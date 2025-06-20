@@ -1,4 +1,3 @@
-
 public enum DiceColor
 {
     Red,
@@ -6,6 +5,7 @@ public enum DiceColor
     Yellow,
     Black
 }
+
 
 [System.Serializable]
 public class DiceData

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+
 public class DiceController : MonoBehaviour
 {
     [Header("1번 배열: 하단 주사위 UI")]
@@ -23,7 +24,10 @@ public class DiceController : MonoBehaviour
     [Header("컨트롤 버튼")]
     public Button rollButton;
     public Button playButton;
-
+    
+    [Header("점수 연출 전용 컨트롤러")]
+    public ScoreEffectController scoreEffectController;
+    
     private void Start()
     {
         InitializeDice();
@@ -35,22 +39,37 @@ public class DiceController : MonoBehaviour
         UpdateUI();
     }
 
-    private void RegisterAllButtonEvents()
+    private void RegisterAllButtonEvents() // 버튼 클릭 시 주사위 이동
     {
-        for (int i = 0; i < rolledDiceButtons.Length; i++)
+        for (int i = 0; i < rolledDiceButtons.Length; i++) 
         {
             int index = i;
-            rolledDiceButtons[i].onClick.AddListener(() => MoveToSelected(index));
+            rolledDiceButtons[i].onClick.AddListener(() => MoveToSelected(index));// 하단 >> 상단 이동
         }
 
-        for (int i = 0; i < selectedDiceButtons.Length; i++)
+        for (int i = 0; i < selectedDiceButtons.Length; i++) 
         {
             int index = i;
-            selectedDiceButtons[i].onClick.AddListener(() => RemoveFromSelected(index));
+            selectedDiceButtons[i].onClick.AddListener(() => RemoveFromSelected(index));// 상단 >> 하단 이동
         }
     }
 
-    public void InitializeDice()
+    private void UpdateHandPreview()
+    {
+        if (selectedIndices.Count >= 1)
+        {
+            var selectedValue = selectedIndices.Select(i => rolledDice[i].value).ToList();
+            HandType previewHand = HandEvaluator.Evaluate(selectedValue);
+            HandInfo previewInfo = HandDatabase.table[previewHand];
+
+            scoreEffectController.PreviewHand(previewInfo.name, previewInfo.baseScore);
+        }
+        else
+        {
+            scoreEffectController.ClearPreview();
+        }
+    }
+    public void InitializeDice() //주사위 초기화
     {
         rolledDice.Clear();
         for (int i = 0; i < 6; i++)
@@ -92,21 +111,29 @@ public class DiceController : MonoBehaviour
                 rolledDice[i].value = Random.Range(1, 7);
             }
         }
-
+        
         UpdateUI();
     }
 
     public void Play()
     {
         List<DiceData> selectedDice = selectedIndices.Select(i => rolledDice[i]).ToList();
+        List<int> values = selectedDice.Select(d => d.value).ToList();
 
-        Debug.Log("플레이 버튼 클릭 - 선택된 주사위:");
-        foreach (var dice in selectedDice)
-        {
-            Debug.Log($"Value: {dice.value}");
-        }
+        HandType hand = HandEvaluator.Evaluate(values);
+        HandInfo info = HandDatabase.table[hand];
 
-        // 추후 족보 평가 함수 호출 위치
+        int baseScore = info.baseScore;
+        int multiplier = info.multiplier;
+        /* 
+         추후 데미지 계산식에 효과를 넣으려면
+         */
+        int finalScore = info.baseScore * info.multiplier;
+
+        Debug.Log($"족보: {info.name}, 점수: {baseScore} * {multiplier} = {finalScore}");
+
+        scoreEffectController.PlayScoreEffect(info.name, baseScore, multiplier, finalScore );
+
     }
 
     public void UpdateUI()
@@ -115,7 +142,8 @@ public class DiceController : MonoBehaviour
         {
             rolledDiceTexts[i].text = rolledDice[i].value.ToString();
             rolledDiceTexts[i].color = selectedIndices.Contains(i) ? Color.gray : Color.white;
-            rolledDiceImages[i].color = rolledDice[i].color == DiceColor.Black ? Color.black : Color.white;
+            
+            //rolledDiceImages[i].color = rolledDice[i].color == DiceColor.Black ? Color.blue : Color.white;
         }
 
         for (int i = 0; i < selectedDiceTexts.Length; i++)
@@ -125,7 +153,7 @@ public class DiceController : MonoBehaviour
                 int sourceIndex = selectedIndices[i];
                 selectedDiceTexts[i].text = rolledDice[sourceIndex].value.ToString();
                 selectedDiceTexts[i].color = Color.white;
-                selectedDiceImages[i].color = rolledDice[sourceIndex].color == DiceColor.Black ? Color.black : Color.white;
+               // selectedDiceImages[i].color = rolledDice[sourceIndex].color == DiceColor.Black ? Color.black : Color.white;
             }
             else
             {
@@ -133,5 +161,8 @@ public class DiceController : MonoBehaviour
                 selectedDiceImages[i].color = new Color(0, 0, 0, 0); // 투명
             }
         }
+
+        UpdateHandPreview();
+
     }
 }
