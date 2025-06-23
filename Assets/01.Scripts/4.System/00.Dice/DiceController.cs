@@ -7,162 +7,150 @@ using TMPro;
 
 public class DiceController : MonoBehaviour
 {
-    [Header("1번 배열: 하단 주사위 UI")]
-    public Button[] rolledDiceButtons;
-    public TMP_Text[] rolledDiceTexts;
-    public Image[] rolledDiceImages;
+    [Header("주사위 UI")] 
+    public Button[] diceButtons;
+    public TMP_Text[] diceTexts;
 
-    [Header("2번 배열: 상단 고정된 주사위 UI")]
-    public Button[] selectedDiceButtons;
-    public TMP_Text[] selectedDiceTexts;
-    public Image[] selectedDiceImages;
+    [Header("버튼 UI")] 
+    public GameObject rollStartButton;
+    public GameObject battleStartButton;
 
-    [Header("주사위 데이터")]
-    public List<DiceData> rolledDice = new List<DiceData>();    // 6개 고정
-    public List<int> selectedIndices = new List<int>();         // 1번 배열의 선택된 인덱스
-    
-    [Header("컨트롤 버튼")]
-    public Button rollButton;
-    public Button playButton;
-    
-    [Header("점수 연출 전용 컨트롤러")]
+    [Header("UI 텍스트")] 
+    public TMP_Text handInfoText;
+    public TMP_Text rerollButtonText;
+    public TMP_Text diceNoticeText;
+
+    [Header("점수 연출 전용 컨트롤러")] 
     public ScoreEffectController scoreEffectController;
+
+    [Header("내부 데이터")] 
+    private List<DiceData> diceList = new(); // 주사위 값 저장
+    private int maxRerolls = 3;     //최대 리롤
+    private int currentRerolls = 0;     //현재까지 리롤
+    private int finalScore = 0;     //최종점수 계산
+    private bool hasRolled = false; //최소굴림 여부
+
+    private HandResult currentResult = new();
     
+
     private void Start()
     {
-        InitializeDice();
-        RegisterAllButtonEvents();
-       
-        rollButton.onClick.AddListener(RollDice);
-        playButton.onClick.AddListener(Play);
+        Init();
         
-        UpdateUI();
-    }
+        rollStartButton.GetComponent<Button>().onClick.AddListener(FirstRollAllDice);
+        battleStartButton.GetComponent<Button>().onClick.AddListener(FinalizeHand);
 
-    private void RegisterAllButtonEvents() // 버튼 클릭 시 주사위 이동
-    {
-        for (int i = 0; i < rolledDiceButtons.Length; i++) 
+        for (int i = 0; i < diceButtons.Length; i++)
         {
             int index = i;
-            rolledDiceButtons[i].onClick.AddListener(() => MoveToSelected(index));// 하단 >> 상단 이동
-        }
-
-        for (int i = 0; i < selectedDiceButtons.Length; i++) 
-        {
-            int index = i;
-            selectedDiceButtons[i].onClick.AddListener(() => RemoveFromSelected(index));// 상단 >> 하단 이동
+            diceButtons[i].onClick.AddListener(() => Reroll(index));    //클릭시 리롤
         }
     }
 
-    private void UpdateHandPreview()
+    private void Init() //주사위데이터 초기화 
     {
-        if (selectedIndices.Count >= 1)
+        diceList.Clear();
+        for (int i = 0; i < 5; i++)
         {
-            var selectedValue = selectedIndices.Select(i => rolledDice[i].value).ToList();
-            HandType previewHand = HandEvaluator.Evaluate(selectedValue);
-            HandInfo previewInfo = HandDatabase.table[previewHand];
-
-            scoreEffectController.PreviewHand(previewInfo.name, previewInfo.baseScore);
-        }
-        else
-        {
-            scoreEffectController.ClearPreview();
-        }
-    }
-    public void InitializeDice() //주사위 초기화
-    {
-        rolledDice.Clear();
-        for (int i = 0; i < 6; i++)
-        {
-            rolledDice.Add(new DiceData
+            diceList.Add(new DiceData
             {
-                value = Random.Range(1, 7),
-                color = DiceColor.Black
+                value = 1,
+                color = DiceColor.Black   // 향후 다른 색 표기
             });
         }
-        selectedIndices.Clear();
-        UpdateUI();
-    }
 
-    public void MoveToSelected(int index)
-    {
-        if (!selectedIndices.Contains(index) && selectedIndices.Count < 5)
-        {
-            selectedIndices.Add(index);
-            UpdateUI();
-        }
-    }
+        currentRerolls = 0;
+        hasRolled = false;
 
-    public void RemoveFromSelected(int selectedSlotIndex)
-    {
-        if (selectedSlotIndex < selectedIndices.Count)
-        {
-            selectedIndices.RemoveAt(selectedSlotIndex);
-            UpdateUI();
-        }
-    }
-
-    public void RollDice()
-    {
-        for (int i = 0; i < rolledDice.Count; i++)
-        {
-            if (!selectedIndices.Contains(i))
-            {
-                rolledDice[i].value = Random.Range(1, 7);
-            }
-        }
+        rollStartButton.SetActive(true);
+        battleStartButton.SetActive(false);
+        rerollButtonText.text = $"{maxRerolls}";
+        handInfoText.text = "주사위를 굴리세요";
         
+        currentResult= new HandResult();
+        scoreEffectController.ClearPreview();
         UpdateUI();
     }
 
-    public void Play()
+    private void FirstRollAllDice() //처음 주사위 굴림
     {
-        List<DiceData> selectedDice = selectedIndices.Select(i => rolledDice[i]).ToList();
-        List<int> values = selectedDice.Select(d => d.value).ToList();
-
-        HandType hand = HandEvaluator.Evaluate(values);
-        HandInfo info = HandDatabase.table[hand];
-
-        int baseScore = info.baseScore;
-        int multiplier = info.multiplier;
-        /* 
-         추후 데미지 계산식에 효과를 넣으려면
-         */
-        int finalScore = info.baseScore * info.multiplier;
-
-        Debug.Log($"족보: {info.name}, 점수: {baseScore} * {multiplier} = {finalScore}");
-
-        scoreEffectController.PlayScoreEffect(info.name, baseScore, multiplier, finalScore );
-
-    }
-
-    public void UpdateUI()
-    {
-        for (int i = 0; i < rolledDice.Count; i++)
+        for (int i = 0; i < diceList.Count; i++)
         {
-            rolledDiceTexts[i].text = rolledDice[i].value.ToString();
-            rolledDiceTexts[i].color = selectedIndices.Contains(i) ? Color.gray : Color.white;
-            
-            //rolledDiceImages[i].color = rolledDice[i].color == DiceColor.Black ? Color.blue : Color.white;
+            diceList[i].value = Random.Range(1, 7);
         }
 
-        for (int i = 0; i < selectedDiceTexts.Length; i++)
-        {
-            if (i < selectedIndices.Count)
-            {
-                int sourceIndex = selectedIndices[i];
-                selectedDiceTexts[i].text = rolledDice[sourceIndex].value.ToString();
-                selectedDiceTexts[i].color = Color.white;
-               // selectedDiceImages[i].color = rolledDice[sourceIndex].color == DiceColor.Black ? Color.black : Color.white;
-            }
-            else
-            {
-                selectedDiceTexts[i].text = "";
-                selectedDiceImages[i].color = new Color(0, 0, 0, 0); // 투명
-            }
-        }
+        hasRolled = true;
+        rollStartButton.SetActive(false);
+        battleStartButton.SetActive(true);
 
         UpdateHandPreview();
-
+        UpdateUI();
     }
+
+    private void Reroll(int index)
+    {
+        if (!hasRolled || currentRerolls >= maxRerolls) return;
+
+        diceList[index].value = Random.Range(1, 7);
+        currentRerolls++;
+
+        rerollButtonText.text = $"{maxRerolls - currentRerolls}";
+        UpdateHandPreview();
+        UpdateUI();
+
+        if (currentRerolls < 0)
+        {
+            
+        }
+        
+    }
+    private void UpdateUI()
+    {
+        for (int i = 0; i < Mathf.Min(diceList.Count, diceTexts.Length); i++) //인덱스 초과 방지
+        {
+            diceTexts[i].text = diceList[i].value.ToString();
+            // 향후 색상 표현 가능
+        }
+    }
+
+    private void UpdateHandPreview() // 핸드의 족보UI
+    {
+        var values = diceList.Select(d => d.value).ToList();
+        var handType = HandEvaluator.Evaluate(values);
+        var info = HandDatabase.table[handType];
+
+        finalScore = info.baseScore * info.multiplier;
+        handInfoText.text = $"{info.name}";
+        
+        scoreEffectController.PreviewHand(info.name, info.baseScore, info.multiplier);
+    }
+    
+    private void FinalizeHand()
+    {
+        // 현재 주사위 값에서 족보 평가
+        var values = diceList.Select(d => d.value).ToList();
+        var handType = HandEvaluator.Evaluate(values);
+        var info = HandDatabase.table[handType];
+
+        currentResult.type = handType;
+        currentResult.baseHandTypeScore = info.baseScore;
+        currentResult.multiplier = info.multiplier;
+
+        // 리롤 애니메이션
+        scoreEffectController.FinalizePreviewLock();
+
+        rollStartButton.SetActive(false);
+        battleStartButton.SetActive(true);
+    }
+
+    public int GetFinalScore()
+    {
+        return currentResult.FinalScore;
+    }
+
+    public HandType GetHandType()
+    {
+        return currentResult.type;
+    }
+
 }

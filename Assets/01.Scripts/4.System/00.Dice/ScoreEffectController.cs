@@ -5,70 +5,53 @@ using DG.Tweening;
 
 public class ScoreEffectController : MonoBehaviour
 {
-    [Header("UI 결과 출력")] public TMP_Text handTypeName;
-    public TMP_Text handTypeTotalScore;
+    [Header("UI 결과 출력")] 
+    public TMP_Text handTypeName;
     public TMP_Text handTypeMulitplier;
-    public GameObject totalScoreBoard;
     public TMP_Text handTypeScorePreview;   // 실시간 프리뷰용
-    public TMP_Text handTypeScoreAnimated;  // 연출용
-    public void PreviewHand(string handName, int score)
+
+    public void PreviewHand(string handName, int score, int multiplier)
     {
         handTypeName.text = handName;
-        handTypeScorePreview.text = score.ToString(); // 여기만 사용
-        handTypeScoreAnimated.text = "";              // 애니메이션용은 숨김
-        handTypeMulitplier.text = "";
-        handTypeTotalScore.text = "";
-        totalScoreBoard.SetActive(false);
+
+        handTypeScorePreview.gameObject.SetActive(true);
+
+        // 점수 애니메이션
+        DOTween.Kill(handTypeScorePreview);
+        int displayScore = 0;
+        handTypeScorePreview.text = "0";
+        DOTween.To(() => displayScore, x =>
+        {
+            displayScore = x;
+            handTypeScorePreview.text = displayScore.ToString();
+        }, score, 0.4f).SetEase(Ease.OutQuad).SetId(handTypeScorePreview);
+
+        // 배율 애니메이션
+        DOTween.Kill(handTypeMulitplier);
+        float displayMul = 0;
+        handTypeMulitplier.text = "x0";
+        DOTween.To(() => displayMul, x =>
+        {
+            displayMul = x;
+            handTypeMulitplier.text = $"x{Mathf.RoundToInt(displayMul)}";
+        }, multiplier, 0.4f).SetEase(Ease.OutQuad).SetId(handTypeMulitplier);
+    }
+    
+    public void FinalizePreviewLock()
+    {
+        DOTween.Kill(handTypeScorePreview);
+        DOTween.Kill(handTypeMulitplier);
+        // 텍스트 그대로 유지
     }
 
     public void ClearPreview()
     {
+        DOTween.Kill(handTypeScorePreview);
+        DOTween.Kill(handTypeMulitplier);
+
         handTypeName.text = "";
-        handTypeScorePreview.text = ""; 
-        handTypeScoreAnimated.text = "";  
+        handTypeScorePreview.text = "";
         handTypeMulitplier.text = "";
-        handTypeTotalScore.text = "";
-        totalScoreBoard.SetActive(false);
     }
 
-    public void PlayScoreEffect(string handName, int baseScore, int multiplier, int finalScore)
-    {
-        Sequence seq = DOTween.Sequence();
-
-        // 연출용 준비
-        handTypeScorePreview.gameObject.SetActive(false); // 미리 보이던 거 끄고
-        handTypeScoreAnimated.gameObject.SetActive(true); // 애니메이션용 켜기
-        handTypeScoreAnimated.text = "0"; // 0부터 시작
-
-        handTypeName.text = handName;
-        handTypeMulitplier.text = "";
-        handTypeTotalScore.text = "";
-        totalScoreBoard.SetActive(false);
-
-        seq.AppendInterval(0.3f);
-
-        // 점수 올라가는 연출
-        int displayBase = 0;
-        seq.Append(DOTween.To(() => displayBase, x =>
-        {
-            displayBase = x;
-            handTypeScoreAnimated.text = displayBase.ToString();
-        }, baseScore, 0.6f).SetEase(Ease.OutQuad));
-
-        seq.AppendCallback(() =>
-        {
-            handTypeMulitplier.text = $"x{multiplier}";
-            totalScoreBoard.SetActive(true); // 1초 기다리기 전에 판을 먼저 켜줌
-        });
-
-        seq.AppendInterval(1f);
-
-        // 총합 점수 증가 애니메이션
-        int displayedFinalScore = 0;
-        seq.Append(DOTween.To(() => displayedFinalScore, x =>
-        {
-            displayedFinalScore = x;
-            handTypeTotalScore.text = displayedFinalScore.ToString();
-        }, finalScore, 0.6f).SetEase(Ease.OutQuad));
-    }
 }
