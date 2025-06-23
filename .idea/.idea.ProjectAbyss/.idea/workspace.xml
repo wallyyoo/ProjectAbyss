@@ -14,12 +14,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/02.Prefabs/6.Map/NodeView.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/02.Prefabs/6.Map/StageGraphData.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/02.Prefabs/6.Map/StageGraphGenerator.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/02.Prefabs/6.Map/StageMapController.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/02.Prefabs/6.Map/StageMapView.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/02.Prefabs/6.Map/StageNodeData.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMPro_UGUI_Private.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
@@ -113,7 +108,7 @@
       <workItem from="1750638289774" duration="300000" />
       <workItem from="1750638621047" duration="1535000" />
       <workItem from="1750642869746" duration="3590000" />
-      <workItem from="1750648429469" duration="7248000" />
+      <workItem from="1750648429469" duration="11268000" />
     </task>
     <servers />
   </component>
