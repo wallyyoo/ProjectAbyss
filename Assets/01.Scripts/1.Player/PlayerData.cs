@@ -1,8 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(menuName = "Character/Player")]
 public class PlayerData : BaseCharacterData
 {
-    // 필요한 부분
+    [Header("재화 초기 값")]
+    [SerializeField] private int startingGold;
+
+    public int StartingGold => startingGold;
 }

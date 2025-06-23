@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using NaughtyAttributes;
 
 public class TurnManager : Singleton<TurnManager>
 {
-    private List<Enemy> enemies = new();
-    private Player player;
+    private Enemy enemy;
+    public Player player;
 
     public void RegisterPlayer(Player p)
     {
@@ -15,40 +13,27 @@ public class TurnManager : Singleton<TurnManager>
     /// <summary>
     /// 생성한 적 등록
     /// </summary>
-    /// <param name="enemy"></param>
-    public void RegisterEnemy(Enemy enemy)
+    /// <param name="e"></param>
+    public void RegisterEnemy(Enemy e)
     {
-        if (!enemies.Contains(enemy)) enemies.Add(enemy);
+        enemy = e;
     }
 
     /// <summary>
-    /// 등록한 적 삭제
+    /// 플레이어 공격
     /// </summary>
-    /// <param name="enemy"></param>
-    public void UnRegisterEnemy(Enemy enemy)
+    [Button("플레이어 공격 테스트")]
+    public void PlayerAttack()
     {
-        enemies.Remove(enemy);
-
-        if (enemies.Count == 0)
-        { 
-            // 결과창
-        }
-    }
-
-    public void PlayerAttack(int targetIndex)
-    {
-        if (targetIndex < 0 || targetIndex >= enemies.Count) return;
-
-        Enemy target = enemies[targetIndex];
         int damage = player.GetAttackDamage();
 
-        target.TakeDamage(damage);
+        enemy.TakeDamage(damage);
 
         PlayerTurnEnd();
     }
 
     /// <summary>
-    /// 플레이어 데미지 받는 호출
+    /// 플레이어 데미지 받음
     /// </summary>
     /// <param name="damage"></param>
     public void PlayerTakeDamage(int damage)
@@ -56,11 +41,11 @@ public class TurnManager : Singleton<TurnManager>
         player.TakeDamage(damage);
     }
 
+    /// <summary>
+    /// 플레이어 턴이 끝나면 적의 턴 감소 또는 공격
+    /// </summary>
     public void PlayerTurnEnd()
     {
-        foreach (var enemy in enemies)
-        {
-            enemy.ProcessTurn();
-        }
+        enemy.ProcessTurn();
     }
 }

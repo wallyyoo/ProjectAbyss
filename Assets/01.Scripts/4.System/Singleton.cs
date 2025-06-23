@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using TMPro;
 
 public abstract class Singleton<T> : MonoBehaviour where T : Component
 {
