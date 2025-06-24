@@ -12,6 +12,7 @@ public enum NodeType
     Shop,
     Reward,
     Event,
+    Start,
     Boss
 }
 public class NodeModel

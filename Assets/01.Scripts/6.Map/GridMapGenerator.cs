@@ -10,12 +10,14 @@ public class GridMapGenerator : IMapGenerator
     private readonly int _columns;
     private readonly int _rows;
     private readonly int _roomCount;
+    private readonly INodeTypeAssigner _nodeTypeAssigner;
 
-    public GridMapGenerator(int columns, int rows, int roomCount)
+    public GridMapGenerator(int columns, int rows, int roomCount, INodeTypeAssigner nodeTypeAssigner)
     {
         _columns = columns;
         _rows = rows;
         _roomCount = roomCount;
+        _nodeTypeAssigner = nodeTypeAssigner;
     }
     
 
@@ -31,8 +33,7 @@ public class GridMapGenerator : IMapGenerator
         Vector2Int start = new Vector2Int(_columns / 2, _rows / 2);
         queue.Enqueue(start);
         occupied[start.x, start.y] = true;
-
-        NodeModel startNode = new NodeModel(nextId++, NodeType.Battle, start);
+        NodeModel startNode = new NodeModel(nextId++, NodeType.Start, start);
         mapModel.Nodes.Add(startNode);
 
         while (mapModel.Nodes.Count < _roomCount && queue.Count > 0)
@@ -58,30 +59,41 @@ public class GridMapGenerator : IMapGenerator
 
                 if (occupied[neighbor.x, neighbor.y]) continue;
                 
-                //int adjacentCount = 0;
-                
-                // foreach (Vector2Int d2 in dirs)
-                // {
-                //     Vector2Int adj = neighbor + d2;
-                //     if(adj.x>= 0 && adj.x < _columns && adj.y >= 0 && adj.y < _rows)
-                //     {
-                //         if (occupied[adj.x, adj.y]) adjacentCount++;
-                //     }
-                // }
+                // int adjacentCount = 0;
                 //
-                // if (adjacentCount > 1) continue;
+                //  foreach (Vector2Int d2 in dirs)
+                //  {
+                //      Vector2Int adj = neighbor + d2;
+                //      if(adj.x>= 0 && adj.x < _columns && adj.y >= 0 && adj.y < _rows)
+                //      {
+                //          if (occupied[adj.x, adj.y]) adjacentCount++;
+                //      }
+                //  }
+                //
+                //  if (adjacentCount > 1) continue;
 
                 if (Random.value < 0.3f) continue;
                 
+                NodeType assignedType = _nodeTypeAssigner.AssignType(mapModel.Nodes.Count,_roomCount);
+                
+                
                 occupied[neighbor.x, neighbor.y] = true;
-                NodeModel node = new NodeModel(nextId++, NodeType.Battle, neighbor);
+                NodeModel node = new NodeModel(nextId++, assignedType, neighbor);
                 mapModel.Nodes.Add(node);
                 queue.Enqueue(neighbor);
                 
-                mapModel.Edges.Add(new EdgeModel(
-                    mapModel.Nodes.Find(n=>n.GridPos == current).Id,
-                    node.Id
-                    ));
+                // mapModel.Edges.Add(new EdgeModel(
+                //     mapModel.Nodes.Find(n=>n.GridPos == current).Id,
+                //     node.Id
+                //     ));
+
+                var edge = new EdgeModel(mapModel.Nodes.Find(n=>n.GridPos == current).Id, node.Id);
+                mapModel.Edges.Add(edge);
+                var fromNode = mapModel.Nodes.Find(n=>n.GridPos == current);
+                var toNode = node;
+                fromNode.ConnectedNodeIds.Add(toNode.Id);
+                toNode.ConnectedNodeIds.Add(fromNode.Id);
+
             }
         }
         return mapModel;

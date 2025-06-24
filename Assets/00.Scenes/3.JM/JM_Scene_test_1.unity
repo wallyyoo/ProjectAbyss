@@ -339,8 +339,12 @@ MonoBehaviour:
   _edgePrefab: {fileID: 8942911800839377774, guid: ccae651935b54e54180fc86eb46af088, type: 3}
   _columns: 9
   _rows: 5
-  _roomCount: 12
+  _roomCount: 20
   CellSize: 150
+  _battleWeight: 1
+  _shopWeight: 0.2
+  _rewardWeight: 0.1
+  _eventWeight: 0.2
 --- !u!1 &1515132335
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,22 +10,33 @@ public class MapController : MonoBehaviour
     [SerializeField] private NodeView _nodePrefab;
     [SerializeField] private EdgeView _edgePrefab;
 
-    private MapModel _mapModel;
-    private Dictionary<int, NodeView> _nodeViews;
-
+    //맵 생성 파라미터
     [SerializeField] private int _columns = 9;
     [SerializeField] private int _rows = 5;
     [SerializeField] private int _roomCount = 12;
     [SerializeField] private float CellSize = 150f;
-
     
+    [SerializeField] private float _battleWeight = 1.0f;
+    [SerializeField] private float _shopWeight = 0.2f;
+    [SerializeField] private float _rewardWeight = 0.1f;
+    [SerializeField] private float _eventWeight = 0.2f;
+    
+    
+    private MapModel _mapModel;
+    private Dictionary<int, NodeView> _nodeViews;
 
+    private int _currentNodeId;
+    
     private void Start()
     {
         Debug.Log("MapController.Start() 호출됨");
-        _mapModel = new GridMapGenerator(_columns,_rows, _roomCount).Generate(0, 0, 0);
+        NodeTypeAssigner _nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
+        _mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner).Generate(0, 0, 0);
         Debug.Log($"생성된 노드의 개수: {_mapModel.Nodes.Count}, 간선개수:{_mapModel.Edges.Count}");
+        _currentNodeId = _mapModel.Nodes[0].Id;
+        
         RenderMap();
+        UpdateCurrentLocationDisplay();
     }
 
     /// <summary>
@@ -45,7 +56,7 @@ public class MapController : MonoBehaviour
             screenPositions[node.Id] = pos;
 
             NodeView view = Instantiate(_nodePrefab, transform);
-            view.Initialize(node.Id, pos, OnNodeClicked);
+            view.Initialize(node, pos, OnNodeClicked);
             _nodeViews[node.Id] = view;
         }
 
@@ -64,12 +75,33 @@ public class MapController : MonoBehaviour
         }
     }
 
+    private void UpdateCurrentLocationDisplay()
+    {
+        foreach (KeyValuePair<int, NodeView> pair in _nodeViews)
+        {
+            bool isCurrent = (pair.Key == _currentNodeId);
+            pair.Value.SetCurrent(isCurrent);
+        }
+    }
+    
+    
     /// <summary>
     /// 유효한이동인지 검사 후 로직 수행
     /// </summary>
-    private void OnNodeClicked(int nodeId)
+    private void OnNodeClicked(NodeModel nodeModel)
     {
-        Debug.Log($"{nodeId}노드클릭됨.");
+        Debug.Log($"{nodeModel.Id}노드클릭됨, Type{nodeModel.Type}");
+        NodeModel currentNode = _mapModel.Nodes.Find(n=> n.Id == _currentNodeId);
+        if (currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
+        {
+            Debug.Log($"이동가능 : Node{_currentNodeId} -> Node{nodeModel.Id}");
+            _currentNodeId = nodeModel.Id;
+            UpdateCurrentLocationDisplay();
+        }
+        else
+        {
+            Debug.Log("이동불가");
+        }
         //TODO: 현재위치 확인 -> 이동가능 여부 검사 -> 씬전환 or 전투 호출 등
     }
 }

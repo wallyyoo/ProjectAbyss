@@ -13,23 +13,27 @@ public class NodeView : MonoBehaviour
     [SerializeField] private Button _button;
     [SerializeField] private Image _roomImage; //방 이미지
     [SerializeField] private Image _indicatorPrefab; // + 표시 프리펩
+
+    [SerializeField] private Color _defaultColor = Color.white;
+    [SerializeField] private Color _currentColor = Color.green;
     
     
-    private int _nodeId;
-    private Action<int> _onClick;
+    private NodeModel _nodeModel;
+    private Action<NodeModel> _onClick;
     private List<Image> _indicators = new List<Image>();
     
 
     /// <summary>
     /// 뷰 초기화
     /// </summary>
-    public void Initialize(int nodeId, Vector2 pos, Action<int> onClick)
+    public void Initialize(NodeModel nodeModel, Vector2 pos, Action<NodeModel> onClick)
     {
-        _nodeId = nodeId;
+        _nodeModel = nodeModel;
         _onClick = onClick;
         transform.localPosition = pos;
+        _roomImage.color = _defaultColor;
 
-        _button.onClick.AddListener(() => _onClick?.Invoke(_nodeId));
+        _button.onClick.AddListener(() => _onClick?.Invoke(_nodeModel));
     }
 
     public void SetConnectionIndicator(MapModel mapModel, Dictionary<int, Vector2> positions)
@@ -37,11 +41,10 @@ public class NodeView : MonoBehaviour
         foreach (Image img in _indicators) Destroy(img.gameObject);
         _indicators.Clear();
         
-        NodeModel self = mapModel.Nodes.Find(n=> n.Id == _nodeId);
 
-        foreach (int neighborId in self.ConnectedNodeIds)
+        foreach (int neighborId in _nodeModel.ConnectedNodeIds)
         {
-            Vector2 myPos = positions[_nodeId];
+            Vector2 myPos = positions[_nodeModel.Id];
             Vector2 otherPos = positions[neighborId];
             Vector2 dir = (otherPos - myPos).normalized;
             
@@ -49,5 +52,18 @@ public class NodeView : MonoBehaviour
             indicator.rectTransform.anchoredPosition = dir * (_roomImage.rectTransform.sizeDelta.x * 0.5f);
             _indicators.Add(indicator);
         }
+    }
+
+    public void SetCurrent(bool isCurrent)
+    {
+        if (isCurrent)
+        {
+            _roomImage.color = _currentColor;
+        }
+        else
+        {
+            _roomImage.color = _defaultColor;
+        }
+            
     }
 }
