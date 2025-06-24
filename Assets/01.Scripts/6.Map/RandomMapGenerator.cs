@@ -5,56 +5,85 @@ using UnityEngine;
 /// <summary>
 /// 레이어별로 노드를 생성하고, 인접레이어에 랜덤으로 연결.
 /// </summary>
-public class RandomMapGenerator : IMapGenerator
+public class GridMapGenerator : IMapGenerator
 {
-    public MapModel Generate(int depth, int minwidth, int maxwidth)
+    private readonly int _columns;
+    private readonly int _rows;
+    private readonly int _roomCount;
+
+    public GridMapGenerator(int columns, int rows, int roomCount)
+    {
+        _columns = columns;
+        _rows = rows;
+        _roomCount = roomCount;
+    }
+    
+
+    public MapModel Generate(int unusedDepth, int unused1, int unused2)
     {
         MapModel mapModel = new MapModel();
-        int nextNodeId = 0;
-        List<List<NodeModel>> layers = new List<List<NodeModel>>();
+        bool[,] occupied = new bool[_columns, _rows];
 
-        for (int layer = 0; layer < depth; layer++)
+        Queue<Vector2Int> queue = new Queue<Vector2Int>();
+        int nextId = 0;
+        
+        //시작점
+        Vector2Int start = new Vector2Int(_columns / 2, _rows / 2);
+        queue.Enqueue(start);
+        occupied[start.x, start.y] = true;
+
+        NodeModel startNode = new NodeModel(nextId++, NodeType.Battle, start);
+        mapModel.Nodes.Add(startNode);
+
+        while (mapModel.Nodes.Count < _roomCount && queue.Count > 0)
         {
-            int width = Random.Range(minwidth, maxwidth+1);
-            List<NodeModel> nodeLayer = new List<NodeModel>();
+            Vector2Int current = queue.Dequeue();
 
-            for (int i = 0; i < width; i++)
+            Vector2Int[] dirs =
             {
-                NodeType type = (layer == depth - 1) ? NodeType.Boss : NodeType.Battle;
-                NodeModel node = new NodeModel(nextNodeId++, type, layer);
+                new Vector2Int(1, 0),
+                new Vector2Int(-1, 0),
+                new Vector2Int(0, 1),
+                new Vector2Int(0, -1)
+
+            };
+            foreach (Vector2Int dir in dirs)
+            {
+                if (mapModel.Nodes.Count >= _roomCount) break;
+                
+                Vector2Int neighbor = current + dir;
+
+                if (neighbor.x < 0 || neighbor.x >= _columns || neighbor.y < 0 || neighbor.y >= _rows)
+                    continue;
+
+                if (occupied[neighbor.x, neighbor.y]) continue;
+                
+                int adjacentCount = 0;
+                
+                // foreach (Vector2Int d2 in dirs)
+                // {
+                //     Vector2Int adj = neighbor + d2;
+                //     if(adj.x>= 0 && adj.x < _columns && adj.y >= 0 && adj.y < _rows)
+                //     {
+                //         if (occupied[adj.x, adj.y]) adjacentCount++;
+                //     }
+                // }
+                //
+                // if (adjacentCount > 1) continue;
+
+                if (Random.value < 0.3f) continue;
+                
+                occupied[neighbor.x, neighbor.y] = true;
+                NodeModel node = new NodeModel(nextId++, NodeType.Battle, neighbor);
                 mapModel.Nodes.Add(node);
-                nodeLayer.Add(node);
-            }
-            layers.Add(nodeLayer);
-        }
-
-        for (int layer = 0; layer < layers.Count-1; layer++)
-        {
-            List<NodeModel> current = layers[layer];
-            List<NodeModel> next = layers[layer + 1];
-
-            foreach (NodeModel fromNode in current)
-            {
-                int connections = Random.Range(1, Mathf.Min(3, next.Count + 1));
-                HashSet<int> used = new HashSet<int>();
-                for (int c = 0; c < connections; c++)
-                {
-                    int idx;
-                    do
-                    {
-                        idx = Random.Range(0, next.Count);
-                    } while (used.Contains(idx));
-                    used.Add(idx);
-
-                    NodeModel toNode = next[idx];
-                    fromNode.ConnectedNodeIds.Add(toNode.Id);
-                    mapModel.Edges.Add(new EdgeModel(fromNode.Id,toNode.Id));
-
-
-                }
+                queue.Enqueue(neighbor);
+                
+                mapModel.Edges.Add(new EdgeModel(
+                    mapModel.Nodes.Find(n=>n.GridPos == current).Id,
+                    node.Id
+                    ));
             }
         }
-
         return mapModel;
     }
 }

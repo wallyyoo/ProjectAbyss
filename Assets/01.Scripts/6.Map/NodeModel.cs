@@ -18,14 +18,14 @@ public class NodeModel
 {
     public int Id { get; }
     public NodeType Type { get; set; }
-    public int Layer { get; }
+    public Vector2Int GridPos { get; }
     public List<int> ConnectedNodeIds { get; }
 
-    public NodeModel(int id, NodeType type, int layer)
+    public NodeModel(int id, NodeType type, Vector2Int gridPos)
     {
         Id = id;
         Type = type;
-        Layer = layer;
+        GridPos = gridPos;
         ConnectedNodeIds = new List<int>();
     }
 }

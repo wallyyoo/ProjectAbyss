@@ -7,5 +7,5 @@ using UnityEngine;
 /// </summary>
 public interface IMapGenerator
 {
-    MapModel Generate(int depth, int minWidth, int maxWidth);
+    MapModel Generate(int unusedDepth, int unused1, int unused2);
 }

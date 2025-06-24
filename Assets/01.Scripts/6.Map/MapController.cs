@@ -13,14 +13,17 @@ public class MapController : MonoBehaviour
     private MapModel _mapModel;
     private Dictionary<int, NodeView> _nodeViews;
 
-    private const float LayerYStep = -200f;
-    private const float NodeXStep = 200f;
+    [SerializeField] private int _columns = 9;
+    [SerializeField] private int _rows = 5;
+    [SerializeField] private int _roomCount = 12;
+    [SerializeField] private float CellSize = 150f;
+
+    
 
     private void Start()
     {
         Debug.Log("MapController.Start() 호출됨");
-        IMapGenerator generator = new RandomMapGenerator();
-        _mapModel = generator.Generate(depth: 4, minWidth: 3, maxWidth: 5);
+        _mapModel = new GridMapGenerator(columns: 9, rows: 5, roomCount: 12).Generate(0, 0, 0);
         Debug.Log($"생성된 노드의 개수: {_mapModel.Nodes.Count}, 간선개수:{_mapModel.Edges.Count}");
         RenderMap();
     }
@@ -30,48 +33,38 @@ public class MapController : MonoBehaviour
     /// </summary>
     private void RenderMap()
     {
+        
+        
         _nodeViews = new Dictionary<int, NodeView>();
-        Dictionary<int, Vector2> positions = new Dictionary<int, Vector2>();
-        
-        
-        Dictionary<int, List<NodeModel>> nodesByLayer = new Dictionary<int, List<NodeModel>>();
-        foreach(NodeModel node in _mapModel.Nodes)
+        Dictionary<int,Vector2> screenPositions = new Dictionary<int, Vector2>();
+
+        foreach (NodeModel node in _mapModel.Nodes)
         {
-            if (!nodesByLayer.ContainsKey(node.Layer))
-            {
-                nodesByLayer[node.Layer] = new List<NodeModel>();
-            }
+            float x = (node.GridPos.x - (_columns - 1) * 0.5f) * CellSize;
+            float y = (node.GridPos.y - (_rows - 1)*0.5f)* CellSize;
+            Vector2 pos = new Vector2(x, y);
 
-            nodesByLayer[node.Layer].Add(node);
-        }
+            screenPositions[node.Id] = pos;
 
-        foreach (KeyValuePair<int,List<NodeModel>> kvp in nodesByLayer)
-        {
-            int layerIndex = kvp.Key;
-            List<NodeModel> layerNodes = kvp.Value;
-            int count = layerNodes.Count;
-
-            for (int i = 0; i < count; i++)
-            {
-                NodeModel node = layerNodes[i];
-
-                float x = (i - (count - 1) * 0.5f )* NodeXStep;
-                float y = layerIndex * LayerYStep;
-                Vector2 pos = new  Vector2(x, y);
-                positions[node.Id] = pos;
-                NodeView view = Instantiate(_nodePrefab, transform);
-                view.Initialize(node.Id, pos, OnNodeClicked);
-                _nodeViews[node.Id] = view;
-            }
+            NodeView view = Instantiate(_nodePrefab, transform);
+            view.Initialize(node.Id, pos, OnNodeClicked);
+            _nodeViews[node.Id] = view;
         }
 
         foreach (EdgeModel edge in _mapModel.Edges)
         {
-            Vector2 from = positions[edge.FromNodeId];
-            Vector2 to = positions[edge.ToNodeId];
+            Vector2 from =screenPositions[edge.FromNodeId];
+            Vector2 to = screenPositions[edge.ToNodeId];
             EdgeView edgeView = Instantiate(_edgePrefab, transform);
-            edgeView.Initialize(from,to);
+            edgeView.Initialize(from, to);
         }
+
+        foreach (NodeModel node in _mapModel.Nodes)
+        {
+            NodeView view = _nodeViews[node.Id];
+            view.SetConnectionIndicator(_mapModel, screenPositions);
+        }
+
     }
 
     /// <summary>
