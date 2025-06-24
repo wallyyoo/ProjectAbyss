@@ -8,5 +8,6 @@ public enum HandType
     Triple,
     TwoPair,
     OnePair,
-    HighDice
+    HighDice,
+    None
 }
