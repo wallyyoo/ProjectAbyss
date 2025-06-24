@@ -1,15 +1,29 @@
 public enum DiceColor
 {
+    None,
     Red,
     Blue,
     Yellow,
     Black
 }
 
+public enum ColorBuffGrade
+{
+    None,
+    ThreeColor,  
+    FourColor,  
+    FiveColor 
+}
+
+public class ColorBuffResult
+{
+    public DiceColor color;
+    public ColorBuffGrade grade;
+}
 
 [System.Serializable]
 public class DiceData
 {
     public int value = 1;
-    public DiceColor color = DiceColor.Black;// 현재 주사위 색상은 검정으로 고정
+    public DiceColor color = DiceColor.Black;
 }
