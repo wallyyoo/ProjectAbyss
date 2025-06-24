@@ -23,7 +23,7 @@ public class MapController : MonoBehaviour
     private void Start()
     {
         Debug.Log("MapController.Start() 호출됨");
-        _mapModel = new GridMapGenerator(columns: 9, rows: 5, roomCount: 12).Generate(0, 0, 0);
+        _mapModel = new GridMapGenerator(_columns,_rows, _roomCount).Generate(0, 0, 0);
         Debug.Log($"생성된 노드의 개수: {_mapModel.Nodes.Count}, 간선개수:{_mapModel.Edges.Count}");
         RenderMap();
     }
@@ -33,8 +33,6 @@ public class MapController : MonoBehaviour
     /// </summary>
     private void RenderMap()
     {
-        
-        
         _nodeViews = new Dictionary<int, NodeView>();
         Dictionary<int,Vector2> screenPositions = new Dictionary<int, Vector2>();
 
@@ -64,7 +62,6 @@ public class MapController : MonoBehaviour
             NodeView view = _nodeViews[node.Id];
             view.SetConnectionIndicator(_mapModel, screenPositions);
         }
-
     }
 
     /// <summary>

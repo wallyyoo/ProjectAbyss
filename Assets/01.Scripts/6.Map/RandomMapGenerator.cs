@@ -58,7 +58,7 @@ public class GridMapGenerator : IMapGenerator
 
                 if (occupied[neighbor.x, neighbor.y]) continue;
                 
-                int adjacentCount = 0;
+                //int adjacentCount = 0;
                 
                 // foreach (Vector2Int d2 in dirs)
                 // {
