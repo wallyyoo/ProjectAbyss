@@ -136,5 +136,7 @@ MonoBehaviour:
   _button: {fileID: 4588927149087302565}
   _roomImage: {fileID: 3860296640720632267}
   _indicatorPrefab: {fileID: 1221275309272609591, guid: 0b54cb69a6bdfff4c864aad8241d83eb, type: 3}
-  _defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  _defaultColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
   _currentColor: {r: 0, g: 1, b: 0, a: 1}
+  _availableColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  _visitedColor: {r: 1, g: 1, b: 1, a: 1}

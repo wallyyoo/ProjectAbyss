@@ -17,6 +17,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/EdgeModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/EdgeView.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/NodeTypeAssigner.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/TestSceneLoad.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMPro_UGUI_Private.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -114,7 +115,7 @@
       <workItem from="1750642869746" duration="3590000" />
       <workItem from="1750648429469" duration="11268000" />
       <workItem from="1750723811280" duration="178000" />
-      <workItem from="1750724009018" duration="9540000" />
+      <workItem from="1750724009018" duration="14654000" />
     </task>
     <servers />
   </component>

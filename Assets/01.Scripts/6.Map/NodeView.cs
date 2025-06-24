@@ -14,8 +14,10 @@ public class NodeView : MonoBehaviour
     [SerializeField] private Image _roomImage; //방 이미지
     [SerializeField] private Image _indicatorPrefab; // + 표시 프리펩
 
-    [SerializeField] private Color _defaultColor = Color.white;
+    [SerializeField] private Color _defaultColor = Color.gray;
     [SerializeField] private Color _currentColor = Color.green;
+    [SerializeField] private Color _availableColor = Color.yellow;
+    [SerializeField] private Color _visitedColor = Color.white;
     
     
     private NodeModel _nodeModel;
@@ -31,9 +33,9 @@ public class NodeView : MonoBehaviour
         _nodeModel = nodeModel;
         _onClick = onClick;
         transform.localPosition = pos;
-        _roomImage.color = _defaultColor;
-
         _button.onClick.AddListener(() => _onClick?.Invoke(_nodeModel));
+
+        SetDefault();
     }
 
     public void SetConnectionIndicator(MapModel mapModel, Dictionary<int, Vector2> positions)
@@ -56,14 +58,21 @@ public class NodeView : MonoBehaviour
 
     public void SetCurrent(bool isCurrent)
     {
-        if (isCurrent)
-        {
-            _roomImage.color = _currentColor;
-        }
-        else
-        {
-            _roomImage.color = _defaultColor;
-        }
-            
+        _roomImage.color = isCurrent ? _currentColor : _defaultColor;
+    }
+
+    public void SetAvailable(bool isAvailable)
+    {
+        _roomImage.color = isAvailable ? _availableColor : _defaultColor;
+    }
+
+    public void SetVisited(bool isVisited)
+    {
+        _roomImage.color = isVisited ? _visitedColor : _defaultColor;
+    }
+
+    public void SetDefault()
+    {
+        _roomImage.color = _defaultColor;
     }
 }

@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/00.Scenes/3.JM/JM_Scene_test_1.unity
     guid: 1d846af0e3b394b4e9d5fae2144c5a76
+  - enabled: 1
+    path: Assets/00.Scenes/3.JM/BattleScene.unity
+    guid: 737d6fcec8596f5448e60f9755a23d45
+  - enabled: 1
+    path: Assets/00.Scenes/3.JM/EventScene.unity
+    guid: 7e4f0eed19e26f440ae496c7a2a2e7d5
   m_configObjects: {}
