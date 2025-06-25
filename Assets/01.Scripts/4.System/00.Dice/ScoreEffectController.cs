@@ -9,7 +9,7 @@ public class ScoreEffectController : MonoBehaviour
     public TMP_Text handTypeName;
     public TMP_Text handTypeMulitplier;
     public TMP_Text handTypeScorePreview;   // 실시간 프리뷰용
-
+//
     public void PreviewHand(string handName, int score, int multiplier)
     {
         handTypeName.text = handName;

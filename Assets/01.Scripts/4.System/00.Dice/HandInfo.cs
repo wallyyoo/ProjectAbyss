@@ -27,5 +27,5 @@ public static class HandDatabase
         { HandType.OnePair, new("OnePair", 40, 2) },
         { HandType.HighDice, new("HighDice", 30, 1) }
     };
-}
+}//
 

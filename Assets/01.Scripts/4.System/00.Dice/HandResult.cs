@@ -6,3 +6,4 @@ public class HandResult
     
     public int FinalScore => baseHandTypeScore * multiplier;
 }
+//

@@ -1,6 +1,6 @@
 
 using UnityEngine;
-
+// 주사위 한 객체에 해당하는 데이터
 public enum DiceColor
 {   
     Black,
@@ -9,6 +9,7 @@ public enum DiceColor
     Red,
     None
 }
+
 public class DiceModel
 {
     public int Value { get; private set; }

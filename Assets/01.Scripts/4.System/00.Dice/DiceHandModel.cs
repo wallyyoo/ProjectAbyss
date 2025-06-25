@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class DiceHandModel
+public class DiceHandModel  // 주사위 굴림, 족보 판정, 색상조합 확인
 {
     public List<DiceModel> DiceList { get; private set; } = new();
     public HandType Type { get; private set; }

@@ -41,7 +41,7 @@ public class DiceView : MonoBehaviour
             scoreEffectController.ClearPreview();
         }
     }
-
+//
     public void UpdateRerollCount(int remaining)
     {
         rerollButtonText.text = remaining.ToString();
@@ -86,7 +86,7 @@ public class DiceView : MonoBehaviour
             DiceColor.Blue => Color.blue,
             DiceColor.Yellow => Color.yellow,
             DiceColor.Black => Color.black,
-            _ => Color.white
+            _ => Color.gray
         };
     }
 }
