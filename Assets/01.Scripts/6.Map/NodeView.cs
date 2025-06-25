@@ -10,15 +10,25 @@ using Unity.VisualScripting;
 /// </summary>
 public class NodeView : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private Button _button;
-    [SerializeField] private Image _roomImage; //방 이미지
-    [SerializeField] private Image _indicatorPrefab; // + 표시 프리펩
-
+    [SerializeField] private Image _backgroundImage; //방 이미지
+    [SerializeField] private Image _iconImage;
+    [SerializeField] private Image _indicatorPrefab; // 이동가능 연결 부분 표시
+    
+    [Header("Type Icons")]
+    [SerializeField] private Sprite _battleSprite;
+    [SerializeField] private Sprite _shopSprite;
+    [SerializeField] private Sprite _rewardSprite;
+    [SerializeField] private Sprite _eventSprite;
+    [SerializeField] private Sprite _startSprite;
+    [SerializeField] private Sprite _bossSprite;
+    
+    
     [SerializeField] private Color _defaultColor = Color.gray;
     [SerializeField] private Color _currentColor = Color.green;
     [SerializeField] private Color _availableColor = Color.yellow;
     [SerializeField] private Color _visitedColor = Color.white;
-    
     
     private NodeModel _nodeModel;
     private Action<NodeModel> _onClick;
@@ -34,7 +44,7 @@ public class NodeView : MonoBehaviour
         _onClick = onClick;
         transform.localPosition = pos;
         _button.onClick.AddListener(() => _onClick?.Invoke(_nodeModel));
-
+        SetupTypeDisplay(_nodeModel.Type);
         SetDefault();
     }
 
@@ -51,28 +61,56 @@ public class NodeView : MonoBehaviour
             Vector2 dir = (otherPos - myPos).normalized;
             
             Image indicator = Instantiate(_indicatorPrefab, transform);
-            indicator.rectTransform.anchoredPosition = dir * (_roomImage.rectTransform.sizeDelta.x * 0.5f);
+            indicator.rectTransform.anchoredPosition = dir * (_backgroundImage.rectTransform.sizeDelta.x * 0.5f);
             _indicators.Add(indicator);
         }
     }
 
     public void SetCurrent(bool isCurrent)
     {
-        _roomImage.color = isCurrent ? _currentColor : _defaultColor;
+        _backgroundImage.color = isCurrent ? _currentColor : _defaultColor;
     }
 
     public void SetAvailable(bool isAvailable)
     {
-        _roomImage.color = isAvailable ? _availableColor : _defaultColor;
+        _backgroundImage.color = isAvailable ? _availableColor : _defaultColor;
     }
 
     public void SetVisited(bool isVisited)
     {
-        _roomImage.color = isVisited ? _visitedColor : _defaultColor;
+        _backgroundImage.color = isVisited ? _visitedColor : _defaultColor;
     }
 
     public void SetDefault()
     {
-        _roomImage.color = _defaultColor;
+        _backgroundImage.color = _defaultColor;
     }
+
+    public void SetupTypeDisplay(NodeType type)
+    {
+        switch (type)
+        {
+            case NodeType.Battle:
+                _iconImage.sprite = _battleSprite;
+                break;
+            case NodeType.Shop:
+                _iconImage.sprite = _shopSprite;
+                break;
+            case NodeType.Reward: 
+                _iconImage.sprite = _rewardSprite;
+                break;
+            case NodeType.Event: 
+                _iconImage.sprite = _eventSprite;
+                break;
+            case NodeType.Start: 
+                _iconImage.sprite = _startSprite;
+                break;
+            case NodeType.Boss: 
+                _iconImage.sprite = _bossSprite;
+                break;
+            default: _iconImage.sprite = null;
+                break;
+        }
+    }
+    
 }

@@ -28,6 +28,7 @@ public class MapController : MonoBehaviour
     private int _currentNodeId;
     private HashSet<int> _visitedNodes;
     
+    
     private void Start()
     {
         SaveData save = SaveLoadManager.LoadGame();
@@ -55,7 +56,8 @@ public class MapController : MonoBehaviour
         else
         {
             NodeTypeAssigner _nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
-            _mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner).Generate(0, 0, 0);
+            BossRoomSelector _bossRoomSelector = new BossRoomSelector();
+            _mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
             _currentNodeId = _mapModel.Nodes[0].Id;
             _visitedNodes = new HashSet<int>{_currentNodeId};
 
@@ -175,8 +177,7 @@ public class MapController : MonoBehaviour
             SaveLoadManager.SaveGame(save);
             
             //씬이동시 사용
-            //SceneManager.LoadScene($"{nodeModel.Type}Scene");
-            //DontDestroyOnLoad(this.transform.root.gameObject);
+            SceneManager.LoadScene($"{nodeModel.Type}Scene");
 
             //UI껏다키기
             //this.transform.root.gameObject.SetActive(false);

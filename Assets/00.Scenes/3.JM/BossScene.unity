@@ -123,51 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &274488796
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 274488797}
-  - component: {fileID: 274488798}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &274488797
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 274488796}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 415.71692, y: 287.28763, z: -3.141305}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &274488798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 274488796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 205f9c7350ec0b0469b40e8beb44f257, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1001 &344304600
+--- !u!1001 &510939558
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -178,10 +134,6 @@ PrefabInstance:
     - target: {fileID: 5910320109135434287, guid: b93da5e32714b1c47af4c634e0b554a3, type: 3}
       propertyPath: m_Name
       value: MapNodeUI
-      objectReference: {fileID: 0}
-    - target: {fileID: 5910320109135434287, guid: b93da5e32714b1c47af4c634e0b554a3, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8092481268337775630, guid: b93da5e32714b1c47af4c634e0b554a3, type: 3}
       propertyPath: m_Pivot.x
@@ -268,7 +220,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b93da5e32714b1c47af4c634e0b554a3, type: 3}
---- !u!1 &1468489435
+--- !u!1 &1265338157
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -276,9 +228,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1468489438}
-  - component: {fileID: 1468489437}
-  - component: {fileID: 1468489436}
+  - component: {fileID: 1265338160}
+  - component: {fileID: 1265338159}
+  - component: {fileID: 1265338158}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -286,21 +238,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1468489436
+--- !u!81 &1265338158
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1468489435}
+  m_GameObject: {fileID: 1265338157}
   m_Enabled: 1
---- !u!20 &1468489437
+--- !u!20 &1265338159
 Camera:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1468489435}
+  m_GameObject: {fileID: 1265338157}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -345,13 +297,13 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!4 &1468489438
+--- !u!4 &1265338160
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1468489435}
+  m_GameObject: {fileID: 1265338157}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
@@ -364,6 +316,5 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1468489438}
-  - {fileID: 274488797}
-  - {fileID: 344304600}
+  - {fileID: 1265338160}
+  - {fileID: 510939558}

@@ -11,13 +11,15 @@ public class GridMapGenerator : IMapGenerator
     private readonly int _rows;
     private readonly int _roomCount;
     private readonly INodeTypeAssigner _nodeTypeAssigner;
+    private readonly IBossRoomSelector _bossRoomSelector;
 
-    public GridMapGenerator(int columns, int rows, int roomCount, INodeTypeAssigner nodeTypeAssigner)
+    public GridMapGenerator(int columns, int rows, int roomCount, INodeTypeAssigner nodeTypeAssigner, IBossRoomSelector bossRoomSelector)
     {
         _columns = columns;
         _rows = rows;
         _roomCount = roomCount;
         _nodeTypeAssigner = nodeTypeAssigner;
+        _bossRoomSelector = bossRoomSelector;
     }
     
 
@@ -59,6 +61,7 @@ public class GridMapGenerator : IMapGenerator
 
                 if (occupied[neighbor.x, neighbor.y]) continue;
                 
+                //인접 방이 2개이상이면 방 생성하지 않는로직 좀 더 선형적인 구성 가능
                 // int adjacentCount = 0;
                 //
                 //  foreach (Vector2Int d2 in dirs)
@@ -94,8 +97,13 @@ public class GridMapGenerator : IMapGenerator
                 fromNode.ConnectedNodeIds.Add(toNode.Id);
                 toNode.ConnectedNodeIds.Add(fromNode.Id);
 
+
             }
         }
+        int startNodeId = mapModel.Nodes[0].Id;
+        int bossNodeId = _bossRoomSelector.SelectBoss(mapModel.Nodes,startNodeId);
+        var bossNode = mapModel.Nodes.Find(n => n.Id == bossNodeId);
+        bossNode.Type = NodeType.Boss;
         return mapModel;
     }
 }
