@@ -217,7 +217,4 @@ public class DiceController : MonoBehaviour
     {
         return currentResult.type;
     }
-    
-    
-
 }

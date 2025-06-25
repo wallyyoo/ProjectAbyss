@@ -12,9 +12,9 @@ public abstract class EnemyData : BaseCharacterData
     [SerializeField] private int dropGold;
 
     [Header("턴 관련")]
-    [SerializeField] private int attackTurn;
+    [SerializeField] private int attackTurn; // ===== 삭제 ( 보류 ) =====
 
     public int AttackDamage => attackDamage;
-    public int AttackTurn => attackTurn;
+    public int AttackTurn => attackTurn; // ===== 삭제 ( 보류 )=====
     public int DropGold => dropGold;
 }
