@@ -11,4 +11,3 @@ public enum HandType
     HighDice,
     None
 }
-//

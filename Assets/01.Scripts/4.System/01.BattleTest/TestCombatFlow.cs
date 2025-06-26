@@ -4,8 +4,8 @@ using System.Collections.Generic;
 public class TestCombatFlow : MonoBehaviour
 {
     [Header("참조")]
-    public PlayerDamageCalculator damageCalculator;
-    public ScoreEffectController scoreEffectController;
+    public PlayerDamageCalculator damageCalculator;         // 데미지 계산기 참조
+    public ScoreEffectController scoreEffectController;     // UI 점수 연출 컨트롤러
 
     [Header("임시 테스트용 외부 보너스")]
     public int bonusFlatDamage = 0;
