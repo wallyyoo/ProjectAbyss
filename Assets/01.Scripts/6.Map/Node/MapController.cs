@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 /// <summary>
 /// 맵 생성부터 클릭 처리, 노드 이동 로직을 총괄
@@ -10,6 +11,7 @@ public class MapController : MonoBehaviour
 {
     [SerializeField] private NodeView _nodePrefab;
     [SerializeField] private EdgeView _edgePrefab;
+    [SerializeField] private CameraSwitcher _cameraSwitcher;
 
     //맵 생성 파라미터
     [SerializeField] private int _columns = 9;
@@ -21,7 +23,10 @@ public class MapController : MonoBehaviour
     [SerializeField] private float _shopWeight = 0.2f;
     [SerializeField] private float _rewardWeight = 0.1f;
     [SerializeField] private float _eventWeight = 0.2f;
-    
+
+    //호출 하는 Action
+    //public Action OnMapNodeAction = OnMapNode;
+    //public Action OffMapNodeAction = OffMapNode;
     
     private MapModel _mapModel;
     private Dictionary<int, NodeView> _nodeViews;
@@ -176,11 +181,10 @@ public class MapController : MonoBehaviour
             }
             SaveLoadManager.SaveGame(save);
             
-            //씬이동시 사용
-            SceneManager.LoadScene($"{nodeModel.Type}Scene");
-
-            //UI껏다키기
-            //this.transform.root.gameObject.SetActive(false);
+            _cameraSwitcher.SwitchTo(nodeModel.Type);
+            
+            //전환되고 꺼짐, 씬 종료 되면 다시 켜짐
+            //this.gameObject.SetActive(false);
         }
         else
         {
@@ -213,5 +217,15 @@ public class MapController : MonoBehaviour
                 view.SetDefault();
             }
         }
+    }
+
+    public void OnMapNode()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void OffMapNode()
+    {
+        gameObject.SetActive(false);
     }
 }
