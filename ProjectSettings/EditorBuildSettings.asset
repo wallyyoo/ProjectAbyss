@@ -8,4 +8,25 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/00.Scenes/0.MainScene/00.MainScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/00.Scenes/3.JM/JM_Scene_test_1.unity
+    guid: 1d846af0e3b394b4e9d5fae2144c5a76
+  - enabled: 1
+    path: Assets/00.Scenes/3.JM/BattleScene.unity
+    guid: 737d6fcec8596f5448e60f9755a23d45
+  - enabled: 1
+    path: Assets/00.Scenes/3.JM/EventScene.unity
+    guid: 7e4f0eed19e26f440ae496c7a2a2e7d5
+  - enabled: 1
+    path: Assets/00.Scenes/3.JM/BossScene.unity
+    guid: 74918639aa7fa9349a15033470e3888f
+  - enabled: 1
+    path: Assets/00.Scenes/3.JM/RewardScene.unity
+    guid: 419c9c32b44cf344eb9a99d7461c3e8a
+  - enabled: 1
+    path: Assets/00.Scenes/3.JM/ShopScene.unity
+    guid: 0c5f3d6b77f6ed44d963eef80ab277e4
+  - enabled: 1
+    path: Assets/00.Scenes/3.JM/StartScene.unity
+    guid: 57aa1c6415d118844b2e3c9d338fa7a7
   m_configObjects: {}
