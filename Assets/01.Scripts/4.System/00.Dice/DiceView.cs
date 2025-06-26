@@ -4,20 +4,26 @@ using TMPro;
 
 public class DiceView : MonoBehaviour
 {
-    [Header("주사위 UI")] public Button[] diceButtons;
+    [Header("주사위 UI")] 
+    public Button[] diceButtons;
     public TMP_Text[] diceTexts;
     public Image[] diceColorImages;
 
-    [Header("버튼 UI")] public GameObject rollStartButton;
-    public GameObject battleStartButton;
+    [Header("버튼 UI")] 
+    public GameObject rollStartButton;
+    public GameObject submitButton;
 
-    [Header("UI 텍스트")] public TMP_Text handInfoText;
+    [Header("UI 텍스트")] 
+    public TMP_Text handInfoText;
+    public TMP_Text submitButtonText;
     public TMP_Text rerollButtonText;
 
-    [Header("팝업 오브젝트")] public GameObject popupObject;
+    [Header("팝업 오브젝트")]
+    public GameObject popupObject;
     public TMP_Text popupText;
 
-    [Header("점수 연출 전용 컨트롤러")] public ScoreEffectController scoreEffectController;
+    [Header("점수 연출 전용 컨트롤러")]
+    public ScoreEffectController scoreEffectController;
 
     public void UpdateDiceDisplay(DiceHandModel model)
     {
@@ -41,7 +47,6 @@ public class DiceView : MonoBehaviour
             scoreEffectController.ClearPreview();
         }
     }
-//
     public void UpdateRerollCount(int remaining)
     {
         rerollButtonText.text = remaining.ToString();
@@ -65,9 +70,9 @@ public class DiceView : MonoBehaviour
         rollStartButton.SetActive(active);
     }
 
-    public void SetBattleButtonActive(bool active)
+    public void SetSubmitButtonActive(bool active)
     {
-        battleStartButton.SetActive(active);
+        submitButton.SetActive(active);
     }
 
     public void ClearUI()
@@ -76,6 +81,9 @@ public class DiceView : MonoBehaviour
         rerollButtonText.text = "3";
         popupObject.SetActive(false);
         scoreEffectController.ClearPreview();
+        
+        SetRollButtonActive(true);        
+        SetSubmitButtonActive(false);
     }
 
     private Color GetColor(DiceColor color)

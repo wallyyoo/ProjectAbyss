@@ -19,7 +19,7 @@ public class DiceModel
     {
         Value = Random.Range(1, 7);
         if (!keepColor)
-            Color = (DiceColor)Random.Range(1, 5);
+            Color = (DiceColor)Random.Range(0, 4);
     }
 
     public void Init()

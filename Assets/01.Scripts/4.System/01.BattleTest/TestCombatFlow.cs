@@ -16,8 +16,11 @@ public class TestCombatFlow : MonoBehaviour
         // === 1. 테스트용 주사위 값과 색상 ===
         List<int> diceValues = new() { 3, 3, 3, 1, 6 }; // 예: 트리플 족보
         List<DiceColorType> diceColors = new() {
-            DiceColorType.Red, DiceColorType.Red, DiceColorType.Red,
-            DiceColorType.Yellow, DiceColorType.Black
+            DiceColorType.Yellow, 
+            DiceColorType.Yellow, 
+            DiceColorType.Yellow,
+            DiceColorType.Yellow, 
+            DiceColorType.Yellow
         };
 
         // === 2. 족보 계산 ===

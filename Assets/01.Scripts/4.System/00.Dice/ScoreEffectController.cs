@@ -29,11 +29,11 @@ public class ScoreEffectController : MonoBehaviour
         // 배율 애니메이션
         DOTween.Kill(handTypeMulitplier);
         float displayMul = 0;
-        handTypeMulitplier.text = "x0";
+        handTypeMulitplier.text = "0";
         DOTween.To(() => displayMul, x =>
         {
             displayMul = x;
-            handTypeMulitplier.text = $"x{Mathf.RoundToInt(displayMul)}";
+            handTypeMulitplier.text = $"{Mathf.RoundToInt(displayMul)}";
         }, multiplier, 0.4f).SetEase(Ease.OutQuad).SetId(handTypeMulitplier);
     }
     
