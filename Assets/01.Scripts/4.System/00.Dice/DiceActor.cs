@@ -12,7 +12,7 @@ public class DiceActor : MonoBehaviour
     [Header("전투 데미지 처리용")]
     [SerializeField] private PlayerDamageCalculator damageCalculator; 
     [SerializeField] private ScoreEffectController scoreEffectController; 
-    [SerializeField] private TestPlayer testPlayer;
+    [SerializeField] private Player testPlayer;
 
     private DiceHandModel model = new(); // 주사위 모델 인스턴스
     
@@ -78,7 +78,7 @@ public class DiceActor : MonoBehaviour
         model.Submit(); // 제출됨 
         view.UpdateHandInfo(model.Info);
         view.SetSubmitButtonActive(false);
-        
+
         // 디버그깅용 주사위 색상 출력 
         foreach (var die in model.DiceList)
         {
@@ -98,11 +98,14 @@ public class DiceActor : MonoBehaviour
         PlayerDamageData result = damageCalculator.GetPlayerDamageData();
         Debug.Log($"[제출 완료] {result}");
 
+        TurnManager.Instance.GetCounterReduction(result.counterDamageReduction);
+
         // UI 미리보기 (점수 애니메이션)
         scoreEffectController?.PreviewHand(info.name, baseScore * multiplier, multiplier);
 
         //  플레이어에게 전달 (테스트)
-        testPlayer?.GetDamageFromCalculator(result); 
+        // testPlayer?.GetDamageFromCalculator(result); 
+        TurnManager.Instance.PlayerGetAttackDamage(result.finalDamage);
     }
     
 }
