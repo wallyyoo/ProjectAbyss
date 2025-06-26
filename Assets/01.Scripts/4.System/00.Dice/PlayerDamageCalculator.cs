@@ -2,22 +2,22 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerDamageCalculator : MonoBehaviour //데미지 계산기 
+public class PlayerDamageCalculator : MonoBehaviour //플레이어 데미지 계산기 
 {
     [Header("기본 주사위 능력치")]
     public int baseScore;
     public int multiplier;
 
-    [Header("임시 보너스 능력치 조절")]
+    [Header("임시 보너스 능력치 조절")] // 테스트용 
     private int extraFlatBonus;       
     private float bonusMultiplier;      
     
-    private List<DiceColorEffect> colorEffects = new();
+    private List<DiceColorEffect> colorEffects = new(); // 색상효과 리스트
     
-    private PlayerDamageData currentData; // 계산한 데이터 저장
+    private PlayerDamageData currentData; // 최종 데미지 데이터 캐싱
 
     private static readonly Dictionary<(DiceColorType, ColorEffectTier), System.Action<PlayerDamageData>> effectActions =
-        new()
+        new() // 색상별 효과 정리 
         {
             // 빨강: 데미지 배수
             { (DiceColorType.Red, ColorEffectTier.ThreeColor), data => data.redMultiplier = 1.1f },
@@ -52,7 +52,7 @@ public class PlayerDamageCalculator : MonoBehaviour //데미지 계산기
           UpdateDamageData();
       }
 
-      private void UpdateDamageData()
+      private void UpdateDamageData() // 색상효과 및 보너스 데미지 포함 계산
       {
           PlayerDamageData result = new PlayerDamageData
           {
@@ -62,12 +62,13 @@ public class PlayerDamageCalculator : MonoBehaviour //데미지 계산기
               nextTurnExtraReroll = 0
           };
 
-          foreach (var effect in colorEffects)
+          foreach (var effect in colorEffects) // 색상 효과적용
           {
               if (effectActions.TryGetValue((effect.colorType, effect.tier), out var apply))
                   apply.Invoke(result);
           }
 
+          // 최종 데미지 계산 공식
           int attackScore = baseScore * multiplier;
           float finalAttackScore = (attackScore + extraFlatBonus) * bonusMultiplier * result.redMultiplier;
           result.finalDamage = Mathf.RoundToInt(finalAttackScore);

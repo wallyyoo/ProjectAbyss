@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-public class HandInfo
+public class HandInfo // 족보 정보
 {
-    public string name;
-    public int baseScore;
-    public int multiplier;
+    public string name; // 족보 이름
+    public int baseScore; // 족보 점수
+    public int multiplier;// 배율
 
     public HandInfo(string name, int baseScore, int multiplier)
     {
