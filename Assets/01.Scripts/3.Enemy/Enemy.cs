@@ -5,7 +5,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData data;
     // [SerializeField] private TextMeshProUGUI turn; // ===== 삭제 ( 보류 ) =====
-    [SerializeField] private TextMeshProUGUI hp;
+    [SerializeField] private TextMeshPro hp;
 
     private int currentHP;
     private int attackTurn;
