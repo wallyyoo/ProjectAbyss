@@ -16,4 +16,4 @@ MonoBehaviour:
   maxHP: 10
   attackDamage: 5
   dropGold: 20
-  attackTurn: 7
+  attackTurn: 1
