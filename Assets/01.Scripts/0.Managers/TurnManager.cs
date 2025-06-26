@@ -7,8 +7,10 @@ public enum TurnPhase { Ready, PlayerAttack, EnemyAttack }
 public class TurnManager : Singleton<TurnManager>
 {
     private Enemy enemy;
-    public Player player;
+    private Player player;
     private int playerAttackDamage;
+
+    private float currentCounterReduction = 0f; // 데미지 감소 값 저장
 
     public TurnPhase CurrentPhase { get; private set; } = TurnPhase.Ready;
 
@@ -51,6 +53,15 @@ public class TurnManager : Singleton<TurnManager>
     }
 
     /// <summary>
+    /// 데미지 감소 받아오는 메서드
+    /// </summary>
+    /// <param name="reduction"></param>
+    public void GetCounterReduction(float reduction)
+    {
+        currentCounterReduction = reduction;
+    }
+
+    /// <summary>
     /// 플레이어 공격 페이즈 시작
     /// </summary>
     [Button("플레이어 공격 테스트")]
@@ -65,7 +76,7 @@ public class TurnManager : Singleton<TurnManager>
     /// <param name="damage"></param>
     public void PlayerTakeDamage(int damage)
     {
-        player.TakeDamage(damage);
+        player.TakeDamage(damage, currentCounterReduction);
     }
 
     /// <summary>

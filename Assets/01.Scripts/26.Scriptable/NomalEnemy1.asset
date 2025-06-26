@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NomalEnemy1
   m_EditorClassIdentifier: 
   characterName: Test1
-  maxHP: 10
-  attackDamage: 5
+  maxHP: 100000
+  attackDamage: 10
   dropGold: 20
   attackTurn: 1
