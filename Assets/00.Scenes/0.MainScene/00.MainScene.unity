@@ -3201,7 +3201,7 @@ MonoBehaviour:
   battleCam: {fileID: 1260674559}
   shopCam: {fileID: 566543594}
   rewardCam: {fileID: 790067377}
-  eventCam: {fileID: 0}
+  eventCam: {fileID: 790067377}
   bossCam: {fileID: 749784580}
 --- !u!114 &519420034
 MonoBehaviour:
@@ -9993,39 +9993,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -1919.5737
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_SizeDelta.y
-      value: -1080.2397
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5344316
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5344316
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5344316
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10045,23 +10045,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -959.7869
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -540.11993
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1635310601679123242, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -10075,6 +10075,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3241004668025607384, guid: eb327322d1509794b90641739376cdce, type: 3}
+      propertyPath: _cameraSwitcher
+      value: 
+      objectReference: {fileID: 519420033}
     - target: {fileID: 8115149485880868345, guid: eb327322d1509794b90641739376cdce, type: 3}
       propertyPath: m_Name
       value: MapNodeUI
