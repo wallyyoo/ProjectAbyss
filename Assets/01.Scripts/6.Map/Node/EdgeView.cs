@@ -1,22 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 두 노드를 잇는 선을 그리는 뷰
 /// </summary>
 public class EdgeView : MonoBehaviour
 {
-    [SerializeField]private LineRenderer _lineRenderer;
+    [SerializeField]private Image _lineImage;
+    [SerializeField] private float _thickness = 8f;
     
     public void Initialize(Vector2 from, Vector2 to)
     {
-        _lineRenderer.useWorldSpace = false;
+        RectTransform rt = _lineImage.rectTransform;
 
-        Vector3 startPos = new Vector3(from.x, from.y, 0f);
-        Vector3 endPos = new Vector3(to.x, to.y, 0f);
-        _lineRenderer.positionCount = 2;
-        _lineRenderer.SetPosition(0, startPos);
-        _lineRenderer.SetPosition(1, endPos);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+        Vector2 delta = to - from;
+        float length = delta.magnitude;
+        float angleDeg = Mathf.Atan2(delta.y, delta.x) * Mathf.Rad2Deg;
+        
+        rt.sizeDelta = new Vector2(length, _thickness);
+        transform.localPosition = (from + to) * 0.5f;
+        rt.localRotation = Quaternion.Euler(0, 0, angleDeg);
     }
 }

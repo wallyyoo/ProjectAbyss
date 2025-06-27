@@ -11,6 +11,10 @@ public class MapController : MonoBehaviour
 {
     [SerializeField] private NodeView _nodePrefab;
     [SerializeField] private EdgeView _edgePrefab;
+
+    [SerializeField] private Transform _edges;
+    [SerializeField] private Transform _nodes;
+    
     [SerializeField] private CameraSwitcher _cameraSwitcher;
 
     //맵 생성 파라미터
@@ -35,7 +39,7 @@ public class MapController : MonoBehaviour
     
     
     private void Start()
-    {
+    { 
         SaveData save = SaveLoadManager.LoadGame();
         if (save != null)
         {
@@ -62,7 +66,16 @@ public class MapController : MonoBehaviour
         {
             NodeTypeAssigner _nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
             BossRoomSelector _bossRoomSelector = new BossRoomSelector();
+
+            //기존 랜덤 맵 노드
             _mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            
+            //패턴으로 제작
+            //List<Vector2Int> _pattern = MapPatternLibrary.CreateCircularRing(8,6,3);
+            //_mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            
+            
+            //수정하지 않는 로직
             _currentNodeId = _mapModel.Nodes[0].Id;
             _visitedNodes = new HashSet<int>{_currentNodeId};
 
@@ -107,25 +120,55 @@ public class MapController : MonoBehaviour
     {
         _nodeViews = new Dictionary<int, NodeView>();
         Dictionary<int,Vector2> screenPositions = new Dictionary<int, Vector2>();
+        
+        
+        //Custom노드에서 사용
+        int minX = int.MaxValue, maxX = int.MinValue;
+        int minY = int.MaxValue, maxY = int.MinValue;
+        
+        foreach (NodeModel node in _mapModel.Nodes)
+        {
+            minX = Mathf.Min(minX, node.GridPos.x);
+            maxX = Mathf.Max(maxX, node.GridPos.x);
+            minY = Mathf.Min(minY, node.GridPos.y);
+            maxY = Mathf.Max(maxY, node.GridPos.y);
+        }
+
+        float centerX = (minX + maxX) * 0.5f;
+        float centerY = (minY + maxY) * 0.5f;
 
         foreach (NodeModel node in _mapModel.Nodes)
         {
-            float x = (node.GridPos.x - (_columns - 1) * 0.5f) * CellSize;
-            float y = (node.GridPos.y - (_rows - 1)*0.5f)* CellSize;
+            float x =(node.GridPos.x - centerX)*CellSize;
+            float y = (node.GridPos.y - centerY)*CellSize;
             Vector2 pos = new Vector2(x, y);
-
             screenPositions[node.Id] = pos;
-
-            NodeView view = Instantiate(_nodePrefab, transform);
-            view.Initialize(node, pos, OnNodeClicked);
+            
+            NodeView view = Instantiate(_nodePrefab, _nodes);
+            view.Initialize(node,pos,OnNodeClicked);
             _nodeViews[node.Id] = view;
         }
+        
+        //랜덤노드에서 사용되던 시작점이 중앙에 위치하던 구조
+        //위의 로직을 사용하면 노드 전체의 좌우를 기준으로 중앙점을 찾아 화면중앙에 위치해줌
+        // foreach (NodeModel node in _mapModel.Nodes)
+        // {
+        //     float x = (node.GridPos.x - (_columns - 1) * 0.5f) * CellSize;
+        //     float y = (node.GridPos.y - (_rows - 1)*0.5f)* CellSize;
+        //     Vector2 pos = new Vector2(x, y);
+        //
+        //     screenPositions[node.Id] = pos;
+        //
+        //     NodeView view = Instantiate(_nodePrefab, transform);
+        //     view.Initialize(node, pos, OnNodeClicked);
+        //     _nodeViews[node.Id] = view;
+        // }
 
         foreach (EdgeModel edge in _mapModel.Edges)
         {
             Vector2 from =screenPositions[edge.FromNodeId];
             Vector2 to = screenPositions[edge.ToNodeId];
-            EdgeView edgeView = Instantiate(_edgePrefab, transform);
+            EdgeView edgeView = Instantiate(_edgePrefab, _edges);
             edgeView.Initialize(from, to);
         }
 
