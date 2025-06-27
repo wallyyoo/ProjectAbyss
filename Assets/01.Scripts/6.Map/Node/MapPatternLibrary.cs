@@ -4,7 +4,13 @@ using UnityEngine;
 
 public static class MapPatternLibrary
 {
-    /// <summary>정사각형 링 패턴</summary>
+    /// <summary>
+    /// 원형 링 패턴
+    /// </summary>
+    /// <param name="horizontalRadius">세로 길이</param>
+    /// <param name="verticalRadius">가로길이</param>
+    /// <param name="thickness">두께</param>
+    /// <returns></returns>
     public static List<Vector2Int> CreateCircularRing(int horizontalRadius, int verticalRadius,int thickness)
     {
         List<Vector2Int> positions = new List<Vector2Int>();
@@ -62,35 +68,46 @@ public static class MapPatternLibrary
     }
 
     /// <summary>피라미드 패턴</summary>
-    public static List<Vector2Int> CreateDiagonal(int length)
+    public static List<Vector2Int> CreateDiagonal(int width, int height, int offsetXperRow = 1)
     {
         List<Vector2Int> positions = new List<Vector2Int>();
-        for (int i = 0; i < length; i++)
+
+        int halfWidth = width / 2;
+        int halfHeight = height / 2;
+        
+        for (int row = 0; row < height; row++)
         {
-            for (int j = 0; j <= i; j++)
+            for (int col = 0; col <= width; col++)
             {
-                positions.Add(new Vector2Int(j,-i));
+                int x = col + row * offsetXperRow-halfWidth - halfHeight*offsetXperRow;
+                int y = -row + halfHeight;
+                positions.Add(new Vector2Int(x,y));
             }
         }
         return positions;
     }
 
     ///<summary>십자 패턴</summary>
-    public static List<Vector2Int> CreateCross(int armLength)
+    public static List<Vector2Int> CreateCross(int armLength, int thickness)
     {
-        List<Vector2Int>positions = new List<Vector2Int>();
+        HashSet<Vector2Int> positionSet = new HashSet<Vector2Int>();
+        int halfThickness = thickness/2;
+        
         for (int x = -armLength; x <= armLength; x++)
         {
-            positions.Add(new Vector2Int(x,0));
-        }
-
-        for (int y = -armLength; y <= armLength; y++)
-        {
-            if (y != 0)
+            for (int y = -halfThickness; y <= halfThickness; y++)
             {
-                positions.Add(new Vector2Int(0,y));
+                positionSet.Add(new Vector2Int(x,y));
             }
         }
-        return positions;
+
+        for (int x = -halfThickness; x <= halfThickness; x++)
+        {
+            for (int y = -armLength; y<=armLength; y++)
+            {
+                positionSet.Add(new Vector2Int(x,y));
+            }
+        }
+        return new List<Vector2Int>(positionSet);
     }
 }

@@ -68,11 +68,19 @@ public class MapController : MonoBehaviour
             BossRoomSelector _bossRoomSelector = new BossRoomSelector();
 
             //기존 랜덤 맵 노드
-            _mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            //_mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
             
             //패턴으로 제작
+            //링패턴
             //List<Vector2Int> _pattern = MapPatternLibrary.CreateCircularRing(8,6,3);
-            //_mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            //피라미드
+            //List<Vector2Int> _pattern = MapPatternLibrary.CreatePyramid(6);
+            //십자가
+            List<Vector2Int> _pattern = MapPatternLibrary.CreateCross(6, 3);
+            //평행사변형
+            //List<Vector2Int> _pattern = MapPatternLibrary.CreateDiagonal(5,7);
+            
+            _mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
             
             
             //수정하지 않는 로직
