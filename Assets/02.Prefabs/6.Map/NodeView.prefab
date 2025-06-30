@@ -295,6 +295,7 @@ MonoBehaviour:
   _eventSprite: {fileID: 21300000, guid: c89abbac0f3822c41903246c4f68addf, type: 3}
   _startSprite: {fileID: 21300000, guid: a760b0e8f1f8be24e99a2f426232dfe7, type: 3}
   _bossSprite: {fileID: 21300000, guid: 9276f2088b1057b4487b22a2d7ed8a3b, type: 3}
+  _UnknownSprite: {fileID: 21300000, guid: 33593dd24ebfe2640b5a1c1ec96a156c, type: 3}
   _defaultColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
   _currentColor: {r: 0, g: 1, b: 0, a: 1}
   _availableColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

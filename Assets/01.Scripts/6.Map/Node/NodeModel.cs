@@ -8,11 +8,12 @@ using UnityEngine;
 /// </summary>
 public enum NodeType
 {
+    Unknown,
+    Start,
     Battle,
     Shop,
     Reward,
     Event,
-    Start,
     Boss
 }
 public class NodeModel

@@ -22,6 +22,7 @@ public class NodeView : MonoBehaviour
     [SerializeField] private Sprite _eventSprite;
     [SerializeField] private Sprite _startSprite;
     [SerializeField] private Sprite _bossSprite;
+    [SerializeField] private Sprite _UnknownSprite;
     
     
     [SerializeField] private Color _defaultColor = Color.gray;
@@ -43,7 +44,7 @@ public class NodeView : MonoBehaviour
         _onClick = onClick;
         transform.localPosition = pos;
         _button.onClick.AddListener(() => _onClick?.Invoke(_nodeModel));
-        SetupTypeDisplay(_nodeModel.Type);
+        SetType(_nodeModel.Type);
         SetDefault();
     }
 
@@ -85,7 +86,18 @@ public class NodeView : MonoBehaviour
         _backgroundImage.color = _defaultColor;
     }
 
-    public void SetupTypeDisplay(NodeType type)
+    public void SetType(NodeType type)
+    {
+        if (type == NodeType.Unknown)
+        {
+            _iconImage.sprite = _UnknownSprite;
+        }
+        else
+        {
+            _iconImage.sprite = SetupTypeDisplay(type);
+        }
+    }
+    public Sprite SetupTypeDisplay(NodeType type)
     {
         switch (type)
         {
@@ -110,6 +122,8 @@ public class NodeView : MonoBehaviour
             default: _iconImage.sprite = null;
                 break;
         }
+
+        return _iconImage.sprite;
     }
     
 }

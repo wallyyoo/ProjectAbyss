@@ -36,6 +36,9 @@ public class MapController : MonoBehaviour
     private Dictionary<int, NodeView> _nodeViews;
     private int _currentNodeId;
     private HashSet<int> _visitedNodes;
+    private INodeRevealStrategy _nodeRevealStrategy;
+    private int _previousRunCount;
+    private int _currentRunCount;
     
     
     private void Start()
@@ -43,6 +46,7 @@ public class MapController : MonoBehaviour
         SaveData save = SaveLoadManager.LoadGame();
         if (save != null)
         {
+            _previousRunCount = save.RunCount;
             _mapModel = new MapModel();
             foreach (var nd in save.Nodes)
             {
@@ -64,11 +68,12 @@ public class MapController : MonoBehaviour
         }
         else
         {
+            _previousRunCount = 0;
             NodeTypeAssigner _nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
             BossRoomSelector _bossRoomSelector = new BossRoomSelector();
 
             //기존 랜덤 맵 노드
-            //_mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            _mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
             
             //패턴으로 제작
             //링패턴
@@ -78,9 +83,9 @@ public class MapController : MonoBehaviour
             //십자가
             // List<Vector2Int> _pattern = MapPatternLibrary.CreateCross(6, 3);
             //평행사변형
-            List<Vector2Int> _pattern = MapPatternLibrary.CreateDiagonal(5,7);
+            //List<Vector2Int> _pattern = MapPatternLibrary.CreateDiagonal(5,7);
             
-            _mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            //_mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
             
             
             //수정하지 않는 로직
@@ -92,7 +97,8 @@ public class MapController : MonoBehaviour
                 Nodes = new List<NodeData>(),
                 Edges = new List<EdgeData>(),
                 CurrentNodeId = _currentNodeId,
-                VisitedNodeIds = new List<int>(_visitedNodes)
+                VisitedNodeIds = new List<int>(_visitedNodes),
+                RunCount = _currentRunCount
             };
             foreach (var node in _mapModel.Nodes)
             {
@@ -117,6 +123,8 @@ public class MapController : MonoBehaviour
             SaveLoadManager.SaveGame(toSave);
         }
         
+        _nodeRevealStrategy = new RunCountRevealStrategy(_mapModel,_previousRunCount);
+        _currentRunCount = _previousRunCount+1;
         RenderMap();
         UpdateCurrentLocationDisplay();
     }
@@ -154,6 +162,13 @@ public class MapController : MonoBehaviour
             
             NodeView view = Instantiate(_nodePrefab, _nodes);
             view.Initialize(node,pos,OnNodeClicked);
+            bool isReveal = _nodeRevealStrategy.ShouldReveal(node);
+            bool isVisited = _visitedNodes.Contains(node.Id);
+
+            NodeType displayType = (isVisited || isReveal)
+                ? node.Type
+                : NodeType.Unknown;
+            view.SetType(displayType);
             _nodeViews[node.Id] = view;
         }
         
@@ -195,12 +210,15 @@ public class MapController : MonoBehaviour
     private void OnNodeClicked(NodeModel nodeModel)
     {
         Debug.Log($"{nodeModel.Id}노드클릭됨, Type{nodeModel.Type}");
+        
         NodeModel currentNode = _mapModel.Nodes.Find(n=> n.Id == _currentNodeId);
         if (currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
         {
             _visitedNodes.Add(_currentNodeId);
             Debug.Log($"이동가능 : Node{_currentNodeId} -> Node{nodeModel.Id}");
             _currentNodeId = nodeModel.Id;
+            _visitedNodes.Add(_currentNodeId);
+            UpdateAllNodeIcons();
             UpdateCurrentLocationDisplay();
 
             var save = new SaveData
@@ -208,7 +226,8 @@ public class MapController : MonoBehaviour
                 Nodes = new List<NodeData>(),
                 Edges = new List<EdgeData>(),
                 CurrentNodeId = _currentNodeId,
-                VisitedNodeIds = new List<int>(_visitedNodes)
+                VisitedNodeIds = new List<int>(_visitedNodes),
+                RunCount = _currentRunCount
             };
             foreach (var node in _mapModel.Nodes)
             {
@@ -270,13 +289,31 @@ public class MapController : MonoBehaviour
         }
     }
 
-    public void OnMapNode()
+    private void UpdateAllNodeIcons()
     {
-        gameObject.SetActive(true);
-    }
+        foreach (KeyValuePair<int, NodeView> pair in _nodeViews)
+        {
+            int nodeId = pair.Key;
+            NodeView nodeView = pair.Value;
 
-    public void OffMapNode()
-    {
-        gameObject.SetActive(false);
+            NodeModel nodeModel = _mapModel.Nodes.Find(n => n.Id == nodeId);
+            bool isVisitied = _visitedNodes.Contains(nodeId);
+            bool isRevealed = _nodeRevealStrategy.ShouldReveal(nodeModel);
+            
+                
+            NodeType displayType = (isVisitied||isRevealed)
+                ? nodeModel.Type:NodeType.Unknown;
+            nodeView.SetType(displayType);
+        }
     }
+    
+    // public void OnMapNode()
+    // {
+    //     gameObject.SetActive(true);
+    // }
+    //
+    // public void OffMapNode()
+    // {
+    //     gameObject.SetActive(false);
+    // }
 }

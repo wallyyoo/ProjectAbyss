@@ -23,8 +23,9 @@ public class DeleteSave:MonoBehaviour
     {
         MapUi.enabled = false;
     }
+
+    //[Button("RunCountup")]
     
-        
     
         
 }
