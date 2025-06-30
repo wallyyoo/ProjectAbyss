@@ -17,6 +17,7 @@ public class DiceActor : MonoBehaviour
     [Header("주사위 스프라이트 출력용")]
     [SerializeField] private DiceSpriteController[] diceSpriteControllers;
 
+    
 
     private DiceHandModel model = new(); // 주사위 모델 인스턴스
     
@@ -49,7 +50,7 @@ public class DiceActor : MonoBehaviour
 
    public void OnClickRollAll()
    {
-       model.RollAll();    //모든 주사위 굴림
+      // model.RollAll();    //모든 주사위 굴림
        model.Evaluate();   //족보 계산
 
        view.UpdateDiceDisplay(model); // ui 갱신
@@ -110,16 +111,18 @@ public class DiceActor : MonoBehaviour
         var colorEffects = DiceColorEffecter.Analyze(model.DiceList);
 
         // 데미지 계산기 초기화
-        damageCalculator.Init(baseScore, multiplier, colorEffects, 0, 1f);
+        damageCalculator.Init(model.Info, model.Result, colorEffects, 0, 1f);
 
         // 최종 데미지 데이터 출력
         PlayerDamageData result = damageCalculator.GetPlayerDamageData();
+        int totalDisplayScore = (result.baseScore + result.bonusScore) * result.multiplier;
+        scoreEffectController?.PreviewHand(result.handName, totalDisplayScore, result.multiplier);// UI 미리보기 (점수 애니메이션)
+        
         Debug.Log($"[제출 완료] {result}");
 
         TurnManager.Instance.GetCounterReduction(result.counterDamageReduction);
 
-        // UI 미리보기 (점수 애니메이션)
-        scoreEffectController?.PreviewHand(info.name, baseScore * multiplier, multiplier);
+  
 
         //  플레이어에게 전달 (테스트)
         // testPlayer?.GetDamageFromCalculator(result); 
