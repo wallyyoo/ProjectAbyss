@@ -7,11 +7,15 @@ public class RunCountRevealStrategy : INodeRevealStrategy
 {
     private readonly int _runCount;
     private readonly HashSet<int> _revealNodeIds;
+    private readonly List<int> _highlightNodeIds = new();
+    private readonly List<(int,int)> _highlighEdges = new();
 
     public RunCountRevealStrategy(MapModel mapModel, int runCount)
     {
         _runCount = runCount;
         _revealNodeIds = ComputeRevealedNodes(mapModel);
+        if (_runCount >= 8)
+            ComputeHighlightPath(mapModel);
     }
 
     private HashSet<int> ComputeRevealedNodes(MapModel mapModel)
@@ -73,18 +77,66 @@ public class RunCountRevealStrategy : INodeRevealStrategy
                     || node.Type == NodeType.Shop
                     || node.Type == NodeType.Battle)
                     result.Add(node.Id);
-            var bossNodes = mapModel.Nodes.First(n => n.Type == NodeType.Battle);
+            var bossNodes = mapModel.Nodes.FirstOrDefault(n => n.Type == NodeType.Boss);
             result.Add(bossNodes.Id);
             return result;
         }
 
-        foreach (var node in mapModel.Nodes)
-            result.Add(node.Id);
+        if (_runCount >= 8)
+        {
+            foreach (var node in mapModel.Nodes)
+                result.Add(node.Id);
+        }
         return result;
     }
 
-    public bool ShouldReveal(NodeModel nodeModel)
+    private void ComputeHighlightPath(MapModel mapModel)
     {
-        return _revealNodeIds.Contains(nodeModel.Id);
+        int startId = mapModel.Nodes.First(n => n.Type == NodeType.Start).Id;
+        int bossId = mapModel.Nodes.First(n => n.Type == NodeType.Boss).Id;
+        
+        //BFS 최단경로
+        var parent = new Dictionary<int, int>();
+        var queue = new Queue<int>();
+        var visited = new HashSet<int> { startId };
+        queue.Enqueue(startId);
+        
+        while (queue.Count > 0)
+        {
+            int cur = queue.Dequeue();
+            if (cur == bossId) break;
+            var node = mapModel.Nodes.Find(n => n.Id == cur);
+            foreach (int nb in node.ConnectedNodeIds)
+            {
+                if (visited.Add(nb))
+                {
+                    parent[nb] = cur;
+                    queue.Enqueue(nb);
+                }
+            }
+        }
+
+        var path = new List<int>();
+        if (startId == bossId || parent.ContainsKey(bossId))
+        {
+            int crawl = bossId;
+            path.Add(crawl);
+            while (crawl != startId)
+            {
+                crawl = parent[crawl];
+                path.Add(crawl);
+            }
+            
+            path.Reverse();
+        }
+
+        _highlightNodeIds.AddRange(path);
+        for(int i = 0; i< path.Count - 1; i++)
+             _highlighEdges.Add((path[i], path[i + 1]));
     }
+    public bool ShouldReveal(NodeModel nodeModel) => _revealNodeIds.Contains(nodeModel.Id);
+    
+    public IEnumerable<int> GetHighlightedNodeIds() => _highlightNodeIds;
+
+    public IEnumerable<(int, int)> GetHighlightedEdges() => _highlighEdges;
 }

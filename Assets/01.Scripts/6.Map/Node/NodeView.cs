@@ -24,11 +24,13 @@ public class NodeView : MonoBehaviour
     [SerializeField] private Sprite _bossSprite;
     [SerializeField] private Sprite _UnknownSprite;
     
-    
+    [Header("Type Color")]
     [SerializeField] private Color _defaultColor = Color.gray;
     [SerializeField] private Color _currentColor = Color.green;
     [SerializeField] private Color _availableColor = Color.yellow;
     [SerializeField] private Color _visitedColor = Color.white;
+
+    [Header("Highlight")] [SerializeField] private GameObject _highlightBorder;
     
     private NodeModel _nodeModel;
     private Action<NodeModel> _onClick;
@@ -125,5 +127,10 @@ public class NodeView : MonoBehaviour
 
         return _iconImage.sprite;
     }
-    
+
+    public void SetHighlight(bool highlight)
+    {
+        if(_highlightBorder != null) 
+            _highlightBorder.SetActive(highlight);
+    }
 }

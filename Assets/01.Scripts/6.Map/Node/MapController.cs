@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.Linq;
 
 /// <summary>
 /// 맵 생성부터 클릭 처리, 노드 이동 로직을 총괄
@@ -37,6 +38,7 @@ public class MapController : MonoBehaviour
     
     private MapModel _mapModel;
     private Dictionary<int, NodeView> _nodeViews;
+    private Dictionary<(int,int),EdgeView> _edgeViews; 
     private int _currentNodeId;
     private HashSet<int> _visitedNodes;
     private INodeRevealStrategy _nodeRevealStrategy;
@@ -79,7 +81,7 @@ public class MapController : MonoBehaviour
             BossRoomSelector _bossRoomSelector = new BossRoomSelector();
 
             //기존 랜덤 맵 노드
-            _mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            //_mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
             
             //패턴으로 제작
             //링패턴
@@ -87,11 +89,11 @@ public class MapController : MonoBehaviour
             //피라미드
             //List<Vector2Int> _pattern = MapPatternLibrary.CreatePyramid(6);
             //십자가
-            // List<Vector2Int> _pattern = MapPatternLibrary.CreateCross(6, 3);
+             List<Vector2Int> _pattern = MapPatternLibrary.CreateCross(6, 4);
             //평행사변형
             //List<Vector2Int> _pattern = MapPatternLibrary.CreateDiagonal(5,7);
             
-            //_mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            _mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
             
             
             //수정하지 않는 로직
@@ -105,6 +107,7 @@ public class MapController : MonoBehaviour
         _currentRunCount = _previousRunCount+1;
         RenderMap();
         UpdateCurrentLocationDisplay();
+        ApplyHighlights();
     }
 
     /// <summary>
@@ -113,6 +116,7 @@ public class MapController : MonoBehaviour
     private void RenderMap()
     {
         _nodeViews = new Dictionary<int, NodeView>();
+        _edgeViews = new Dictionary<(int,int),EdgeView>();
         Dictionary<int,Vector2> screenPositions = new Dictionary<int, Vector2>();
         
         
@@ -150,27 +154,16 @@ public class MapController : MonoBehaviour
             _nodeViews[node.Id] = view;
         }
         
-        //랜덤노드에서 사용되던 시작점이 중앙에 위치하던 구조
-        //위의 로직을 사용하면 노드 전체의 좌우를 기준으로 중앙점을 찾아 화면중앙에 위치해줌
-        // foreach (NodeModel node in _mapModel.Nodes)
-        // {
-        //     float x = (node.GridPos.x - (_columns - 1) * 0.5f) * CellSize;
-        //     float y = (node.GridPos.y - (_rows - 1)*0.5f)* CellSize;
-        //     Vector2 pos = new Vector2(x, y);
-        //
-        //     screenPositions[node.Id] = pos;
-        //
-        //     NodeView view = Instantiate(_nodePrefab, transform);
-        //     view.Initialize(node, pos, OnNodeClicked);
-        //     _nodeViews[node.Id] = view;
-        // }
-
+        //엣지 생성
         foreach (EdgeModel edge in _mapModel.Edges)
         {
             Vector2 from =screenPositions[edge.FromNodeId];
             Vector2 to = screenPositions[edge.ToNodeId];
             EdgeView edgeView = Instantiate(_edgePrefab, _edges);
             edgeView.Initialize(from, to);
+            
+            _edgeViews[(edge.FromNodeId, edge.ToNodeId)] = edgeView;
+            _edgeViews[(edge.ToNodeId, edge.FromNodeId)] = edgeView;
         }
 
         foreach (NodeModel node in _mapModel.Nodes)
@@ -180,6 +173,14 @@ public class MapController : MonoBehaviour
         }
     }
 
+    private void ApplyHighlights()
+    {
+        foreach(int nodeId in _nodeRevealStrategy.GetHighlightedNodeIds())
+            _nodeViews[nodeId].SetHighlight(true);
+        foreach(var(from,to)in _nodeRevealStrategy.GetHighlightedEdges())
+           if(_edgeViews.TryGetValue((from,to),out var ev))
+               ev.SetHighlight(true);
+    }
     
     
     /// <summary>
@@ -289,6 +290,9 @@ public class MapController : MonoBehaviour
         }
         SaveLoadManager.SaveGame(save);
     }
+    
+    
+    
     // public void OnMapNode()
     // {
     //     gameObject.SetActive(true);

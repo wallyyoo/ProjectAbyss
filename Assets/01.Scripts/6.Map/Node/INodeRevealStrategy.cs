@@ -9,4 +9,12 @@ public interface INodeRevealStrategy
     /// </summary>
     /// <param name="nodeModel"></param>
     bool ShouldReveal(NodeModel nodeModel);
+
+    /// <summary>
+    /// 아이콘은 이미 다 보인 상태, 하이라이트 할 ID 리스트
+    /// </summary>
+    /// <returns></returns>
+    IEnumerable<int> GetHighlightedNodeIds();
+    
+    IEnumerable<(int fromNodeId, int toNodeId)> GetHighlightedEdges();
 }
