@@ -76,9 +76,9 @@ public class MapController : MonoBehaviour
             //피라미드
             //List<Vector2Int> _pattern = MapPatternLibrary.CreatePyramid(6);
             //십자가
-            List<Vector2Int> _pattern = MapPatternLibrary.CreateCross(6, 3);
+            // List<Vector2Int> _pattern = MapPatternLibrary.CreateCross(6, 3);
             //평행사변형
-            //List<Vector2Int> _pattern = MapPatternLibrary.CreateDiagonal(5,7);
+            List<Vector2Int> _pattern = MapPatternLibrary.CreateDiagonal(5,7);
             
             _mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
             

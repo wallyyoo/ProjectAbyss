@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using Unity.VisualScripting;
+
 
 /// <summary>
 /// 화면에 표시되는 노드 뷰. 클릭 이벤트를 MapController에 전달.
