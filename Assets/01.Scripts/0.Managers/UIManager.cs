@@ -2,11 +2,15 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using UnityEditor.Overlays;
 
 public class UIManager : Singleton<UIManager>
 {
-    // ==== 골드 ====
-    [UIBind("TopBar/Gold/GoldText")] private TextMeshProUGUI goldText;
+    // ==== 재화 (골드, 수정) ====
+    [UIBind("TopBar/UI_Currency/Gold/GoldText")] private TextMeshProUGUI goldText;
+    [UIBind("TopBar/UI_Currency/EnchantCore/EnchantCoreText")] private TextMeshProUGUI enchantCoreText;
+    [UIBind("TopBar/UI_Currency")] private RectTransform currencyPanel;
 
     // ==== 제한 ====
     [UIBind("TopBar/Constraint/Back/Image/ConstText")] private TextMeshProUGUI constText;
@@ -88,5 +92,32 @@ public class UIManager : Singleton<UIManager>
     public void UpdateGold(int currentGold)
     {
         goldText.text = $"{currentGold:N0}";
+        StartCoroutine(RebuildAfterDelay());
+    }
+
+    public void UpdateEnchantCore(int currentEchantCore)
+    {
+        enchantCoreText.text = $"{currentEchantCore:N0}";
+    }
+
+    /// <summary>
+    /// 재화 부분 갱신용
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator Start()
+    {
+        yield return new WaitForEndOfFrame();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(currencyPanel);
+    }
+
+    /// <summary>
+    /// 골드 리빌드 용
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator RebuildAfterDelay()
+    {
+        yield return null;
+        yield return null;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(currencyPanel);
     }
 }

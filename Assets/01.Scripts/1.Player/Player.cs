@@ -11,13 +11,9 @@ public class Player : MonoBehaviour
     [SerializeField] private PlayerData data;
     private PlayerProgress progress;
 
-    private TurnManager turnManager;
-    private UIManager uiManager;
-
     [Header("기초 정보")]
     [SerializeField] private TextMeshPro PlayerHP;
     private int currentHP;
-    private int damage;
 
     public bool IsAlive => currentHP > 0;
 
@@ -25,16 +21,14 @@ public class Player : MonoBehaviour
     {
         // progress = GetComponent<PlayerProgress>();
         // progress.Init(data);
-        turnManager = TurnManager.Instance;
-        uiManager = UIManager.Instance;
         // 강화 수치 적용된 progress.MaxHP 로 변경 예정
         currentHP = data.MaxHP;
-        UPdateHP();
+        UpdateHP();
     }
 
     private void OnEnable()
     {
-        turnManager.RegisterPlayer(this);
+        TurnManager.Instance.RegisterPlayer(this);
     }
 
     /// <summary>
@@ -46,7 +40,7 @@ public class Player : MonoBehaviour
         float result = damage * (1f - counterDamageReduction);
         currentHP -= Mathf.RoundToInt(result);
 
-        UPdateHP();
+        UpdateHP();
         Debug.Log($"{data.CharacterName}이(가) {damage} 데미지! 남은 체력: {currentHP}");
 
         if (currentHP <= 0)
@@ -55,8 +49,37 @@ public class Player : MonoBehaviour
         }
     }
 
-    void UPdateHP()
+    void UpdateHP()
     {
         PlayerHP.text = $"{currentHP}";
     }
+
+    //======================= 테스트 코드 =======================
+    // [Button("골드 증가")]
+    // void GetGold()
+    // {
+    //     currentGold += 1000;
+    //     uiManager.UpdateGold(currentGold);
+    // }
+
+    // [Button("골드 감소")]
+    // void SpendGold()
+    // {
+    //     currentGold -= 1000;
+    //     uiManager.UpdateGold(currentGold);
+    // }
+
+    // [Button("수정 증가")]
+    // void GetEnchantCore()
+    // {
+    //     currentCore += 1000;
+    //     uiManager.UpdateEnchantCore(currentCore);
+    // }
+
+    // [Button("수정 감소")]
+    // void SpendEnchantCore()
+    // {
+    //     currentCore -= 1000;
+    //     uiManager.UpdateEnchantCore(currentCore);
+    // }
 }
