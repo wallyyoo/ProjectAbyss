@@ -28,6 +28,9 @@ public class MapController : MonoBehaviour
     [SerializeField] private float _rewardWeight = 0.1f;
     [SerializeField] private float _eventWeight = 0.2f;
 
+    [Header("Debug")]
+    [SerializeField] private bool _useDebugRunCount = false;
+    [SerializeField] private int _debugRunCount = 0;
     //호출 하는 Action
     //public Action OnMapNodeAction = OnMapNode;
     //public Action OffMapNodeAction = OffMapNode;
@@ -44,9 +47,12 @@ public class MapController : MonoBehaviour
     private void Start()
     { 
         SaveData save = SaveLoadManager.LoadGame();
+        int storedRunCount = (save != null) ? save.RunCount : 0;
+        _previousRunCount = (_useDebugRunCount) ? _debugRunCount : storedRunCount;
+        
         if (save != null)
         {
-            _previousRunCount = save.RunCount;
+            //_previousRunCount = save.RunCount;
             _mapModel = new MapModel();
             foreach (var nd in save.Nodes)
             {
@@ -68,7 +74,7 @@ public class MapController : MonoBehaviour
         }
         else
         {
-            _previousRunCount = 0;
+           // _previousRunCount = 0;
             NodeTypeAssigner _nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
             BossRoomSelector _bossRoomSelector = new BossRoomSelector();
 

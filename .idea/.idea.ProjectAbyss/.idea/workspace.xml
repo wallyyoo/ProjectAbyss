@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="75a9aa63-600e-475a-b31d-5cc6c5bf82ca" name="변경" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectAbyss/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectAbyss/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/4.System/DeleteSave.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/4.System/DeleteSave.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/4.System/MapData.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/4.System/MapData.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/NodeModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/NodeModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/NodeView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/NodeView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/02.Prefabs/6.Map/NodeView.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/02.Prefabs/6.Map/NodeView.prefab" afterDir="false" />
-    </list>
+    <list default="true" id="75a9aa63-600e-475a-b31d-5cc6c5bf82ca" name="변경" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
