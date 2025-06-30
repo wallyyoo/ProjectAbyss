@@ -45,9 +45,9 @@ public class PlayerDamageCalculator : MonoBehaviour //플레이어 데미지 계
       {
           this.baseScore = baseScore;
           this.multiplier = multiplier;
-          this.colorEffects = effects ?? new();
-          this.extraFlatBonus = flatBonus;
-          this.bonusMultiplier = multiplierBonus;
+          colorEffects = effects ?? new();
+          extraFlatBonus = flatBonus;
+          bonusMultiplier = multiplierBonus;
   
           UpdateDamageData();
       }

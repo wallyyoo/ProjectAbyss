@@ -35,7 +35,7 @@ public static class DiceColorEffecter // 주사위 색상별 효과 분석
             {
                 DiceColor.Red => DiceColorType.Red,
                 DiceColor.Blue => DiceColorType.Blue,
-                DiceColor.Yellow => DiceColorType.Yellow,
+                DiceColor.Yello => DiceColorType.Yellow,
                 DiceColor.Black => DiceColorType.Black,
                 _ => throw new System.Exception($"지원하지 않는 색상: {color}")
             };

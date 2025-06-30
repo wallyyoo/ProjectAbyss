@@ -19,6 +19,7 @@ public class DiceHandModel  // 5개의 주사위 굴림, 족보 판정, 색상�
         {
             var model = new DiceModel();
             model.Init();
+            model.Roll(false);
             DiceList.Add(model);
         }
 
