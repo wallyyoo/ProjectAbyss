@@ -98,35 +98,7 @@ public class MapController : MonoBehaviour
             _currentNodeId = _mapModel.Nodes[0].Id;
             _visitedNodes = new HashSet<int>{_currentNodeId};
 
-            var toSave = new SaveData
-            {
-                Nodes = new List<NodeData>(),
-                Edges = new List<EdgeData>(),
-                CurrentNodeId = _currentNodeId,
-                VisitedNodeIds = new List<int>(_visitedNodes),
-                RunCount = _currentRunCount
-            };
-            foreach (var node in _mapModel.Nodes)
-            {
-                toSave.Nodes.Add(new NodeData
-                {
-                    Id = node.Id,
-                    Type = node.Type,
-                    X = node.GridPos.x,
-                    Y = node.GridPos.y, 
-                    ConndectedNodeIds = new List<int>(node.ConnectedNodeIds)
-                });
-            }
-
-            foreach (var ed in _mapModel.Edges)
-            {
-                toSave.Edges.Add(new EdgeData
-                {
-                        FromNodeId = ed.FromNodeId,
-                        ToNodeId = ed.ToNodeId 
-                });
-            }
-            SaveLoadManager.SaveGame(toSave);
+            SaveGameWithRunCount();
         }
         
         _nodeRevealStrategy = new RunCountRevealStrategy(_mapModel,_previousRunCount);
@@ -227,35 +199,7 @@ public class MapController : MonoBehaviour
             UpdateAllNodeIcons();
             UpdateCurrentLocationDisplay();
 
-            var save = new SaveData
-            {
-                Nodes = new List<NodeData>(),
-                Edges = new List<EdgeData>(),
-                CurrentNodeId = _currentNodeId,
-                VisitedNodeIds = new List<int>(_visitedNodes),
-                RunCount = _currentRunCount
-            };
-            foreach (var node in _mapModel.Nodes)
-            {
-                save.Nodes.Add(new NodeData
-                {
-                    Id = node.Id,
-                    Type = node.Type,
-                    X = node.GridPos.x,
-                    Y = node.GridPos.y, 
-                    ConndectedNodeIds = new List<int>(node.ConnectedNodeIds)
-                });
-            }
-
-            foreach (var ed in _mapModel.Edges)
-            {
-                save.Edges.Add(new EdgeData
-                {
-                    FromNodeId = ed.FromNodeId,
-                    ToNodeId = ed.ToNodeId 
-                });
-            }
-            SaveLoadManager.SaveGame(save);
+            SaveGameWithRunCount();
             
             _cameraSwitcher.SwitchTo(nodeModel.Type);
             
@@ -312,7 +256,39 @@ public class MapController : MonoBehaviour
             nodeView.SetType(displayType);
         }
     }
-    
+
+    private void SaveGameWithRunCount()
+    {
+        var save = new SaveData
+        {
+            Nodes = new List<NodeData>(),
+            Edges = new List<EdgeData>(),
+            CurrentNodeId = _currentNodeId,
+            VisitedNodeIds = new List<int>(_visitedNodes),
+            RunCount = _currentRunCount
+        };
+        foreach (var node in _mapModel.Nodes)
+        {
+            save.Nodes.Add(new NodeData
+            {
+                Id = node.Id,
+                Type = node.Type,
+                X = node.GridPos.x,
+                Y = node.GridPos.y, 
+                ConndectedNodeIds = new List<int>(node.ConnectedNodeIds)
+            });
+        }
+
+        foreach (var ed in _mapModel.Edges)
+        {
+            save.Edges.Add(new EdgeData
+            {
+                FromNodeId = ed.FromNodeId,
+                ToNodeId = ed.ToNodeId 
+            });
+        }
+        SaveLoadManager.SaveGame(save);
+    }
     // public void OnMapNode()
     // {
     //     gameObject.SetActive(true);
