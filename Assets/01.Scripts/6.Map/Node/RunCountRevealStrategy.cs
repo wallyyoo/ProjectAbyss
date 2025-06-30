@@ -2,93 +2,100 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using UnityEngine;
 
 public class RunCountRevealStrategy : INodeRevealStrategy
 {
-    private readonly int _runCount;
-    private readonly HashSet<int> _revealNodeIds;
-    private readonly List<int> _highlightNodeIds = new();
-    private readonly List<(int,int)> _highlighEdges = new();
+    private readonly HashSet<int> _revealNodeIds = new HashSet<int>();
+    private readonly List<int> _highlightedNodeIds = new List<int>();
+    private readonly List<(int,int)> _highlightedEdges = new List<(int,int)>();
 
-    public RunCountRevealStrategy(MapModel mapModel, int runCount)
+    public RunCountRevealStrategy(
+        MapModel mapModel,
+        int runCount,
+        int currentNodeId,
+        HashSet<int> visitedNodeIds)
     {
-        _runCount = runCount;
-        _revealNodeIds = ComputeRevealedNodes(mapModel);
-        if (_runCount >= 8)
+        foreach (int visited in visitedNodeIds)
+        {
+            _revealNodeIds.Add(visited);
+        }
+        
+        NodeModel currentNode = mapModel
+            .Nodes
+            .First(n => n.Id == currentNodeId);
+        List<NodeModel> neighbors = mapModel
+                                    .Nodes
+                                    .Where(n => currentNode.ConnectedNodeIds.Contains(n.Id)).ToList();
+       
+       
+        
+        if (runCount >= 2) // 2회차 : 회복 노드 ? 표시 제외
+        {
+            foreach (NodeModel neighbor in neighbors)
+            {
+                
+                if (neighbor.Type == NodeType.Reward) 
+                    _revealNodeIds.Add(neighbor.Id);
+            }
+            
+        }
+        
+        if (runCount >= 3) // 3회차 : 상점 노드 ? 표시 제외
+        {
+            foreach (NodeModel neighbor in neighbors)
+            {
+                
+                if (neighbor.Type == NodeType.Shop) 
+                    _revealNodeIds.Add(neighbor.Id);
+            }
+        }
+        
+        if (runCount >= 4)
+        {
+            List<NodeModel> battleNeighbors = neighbors
+                                              .Where(n => n.Type == NodeType.Battle)
+                                              .ToList();
+            int toRevealCount;
+            if (runCount == 4)
+            {
+                toRevealCount = Mathf.CeilToInt(battleNeighbors.Count()*0.3f);
+            }
+            else if (runCount == 5)
+            {
+                toRevealCount = Mathf.FloorToInt(battleNeighbors.Count()*0.6f);
+            }
+            else
+            {
+                toRevealCount = battleNeighbors.Count();
+            }
+            System.Random _random = new System.Random();
+            List<NodeModel> shuffled = battleNeighbors
+                .OrderBy(_ => _random.Next())
+                .ToList();
+            for (int i = 0; i < toRevealCount && i < shuffled.Count; i++)
+            {
+                _revealNodeIds.Add(shuffled[i].Id);
+            }
+        }
+        
+        if (runCount >= 7)
+        {
+            
+            NodeModel bossNode = mapModel.Nodes
+                                          .FirstOrDefault(n => n.Type == NodeType.Boss);
+            if(bossNode != null)
+                _revealNodeIds.Add(bossNode.Id);
+        }
+
+        if (runCount >= 8)
+        {
             ComputeHighlightPath(mapModel);
+        }
+        
     }
 
-    private HashSet<int> ComputeRevealedNodes(MapModel mapModel)
-    {
-        var result = new HashSet<int>();
 
-        if (_runCount <= 1) //1회차 : 모든노드 ? 표시
-        {
-            return result;
-        }
-        
-        if (_runCount == 2) // 2회차 : 회복 노드 ? 표시 제외
-        {
-            foreach(var node in mapModel.Nodes)
-                if (node.Type == NodeType.Reward) 
-                    result.Add(node.Id);
-            return result;
-        }
-        
-        if (_runCount == 3) // 3회차 : 상점 노드 ? 표시 제외
-        {
-            foreach (var node in mapModel.Nodes)
-                if (node.Type == NodeType.Reward || node.Type == NodeType.Shop)
-                    result.Add(node.Id);
-            return result;
-        }
-        
-        if (_runCount == 4 || _runCount == 5)
-        {
-            float ratio = (_runCount == 4) ? 0.3f : 0.6f;
-            var battleNodes = mapModel.Nodes
-                                      .Where(n => n.Type == NodeType.Battle)
-                                      .OrderBy(n => n.Id)
-                                      .ToList();
-            int countToReveal = (int)MathF.Ceiling(battleNodes.Count * ratio);
-            for(int i = 0; i < countToReveal; i++)
-                result.Add(battleNodes[i].Id);
-            
-            foreach (var node in mapModel.Nodes)
-                if (node.Type == NodeType.Reward || node.Type == NodeType.Shop)
-                    result.Add(node.Id);
-            
-            return result;
-        }
-        
-        if (_runCount == 6)
-        {
-            foreach (var node in mapModel.Nodes)
-                if (node.Type == NodeType.Reward
-                    || node.Type == NodeType.Shop
-                    || node.Type == NodeType.Battle)
-                    result.Add(node.Id);
-            return result;
-        }
-        if (_runCount == 7)
-        {
-            foreach (var node in mapModel.Nodes)
-                if (node.Type == NodeType.Reward
-                    || node.Type == NodeType.Shop
-                    || node.Type == NodeType.Battle)
-                    result.Add(node.Id);
-            var bossNodes = mapModel.Nodes.FirstOrDefault(n => n.Type == NodeType.Boss);
-            result.Add(bossNodes.Id);
-            return result;
-        }
-
-        if (_runCount >= 8)
-        {
-            foreach (var node in mapModel.Nodes)
-                result.Add(node.Id);
-        }
-        return result;
-    }
 
     private void ComputeHighlightPath(MapModel mapModel)
     {
@@ -96,47 +103,49 @@ public class RunCountRevealStrategy : INodeRevealStrategy
         int bossId = mapModel.Nodes.First(n => n.Type == NodeType.Boss).Id;
         
         //BFS 최단경로
-        var parent = new Dictionary<int, int>();
-        var queue = new Queue<int>();
-        var visited = new HashSet<int> { startId };
+        Queue<int> queue = new Queue<int>();
+        Dictionary<int, int> parent = new Dictionary<int, int>();
+        HashSet<int> visited = new HashSet<int> { startId };
+
         queue.Enqueue(startId);
-        
+
         while (queue.Count > 0)
         {
-            int cur = queue.Dequeue();
-            if (cur == bossId) break;
-            var node = mapModel.Nodes.Find(n => n.Id == cur);
-            foreach (int nb in node.ConnectedNodeIds)
+            int current = queue.Dequeue();
+            if (current == bossId) break;
+
+            NodeModel node = mapModel.Nodes.First(n => n.Id == current);
+            foreach (int neighborId in node.ConnectedNodeIds)
             {
-                if (visited.Add(nb))
+                if (visited.Add(neighborId))
                 {
-                    parent[nb] = cur;
-                    queue.Enqueue(nb);
+                    parent[neighborId] = current;
+                    queue.Enqueue(neighborId);
                 }
             }
         }
 
-        var path = new List<int>();
-        if (startId == bossId || parent.ContainsKey(bossId))
+        List<int> path = new List<int>();
+        if (parent.ContainsKey(bossId) || startId == bossId)
         {
             int crawl = bossId;
-            path.Add(crawl);
-            while (crawl != startId)
+            while (true)
             {
-                crawl = parent[crawl];
                 path.Add(crawl);
+                if (crawl == startId) break;
+                crawl = parent[crawl];
             }
-            
             path.Reverse();
         }
 
-        _highlightNodeIds.AddRange(path);
-        for(int i = 0; i< path.Count - 1; i++)
-             _highlighEdges.Add((path[i], path[i + 1]));
+        _highlightedNodeIds.AddRange(path);
+        for(int i = 0; i < path.Count-1; i++)
+            _highlightedEdges.Add((path[i], path[i+1]));
     }
+
     public bool ShouldReveal(NodeModel nodeModel) => _revealNodeIds.Contains(nodeModel.Id);
     
-    public IEnumerable<int> GetHighlightedNodeIds() => _highlightNodeIds;
+    public IEnumerable<int> GetHighlightedNodeIds() => _highlightedNodeIds;
 
-    public IEnumerable<(int, int)> GetHighlightedEdges() => _highlighEdges;
+    public IEnumerable<(int, int)> GetHighlightedEdges() => _highlightedEdges;
 }

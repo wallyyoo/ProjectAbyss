@@ -1,9 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using System;
-using System.Linq;
+
 
 /// <summary>
 /// 맵 생성부터 클릭 처리, 노드 이동 로직을 총괄
@@ -41,6 +38,7 @@ public class MapController : MonoBehaviour
     private Dictionary<(int,int),EdgeView> _edgeViews; 
     private int _currentNodeId;
     private HashSet<int> _visitedNodes;
+    
     private INodeRevealStrategy _nodeRevealStrategy;
     private int _previousRunCount;
     private int _currentRunCount;
@@ -54,7 +52,6 @@ public class MapController : MonoBehaviour
         
         if (save != null)
         {
-            //_previousRunCount = save.RunCount;
             _mapModel = new MapModel();
             foreach (var nd in save.Nodes)
             {
@@ -76,7 +73,6 @@ public class MapController : MonoBehaviour
         }
         else
         {
-           // _previousRunCount = 0;
             NodeTypeAssigner _nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
             BossRoomSelector _bossRoomSelector = new BossRoomSelector();
 
@@ -102,9 +98,14 @@ public class MapController : MonoBehaviour
 
             SaveGameWithRunCount();
         }
+        _currentRunCount = _previousRunCount + 1;
         
-        _nodeRevealStrategy = new RunCountRevealStrategy(_mapModel,_previousRunCount);
-        _currentRunCount = _previousRunCount+1;
+        _nodeRevealStrategy = new RunCountRevealStrategy(
+            _mapModel,
+            _currentRunCount,
+            _currentNodeId,
+            _visitedNodes);
+        
         RenderMap();
         UpdateCurrentLocationDisplay();
         ApplyHighlights();
@@ -175,11 +176,21 @@ public class MapController : MonoBehaviour
 
     private void ApplyHighlights()
     {
-        foreach(int nodeId in _nodeRevealStrategy.GetHighlightedNodeIds())
+        foreach(NodeView nv in _nodeViews.Values)
+            nv.SetHighlight(false);
+        foreach(EdgeView ev in _edgeViews.Values)
+            ev.SetHighlight(false);
+
+        foreach (int nodeId in _nodeRevealStrategy.GetHighlightedNodeIds())
+        {
             _nodeViews[nodeId].SetHighlight(true);
-        foreach(var(from,to)in _nodeRevealStrategy.GetHighlightedEdges())
-           if(_edgeViews.TryGetValue((from,to),out var ev))
-               ev.SetHighlight(true);
+        }
+
+        foreach ((int from, int to) in _nodeRevealStrategy.GetHighlightedEdges())
+        {
+            if(_edgeViews.TryGetValue((from,to), out EdgeView edgeView))
+                edgeView.SetHighlight(true);
+        }
     }
     
     
@@ -191,26 +202,33 @@ public class MapController : MonoBehaviour
         Debug.Log($"{nodeModel.Id}노드클릭됨, Type{nodeModel.Type}");
         
         NodeModel currentNode = _mapModel.Nodes.Find(n=> n.Id == _currentNodeId);
-        if (currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
-        {
-            _visitedNodes.Add(_currentNodeId);
-            Debug.Log($"이동가능 : Node{_currentNodeId} -> Node{nodeModel.Id}");
-            _currentNodeId = nodeModel.Id;
-            _visitedNodes.Add(_currentNodeId);
-            UpdateAllNodeIcons();
-            UpdateCurrentLocationDisplay();
-
-            SaveGameWithRunCount();
-            
-            _cameraSwitcher.SwitchTo(nodeModel.Type);
-            
-            //전환되고 꺼짐, 씬 종료 되면 다시 켜짐
-            //this.gameObject.SetActive(false);
-        }
-        else
-        {
-            Debug.Log("이동불가");
-        }
+        if (!currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
+            return;
+        
+        //1)이전 노드 방문 처리
+        _visitedNodes.Add(_currentNodeId);
+        Debug.Log($"이동가능 : Node{_currentNodeId} -> Node{nodeModel.Id}");
+        
+        //2)현재 위치 갱신
+        _currentNodeId = nodeModel.Id;
+        
+        //3)새 위치도 즉시 방문 처리
+        _visitedNodes.Add(_currentNodeId);
+        
+        _nodeRevealStrategy = new RunCountRevealStrategy(
+            _mapModel,
+            _currentRunCount,
+            _currentNodeId,
+            _visitedNodes);
+        
+        
+        UpdateAllNodeIcons();
+        UpdateCurrentLocationDisplay();
+        ApplyHighlights();
+        SaveGameWithRunCount();
+        _cameraSwitcher.SwitchTo(nodeModel.Type);
+        
+        
         //TODO: 현재위치 확인 -> 이동가능 여부 검사 -> 씬전환 or 전투 호출 등
     }
     private void UpdateCurrentLocationDisplay()
@@ -290,16 +308,4 @@ public class MapController : MonoBehaviour
         }
         SaveLoadManager.SaveGame(save);
     }
-    
-    
-    
-    // public void OnMapNode()
-    // {
-    //     gameObject.SetActive(true);
-    // }
-    //
-    // public void OffMapNode()
-    // {
-    //     gameObject.SetActive(false);
-    // }
 }
