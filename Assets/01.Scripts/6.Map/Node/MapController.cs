@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 
@@ -59,15 +60,15 @@ public class MapController : MonoBehaviour
     private INodeRevealStrategy _nodeRevealStrategy;
     
     
+    /// <summary>
+    /// 스테이지 시작 시 호출
+    /// </summary>
     private void InitializeStage()
     { 
         //저장된 데이터 로드
         SaveData save = SaveLoadManager.LoadGame();
         
-        
-        
-        
-        if (save != null) // 저장된게 있을 때 -> restorefromsave
+        if (save != null) // 저장된게 있을 때
         {
             RestoreMapFromSave(save);   
         }
@@ -107,11 +108,18 @@ public class MapController : MonoBehaviour
     {
         InitializeStage();
     }
+    
     /// <summary>
     /// 맵 모델에 따라 뷰를 인스턴스화
     /// </summary>
     private void RenderMap()
     {
+        if (_nodeViews != null)
+        {
+            foreach(var nv in _nodeViews.Values) Destroy(nv.gameObject);
+            foreach(var ev in _edgeViews.Values) Destroy(ev.gameObject);
+        }
+        
         _nodeViews = new Dictionary<int, NodeView>();
         _edgeViews = new Dictionary<(int,int),EdgeView>();
         Dictionary<int,Vector2> screenPositions = new Dictionary<int, Vector2>();
@@ -172,6 +180,7 @@ public class MapController : MonoBehaviour
 
     private void OnBossCleared()
     {
+        SaveLoadManager.DeleteSave();
         InitializeStage();
     }
     private void ApplyHighlights()
@@ -373,4 +382,11 @@ public class MapController : MonoBehaviour
         }
         SaveLoadManager.SaveGame(save);
     }
+
+    [Button("bossclear")]
+    private void bossclear()
+    {
+        OnBossCleared();
+    }
+    
 }
