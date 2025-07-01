@@ -75,6 +75,16 @@ public class CustomMapGenerator : IMapGenerator
         return mapModel;
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    // 2) 외곽 노드 필터링
     private void FilterOutNodes(MapModel model, Dictionary<Vector2Int, NodeModel> posMap, int keepPercent)
     {
         if (posMap == null || posMap.Count <= 1)
@@ -84,18 +94,23 @@ public class CustomMapGenerator : IMapGenerator
                               .Select(p => p.x * p.x + p.y * p.y);
         if (!distances.Any())
             return;
-
+        
+        //최대 거리 계산
         int maxDist2 = distances.Max();
         
+        //외곽 노드 리스트
         List<NodeModel> outerNodes = model.Nodes
                                           .Where(n => n.GridPos.x * n.GridPos.x
                                               + n.GridPos.y * n.GridPos.y == maxDist2)
                                           .ToList();
+        
+        //최소 유지 개수
         int minKeep = outerNodes.Count * keepPercent / 100;
         int removeCount = outerNodes.Count - minKeep;
         if (removeCount <= 0)
             return;
         
+        //랜덤으로 제거
         outerNodes
             .OrderBy(_ => _random.Next())
             .Take(removeCount)
@@ -113,6 +128,7 @@ public class CustomMapGenerator : IMapGenerator
         posMap.Remove(node.GridPos);
     }
 
+    // 3) 인접 리스트 구성
     private Dictionary<NodeModel, List<NodeModel>> BuildAdjacency(
         Dictionary<Vector2Int, NodeModel> posMap)
     {

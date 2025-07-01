@@ -65,7 +65,7 @@ public class MapController : MonoBehaviour
         int storedRunCount = (save != null) ? save.RunCount : 0;
         _previousRunCount = (_useDebugRunCount) ? _debugRunCount : storedRunCount;
         
-        if (save != null)
+        if (save != null) // 저장된게 있을 때 -> restorefromsave
         {
             _mapModel = new MapModel();
             foreach (var nd in save.Nodes)
@@ -86,37 +86,9 @@ public class MapController : MonoBehaviour
             _currentNodeId = save.CurrentNodeId;
             _visitedNodes = new HashSet<int>(save.VisitedNodeIds);
         }
-        else
+        else // 저장된게 없을 때 새로 만들기
         {
-            NodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
-            BossRoomSelector bossRoomSelector = new BossRoomSelector();
-            IMapGenerator generator;
-            if (_mapType == MapType.Grid)
-            {
-                generator = new GridMapGenerator(_columns, _rows,_roomCount, nodeTypeAssigner, bossRoomSelector);
-            }
-            else
-            {
-                List<Vector2Int> pattern = GetCustomPattern(); 
-                generator = new CustomMapGenerator(pattern, nodeTypeAssigner, bossRoomSelector);
-            }
-
-            _mapModel = generator.Generate(0, 0, 0);
-            // //기존 랜덤 맵 노드
-            // //_mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
-            //
-            // //패턴으로 제작
-            // //링패턴
-            // //List<Vector2Int> _pattern = MapPatternLibrary.CreateCircularRing(8,6,3);
-            // //피라미드
-            // //List<Vector2Int> _pattern = MapPatternLibrary.CreatePyramid(6);
-            // //십자가
-            //  List<Vector2Int> _pattern = MapPatternLibrary.CreateCross(6, 4);
-            // //평행사변형
-            // //List<Vector2Int> _pattern = MapPatternLibrary.CreateDiagonal(5,7);
-            //
-            // _mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
-            
+            CreateMapModel();
             
             //수정하지 않는 로직
             _currentNodeId = _mapModel.Nodes[0].Id;
@@ -236,6 +208,47 @@ public class MapController : MonoBehaviour
                 return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
         }
     }
+
+    /// <summary>
+    /// MapType에 따라 Grid 혹은 Custom - Type 생성기 호출
+    /// </summary>
+    private void CreateMapModel()
+    {
+        NodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
+        BossRoomSelector bossRoomSelector = new BossRoomSelector();
+        IMapGenerator generator;
+        if (_mapType == MapType.Grid)
+        {
+            generator = new GridMapGenerator(_columns, _rows,_roomCount, nodeTypeAssigner, bossRoomSelector);
+        }
+        else
+        {
+            List<Vector2Int> pattern = GetCustomPattern(); 
+            generator = new CustomMapGenerator(pattern, nodeTypeAssigner, bossRoomSelector);
+        }
+
+        _mapModel = generator.Generate(0, 0, 0);
+    }
+
+    private void RestoreMapFromSave(SaveData dsave)
+    {
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     /// <summary>
     /// 유효한이동인지 검사 후 로직 수행
