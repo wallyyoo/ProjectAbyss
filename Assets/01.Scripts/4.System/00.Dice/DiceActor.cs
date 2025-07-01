@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System.Collections;
 public class DiceActor : MonoBehaviour
 {
     [Header("모델, 뷰 UI 연결용")]
@@ -69,9 +70,13 @@ public class DiceActor : MonoBehaviour
             model.Reroll(index); // 선택한 주사위만 리롤
             model.Evaluate();   // 리롤한 걸 다시 족보 계산
             
-            diceSpriteControllers[index].SetSprite(model.DiceList[index].Color, model.DiceList[index].Value); //이미지
+            DiceColorType color = model.DiceList[index].Color;
+            diceSpriteControllers[index].PlayRollAnimation(color); // DiceRollAnimator 호출
 
-            view.UpdateDiceDisplay(model);
+            // 👉 일정 시간(애니메이션 끝날 시점)에 이미지 변경
+            StartCoroutine(DelayUpdateDiceSprite(index, color, model.DiceList[index].Value));
+
+            // UI 나머지는 즉시 갱신 가능
             view.UpdateHandInfo(model.Info);
             view.UpdateRerollCount(model.MaxRerolls - model.CurrentRerolls);
         }
@@ -85,6 +90,14 @@ public class DiceActor : MonoBehaviour
         }
     }
 
+    
+    
+    private IEnumerator DelayUpdateDiceSprite(int index, DiceColorType color, int value)
+    {
+        yield return new WaitForSeconds(0.5f);
+        diceSpriteControllers[index].SetSprite(color, value);
+    }
+    
     public void OnClickSubmit()
     {
         if (model.HasSubmitted)

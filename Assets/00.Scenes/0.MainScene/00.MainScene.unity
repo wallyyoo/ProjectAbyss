@@ -2948,8 +2948,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cad98d2e40ea8d439559a4f93e71f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentHP: 100
-  rerollBonus: 0
 --- !u!4 &502208893
 Transform:
   m_ObjectHideFlags: 0
@@ -8337,10 +8335,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a805bd848592ddb4cadf9450f3afc019, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageCalculator: {fileID: 857875376}
-  scoreEffectController: {fileID: 0}
-  bonusFlatDamage: 0
-  bonusMultiplier: 1
 --- !u!1 &1452400590
 GameObject:
   m_ObjectHideFlags: 0
