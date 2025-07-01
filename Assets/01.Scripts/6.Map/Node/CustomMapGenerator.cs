@@ -107,14 +107,24 @@ public class CustomMapGenerator : IMapGenerator
 
     private void FilterOutNodes(MapModel model, Dictionary<Vector2Int, NodeModel> posMap, int keepPercent)
     {
-        int maxDist2 = posMap.Keys.Max(p=>p.x*p.x +p.y*p.y);
+        if (posMap == null || posMap.Count <= 1)
+            return;
 
+        var distances = posMap.Keys
+                              .Select(p => p.x * p.x + p.y * p.y);
+        if (!distances.Any())
+            return;
+
+        int maxDist2 = distances.Max();
+        
         List<NodeModel> outerNodes = model.Nodes
                                           .Where(n => n.GridPos.x * n.GridPos.x
                                               + n.GridPos.y * n.GridPos.y == maxDist2)
                                           .ToList();
         int minKeep = outerNodes.Count * keepPercent / 100;
         int removeCount = outerNodes.Count - minKeep;
+        if (removeCount <= 0)
+            return;
         
         outerNodes
             .OrderBy(_ => _random.Next())
@@ -167,18 +177,27 @@ public class CustomMapGenerator : IMapGenerator
         var stack = new Stack<NodeModel>();
         
 
-        NodeModel start = model.Nodes.Find(n => n.Id == 0);
+        NodeModel start = model.Nodes.FirstOrDefault(n => n.Id == 0&&adj.ContainsKey(n));
+        if (start == null && adj.Count > 0)
+        {
+            start = adj.Keys.First();
+        }
+
+        if (start == null)
+        {
+            return edges;
+        }
         visited.Add(start);
         stack.Push(start);
 
         while (stack.Count > 0)
         {
             NodeModel current = stack.Pop();
-            
-            List<NodeModel> neighbors = adj[current]
-                .OrderBy(_ => _random.Next()).ToList();
 
-            foreach (NodeModel neighbor in neighbors)
+            if (!adj.TryGetValue(current, out var neighbors))
+                continue;
+            
+            foreach (NodeModel neighbor in neighbors.OrderBy(_=>_random.Next()))
             {
                 if (!visited.Contains(neighbor))
                 {
