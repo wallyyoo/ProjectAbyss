@@ -7,41 +7,36 @@ using UnityEngine;
 /// </summary>
 public class MapController : MonoBehaviour
 {
-    [SerializeField] private NodeView _nodePrefab;
-    [SerializeField] private EdgeView _edgePrefab;
-
-    [SerializeField] private Transform _edges;
-    [SerializeField] private Transform _nodes;
-    
-    [SerializeField] private CameraSwitcher _cameraSwitcher;
-
-    //맵 생성 파라미터
+    [Header("Generator Settings")]
+    [SerializeField] private MapType _mapType = MapType.Grid;
     [SerializeField] private int _columns = 9;
     [SerializeField] private int _rows = 5;
     [SerializeField] private int _roomCount = 12;
     [SerializeField] private float CellSize = 150f;
-    
     [SerializeField] private float _battleWeight = 1.0f;
     [SerializeField] private float _shopWeight = 0.2f;
     [SerializeField] private float _rewardWeight = 0.1f;
     [SerializeField] private float _eventWeight = 0.2f;
-
+    
     [Header("Debug")]
     [SerializeField] private bool _useDebugRunCount = false;
     [SerializeField] private int _debugRunCount = 0;
-    //호출 하는 Action
-    //public Action OnMapNodeAction = OnMapNode;
-    //public Action OffMapNodeAction = OffMapNode;
+    
+    [Header("References")]
+    [SerializeField] private NodeView _nodePrefab;
+    [SerializeField] private EdgeView _edgePrefab;
+    [SerializeField] private Transform _edges;
+    [SerializeField] private Transform _nodes;
+    [SerializeField] private CameraSwitcher _cameraSwitcher;
     
     private MapModel _mapModel;
     private Dictionary<int, NodeView> _nodeViews;
     private Dictionary<(int,int),EdgeView> _edgeViews; 
-    private int _currentNodeId;
     private HashSet<int> _visitedNodes;
-    
-    private INodeRevealStrategy _nodeRevealStrategy;
+    private int _currentNodeId;
     private int _previousRunCount;
     private int _currentRunCount;
+    private INodeRevealStrategy _nodeRevealStrategy;
     
     
     private void Start()
