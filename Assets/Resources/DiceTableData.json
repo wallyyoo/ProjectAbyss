@@ -1,0 +1,542 @@
+[
+  {
+    "handType": "MonoRoll",
+    "level": 0,
+    "score": 200,
+    "multiplier": 8,
+    "total": 1600,
+    "manaCount": 0,
+    "add_score": 0,
+    "add_multiplier": 0
+  },
+  {
+    "handType": "MonoRoll",
+    "level": 1,
+    "score": 350,
+    "multiplier": 14,
+    "total": 4900,
+    "manaCount": 195,
+    "add_score": 150,
+    "add_multiplier": 6
+  },
+  {
+    "handType": "MonoRoll",
+    "level": 2,
+    "score": 505,
+    "multiplier": 21,
+    "total": 10605,
+    "manaCount": 425,
+    "add_score": 155,
+    "add_multiplier": 7
+  },
+  {
+    "handType": "MonoRoll",
+    "level": 3,
+    "score": 665,
+    "multiplier": 29,
+    "total": 19285,
+    "manaCount": 770,
+    "add_score": 160,
+    "add_multiplier": 8
+  },
+  {
+    "handType": "MonoRoll",
+    "level": 4,
+    "score": 830,
+    "multiplier": 38,
+    "total": 31540,
+    "manaCount": 1260,
+    "add_score": 165,
+    "add_multiplier": 9
+  },
+  {
+    "handType": "MonoRoll",
+    "level": 5,
+    "score": 1000,
+    "multiplier": 47,
+    "total": 47000,
+    "manaCount": 1875,
+    "add_score": 170,
+    "add_multiplier": 9
+  },
+  {
+    "handType": "FourDice",
+    "level": 0,
+    "score": 120,
+    "multiplier": 6,
+    "total": 720,
+    "manaCount": 0,
+    "add_score": 0,
+    "add_multiplier": 0
+  },
+  {
+    "handType": "FourDice",
+    "level": 1,
+    "score": 180,
+    "multiplier": 9,
+    "total": 1620,
+    "manaCount": 225,
+    "add_score": 60,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "FourDice",
+    "level": 2,
+    "score": 220,
+    "multiplier": 12,
+    "total": 2640,
+    "manaCount": 460,
+    "add_score": 40,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "FourDice",
+    "level": 3,
+    "score": 250,
+    "multiplier": 15,
+    "total": 3750,
+    "manaCount": 875,
+    "add_score": 30,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "FourDice",
+    "level": 4,
+    "score": 290,
+    "multiplier": 18,
+    "total": 5220,
+    "manaCount": 910,
+    "add_score": 40,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "FourDice",
+    "level": 5,
+    "score": 340,
+    "multiplier": 21,
+    "total": 7140,
+    "manaCount": 995,
+    "add_score": 50,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "LargeStraight",
+    "level": 0,
+    "score": 100,
+    "multiplier": 5,
+    "total": 500,
+    "manaCount": 0,
+    "add_score": 0,
+    "add_multiplier": 0
+  },
+  {
+    "handType": "LargeStraight",
+    "level": 1,
+    "score": 150,
+    "multiplier": 8,
+    "total": 1200,
+    "manaCount": 200,
+    "add_score": 50,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "LargeStraight",
+    "level": 2,
+    "score": 190,
+    "multiplier": 11,
+    "total": 2090,
+    "manaCount": 435,
+    "add_score": 40,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "LargeStraight",
+    "level": 3,
+    "score": 220,
+    "multiplier": 14,
+    "total": 3080,
+    "manaCount": 855,
+    "add_score": 30,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "LargeStraight",
+    "level": 4,
+    "score": 255,
+    "multiplier": 17,
+    "total": 4335,
+    "manaCount": 905,
+    "add_score": 35,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "LargeStraight",
+    "level": 5,
+    "score": 295,
+    "multiplier": 20,
+    "total": 5900,
+    "manaCount": 985,
+    "add_score": 40,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "SmallStraight",
+    "level": 0,
+    "score": 80,
+    "multiplier": 5,
+    "total": 400,
+    "manaCount": 0,
+    "add_score": 0,
+    "add_multiplier": 0
+  },
+  {
+    "handType": "SmallStraight",
+    "level": 1,
+    "score": 130,
+    "multiplier": 8,
+    "total": 1040,
+    "manaCount": 135,
+    "add_score": 50,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "SmallStraight",
+    "level": 2,
+    "score": 170,
+    "multiplier": 11,
+    "total": 1870,
+    "manaCount": 305,
+    "add_score": 40,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "SmallStraight",
+    "level": 3,
+    "score": 210,
+    "multiplier": 14,
+    "total": 2940,
+    "manaCount": 640,
+    "add_score": 40,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "SmallStraight",
+    "level": 4,
+    "score": 250,
+    "multiplier": 17,
+    "total": 4250,
+    "manaCount": 690,
+    "add_score": 40,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "SmallStraight",
+    "level": 5,
+    "score": 290,
+    "multiplier": 20,
+    "total": 5800,
+    "manaCount": 755,
+    "add_score": 40,
+    "add_multiplier": 3
+  },
+  {
+    "handType": "FullHouse",
+    "level": 0,
+    "score": 75,
+    "multiplier": 4,
+    "total": 300,
+    "manaCount": 0,
+    "add_score": 0,
+    "add_multiplier": 0
+  },
+  {
+    "handType": "FullHouse",
+    "level": 1,
+    "score": 105,
+    "multiplier": 6,
+    "total": 630,
+    "manaCount": 95,
+    "add_score": 30,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "FullHouse",
+    "level": 2,
+    "score": 125,
+    "multiplier": 8,
+    "total": 1000,
+    "manaCount": 200,
+    "add_score": 20,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "FullHouse",
+    "level": 3,
+    "score": 145,
+    "multiplier": 10,
+    "total": 1450,
+    "manaCount": 430,
+    "add_score": 20,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "FullHouse",
+    "level": 4,
+    "score": 175,
+    "multiplier": 12,
+    "total": 2100,
+    "manaCount": 415,
+    "add_score": 30,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "FullHouse",
+    "level": 5,
+    "score": 205,
+    "multiplier": 14,
+    "total": 2870,
+    "manaCount": 425,
+    "add_score": 30,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "Triple",
+    "level": 0,
+    "score": 70,
+    "multiplier": 4,
+    "total": 280,
+    "manaCount": 0,
+    "add_score": 0,
+    "add_multiplier": 0
+  },
+  {
+    "handType": "Triple",
+    "level": 1,
+    "score": 95,
+    "multiplier": 6,
+    "total": 570,
+    "manaCount": 90,
+    "add_score": 25,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "Triple",
+    "level": 2,
+    "score": 115,
+    "multiplier": 8,
+    "total": 920,
+    "manaCount": 190,
+    "add_score": 20,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "Triple",
+    "level": 3,
+    "score": 135,
+    "multiplier": 10,
+    "total": 1350,
+    "manaCount": 420,
+    "add_score": 20,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "Triple",
+    "level": 4,
+    "score": 155,
+    "multiplier": 12,
+    "total": 1860,
+    "manaCount": 385,
+    "add_score": 20,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "Triple",
+    "level": 5,
+    "score": 185,
+    "multiplier": 14,
+    "total": 2590,
+    "manaCount": 405,
+    "add_score": 30,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "TwoPair",
+    "level": 0,
+    "score": 60,
+    "multiplier": 2,
+    "total": 120,
+    "manaCount": 0,
+    "add_score": 0,
+    "add_multiplier": 0
+  },
+  {
+    "handType": "TwoPair",
+    "level": 1,
+    "score": 80,
+    "multiplier": 3,
+    "total": 240,
+    "manaCount": 80,
+    "add_score": 20,
+    "add_multiplier": 1
+  },
+  {
+    "handType": "TwoPair",
+    "level": 2,
+    "score": 100,
+    "multiplier": 4,
+    "total": 400,
+    "manaCount": 175,
+    "add_score": 20,
+    "add_multiplier": 1
+  },
+  {
+    "handType": "TwoPair",
+    "level": 3,
+    "score": 120,
+    "multiplier": 5,
+    "total": 600,
+    "manaCount": 400,
+    "add_score": 20,
+    "add_multiplier": 1
+  },
+  {
+    "handType": "TwoPair",
+    "level": 4,
+    "score": 140,
+    "multiplier": 6,
+    "total": 840,
+    "manaCount": 370,
+    "add_score": 20,
+    "add_multiplier": 1
+  },
+  {
+    "handType": "TwoPair",
+    "level": 5,
+    "score": 160,
+    "multiplier": 7,
+    "total": 1120,
+    "manaCount": 370,
+    "add_score": 20,
+    "add_multiplier": 1
+  },
+  {
+    "handType": "OnePair",
+    "level": 0,
+    "score": 40,
+    "multiplier": 2,
+    "total": 80,
+    "manaCount": 0,
+    "add_score": 0,
+    "add_multiplier": 0
+  },
+  {
+    "handType": "OnePair",
+    "level": 1,
+    "score": 55,
+    "multiplier": 3,
+    "total": 165,
+    "manaCount": 20,
+    "add_score": 15,
+    "add_multiplier": 1
+  },
+  {
+    "handType": "OnePair",
+    "level": 2,
+    "score": 75,
+    "multiplier": 4,
+    "total": 300,
+    "manaCount": 45,
+    "add_score": 20,
+    "add_multiplier": 1
+  },
+  {
+    "handType": "OnePair",
+    "level": 3,
+    "score": 100,
+    "multiplier": 6,
+    "total": 600,
+    "manaCount": 120,
+    "add_score": 25,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "OnePair",
+    "level": 4,
+    "score": 130,
+    "multiplier": 8,
+    "total": 1040,
+    "manaCount": 155,
+    "add_score": 30,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "OnePair",
+    "level": 5,
+    "score": 165,
+    "multiplier": 10,
+    "total": 1650,
+    "manaCount": 195,
+    "add_score": 35,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "HighDice",
+    "level": 0,
+    "score": 30,
+    "multiplier": 1,
+    "total": 30,
+    "manaCount": 0,
+    "add_score": 0,
+    "add_multiplier": 0
+  },
+  {
+    "handType": "HighDice",
+    "level": 1,
+    "score": 45,
+    "multiplier": 2,
+    "total": 90,
+    "manaCount": 10,
+    "add_score": 15,
+    "add_multiplier": 1
+  },
+  {
+    "handType": "HighDice",
+    "level": 2,
+    "score": 65,
+    "multiplier": 4,
+    "total": 260,
+    "manaCount": 20,
+    "add_score": 20,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "HighDice",
+    "level": 3,
+    "score": 90,
+    "multiplier": 6,
+    "total": 540,
+    "manaCount": 40,
+    "add_score": 25,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "HighDice",
+    "level": 4,
+    "score": 115,
+    "multiplier": 8,
+    "total": 920,
+    "manaCount": 55,
+    "add_score": 25,
+    "add_multiplier": 2
+  },
+  {
+    "handType": "HighDice",
+    "level": 5,
+    "score": 140,
+    "multiplier": 10,
+    "total": 1400,
+    "manaCount": 70,
+    "add_score": 25,
+    "add_multiplier": 2
+  }
+]
