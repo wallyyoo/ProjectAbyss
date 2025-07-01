@@ -7,16 +7,36 @@ using UnityEngine;
 /// </summary>
 public class MapController : MonoBehaviour
 {
-    [Header("Generator Settings")]
+    [Header("Map Generator Settings")]
     [SerializeField] private MapType _mapType = MapType.Grid;
+    [SerializeField] private PatternType _patternType = PatternType.CircularRing;
+    
+    
+    [Header("Grid Parameter")]
     [SerializeField] private int _columns = 9;
     [SerializeField] private int _rows = 5;
     [SerializeField] private int _roomCount = 12;
     [SerializeField] private float CellSize = 150f;
+
+    [Header("Pattern Parameter")]
+    [SerializeField] private int _ringHorizontalRadius;
+    [SerializeField] private int _ringVerticalRadius;
+    [SerializeField] private int _ringThickness;
+    [SerializeField] private int _pyramidLevels;
+    [SerializeField] private int _diagonalWidth;
+    [SerializeField] private int _diagonalHeight;
+    [SerializeField] private int _diagonalOffset;
+    [SerializeField] private int _crossArmLength;
+    [SerializeField] private int _crossThickness;
+    
+    
+    [Header("Node 확률 가중치")]
     [SerializeField] private float _battleWeight = 1.0f;
     [SerializeField] private float _shopWeight = 0.2f;
     [SerializeField] private float _rewardWeight = 0.1f;
     [SerializeField] private float _eventWeight = 0.2f;
+    
+    
     
     [Header("Debug")]
     [SerializeField] private bool _useDebugRunCount = false;
