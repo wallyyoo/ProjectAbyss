@@ -66,37 +66,7 @@ public class CustomMapGenerator : IMapGenerator
             b.ConnectedNodeIds.Add(a.Id);
         }
         
-        
-        // Vector2Int[] dirs =
-        // {
-        //     new Vector2Int(1, 0),
-        //     new Vector2Int(-1, 0),
-        //     new Vector2Int(0, 1),
-        //     new Vector2Int(0, -1)
-        //
-        // };
-        // foreach (KeyValuePair<Vector2Int, NodeModel> entry in positionNodeMap)
-        // {
-        //     Vector2Int currentPosition = entry.Key;
-        //     NodeModel currentNode = entry.Value;
-        //
-        //     foreach (Vector2Int dir in dirs)
-        //     {
-        //         Vector2Int neighborPosition = currentPosition + dir;
-        //         if (positionNodeMap.ContainsKey(neighborPosition))
-        //         {
-        //             NodeModel neighborNode = positionNodeMap[neighborPosition];
-        //             if (currentNode.Id < neighborNode.Id)
-        //             {
-        //                 currentNode.ConnectedNodeIds.Add(neighborNode.Id);
-        //                 neighborNode.ConnectedNodeIds.Add(currentNode.Id);
-        //                 mapModel.Edges.Add(
-        //                     new EdgeModel(currentNode.Id, neighborNode.Id));
-        //                 
-        //             }
-        //         }
-        //     }
-        // }
+       
         int startNodeId = mapModel.Nodes[0].Id;
         mapModel.Nodes.Find(n => n.Id == startNodeId).Type = NodeType.Start;
         int bossNodeId = _bossRoomSelector.SelectBoss(mapModel.Nodes, startNodeId);
