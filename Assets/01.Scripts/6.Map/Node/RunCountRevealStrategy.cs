@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using UnityEngine;
 
 public class RunCountRevealStrategy : INodeRevealStrategy
@@ -9,13 +7,18 @@ public class RunCountRevealStrategy : INodeRevealStrategy
     private readonly HashSet<int> _revealNodeIds = new HashSet<int>();
     private readonly List<int> _highlightedNodeIds = new List<int>();
     private readonly List<(int,int)> _highlightedEdges = new List<(int,int)>();
+    private readonly NodeType _targetType;
 
     public RunCountRevealStrategy(
         MapModel mapModel,
         int runCount,
         int currentNodeId,
-        HashSet<int> visitedNodeIds)
+        HashSet<int> visitedNodeIds,
+        NodeType targetType
+        )
+        
     {
+        _targetType = targetType;
         foreach (int visited in visitedNodeIds)
         {
             _revealNodeIds.Add(visited);
@@ -35,7 +38,7 @@ public class RunCountRevealStrategy : INodeRevealStrategy
             foreach (NodeModel neighbor in neighbors)
             {
                 
-                if (neighbor.Type == NodeType.Reward) 
+                if (neighbor.Type == NodeType.Rest) 
                     _revealNodeIds.Add(neighbor.Id);
             }
             
@@ -82,10 +85,10 @@ public class RunCountRevealStrategy : INodeRevealStrategy
         if (runCount >= 7)
         {
             
-            NodeModel bossNode = mapModel.Nodes
-                                          .FirstOrDefault(n => n.Type == NodeType.Boss);
-            if(bossNode != null)
-                _revealNodeIds.Add(bossNode.Id);
+            NodeModel targetNode = mapModel.Nodes
+                                          .FirstOrDefault(n => n.Type == _targetType);
+            if(targetNode != null)
+                _revealNodeIds.Add(targetNode.Id);
         }
 
         if (runCount >= 8)
@@ -99,9 +102,21 @@ public class RunCountRevealStrategy : INodeRevealStrategy
 
     private void ComputeHighlightPath(MapModel mapModel)
     {
-        int startId = mapModel.Nodes.First(n => n.Type == NodeType.Start).Id;
-        int bossId = mapModel.Nodes.First(n => n.Type == NodeType.Boss).Id;
+        NodeModel startNode = mapModel.Nodes.FirstOrDefault(n => n.Type == NodeType.Start);
+        if (startNode == null)
+        {
+            Debug.LogError("ComputHighlighPath 실패: Start노드가 없음");
+            return;
+        }
         
+        NodeModel targetNode = mapModel.Nodes.FirstOrDefault(n=>n.Type == _targetType);
+        if (targetNode == null)
+        {
+            Debug.LogError($"ComputHighlighPath 실패: {_targetType}노드가 없음");
+            return;
+        }
+        int startId = startNode.Id;
+        int targetId = targetNode.Id;
         //BFS 최단경로
         Queue<int> queue = new Queue<int>();
         Dictionary<int, int> parent = new Dictionary<int, int>();
@@ -112,7 +127,7 @@ public class RunCountRevealStrategy : INodeRevealStrategy
         while (queue.Count > 0)
         {
             int current = queue.Dequeue();
-            if (current == bossId) break;
+            if (current == targetId) break;
 
             NodeModel node = mapModel.Nodes.First(n => n.Id == current);
             foreach (int neighborId in node.ConnectedNodeIds)
@@ -126,9 +141,9 @@ public class RunCountRevealStrategy : INodeRevealStrategy
         }
 
         List<int> path = new List<int>();
-        if (parent.ContainsKey(bossId) || startId == bossId)
+        if (parent.ContainsKey(targetId) || startId == targetId)
         {
-            int crawl = bossId;
+            int crawl = targetId;
             while (true)
             {
                 path.Add(crawl);
@@ -139,8 +154,10 @@ public class RunCountRevealStrategy : INodeRevealStrategy
         }
 
         _highlightedNodeIds.AddRange(path);
-        for(int i = 0; i < path.Count-1; i++)
+        for (int i = 0; i < path.Count - 1; i++)
+        {
             _highlightedEdges.Add((path[i], path[i+1]));
+        }
     }
 
     public bool ShouldReveal(NodeModel nodeModel) => _revealNodeIds.Contains(nodeModel.Id);

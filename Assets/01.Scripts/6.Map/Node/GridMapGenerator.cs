@@ -11,15 +11,15 @@ public class GridMapGenerator : IMapGenerator
     private readonly int _rows;
     private readonly int _roomCount;
     private readonly INodeTypeAssigner _nodeTypeAssigner;
-    private readonly IBossRoomSelector _bossRoomSelector;
+    private readonly IFarthestRoomSelector _farthestRoomSelector;
 
-    public GridMapGenerator(int columns, int rows, int roomCount, INodeTypeAssigner nodeTypeAssigner, IBossRoomSelector bossRoomSelector)
+    public GridMapGenerator(int columns, int rows, int roomCount, INodeTypeAssigner nodeTypeAssigner, IFarthestRoomSelector farthestRoomSelector)
     {
         _columns = columns;
         _rows = rows;
         _roomCount = roomCount;
         _nodeTypeAssigner = nodeTypeAssigner;
-        _bossRoomSelector = bossRoomSelector;
+        _farthestRoomSelector = farthestRoomSelector;
     }
     
 
@@ -101,9 +101,9 @@ public class GridMapGenerator : IMapGenerator
             }
         }
         int startNodeId = mapModel.Nodes[0].Id;
-        int bossNodeId = _bossRoomSelector.SelectBoss(mapModel.Nodes,startNodeId);
+        int bossNodeId = _farthestRoomSelector.SelectFarthestRoom(mapModel.Nodes,startNodeId);
         var bossNode = mapModel.Nodes.Find(n => n.Id == bossNodeId);
-        bossNode.Type = NodeType.Boss;
+        bossNode.Type = NodeType.Move;
         return mapModel;
     }
 }

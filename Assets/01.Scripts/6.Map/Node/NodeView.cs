@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-
 /// <summary>
 /// 화면에 표시되는 노드 뷰. 클릭 이벤트를 MapController에 전달.
 /// </summary>
@@ -16,13 +15,15 @@ public class NodeView : MonoBehaviour
     [SerializeField] private Image _indicatorPrefab; // 이동가능 연결 부분 표시
     
     [Header("Type Icons")]
+    [SerializeField] private Sprite _UnknownSprite;
+    [SerializeField] private Sprite _startSprite;
     [SerializeField] private Sprite _battleSprite;
     [SerializeField] private Sprite _shopSprite;
-    [SerializeField] private Sprite _rewardSprite;
+    [SerializeField] private Sprite _restSprite;
     [SerializeField] private Sprite _eventSprite;
-    [SerializeField] private Sprite _startSprite;
+    [SerializeField] private Sprite _moveSprite;
+    [SerializeField] private Sprite _EmptySprite;
     [SerializeField] private Sprite _bossSprite;
-    [SerializeField] private Sprite _UnknownSprite;
     
     [Header("Type Color")]
     [SerializeField] private Color _defaultColor = Color.gray;
@@ -103,20 +104,23 @@ public class NodeView : MonoBehaviour
     {
         switch (type)
         {
+            case NodeType.Start: 
+                _iconImage.sprite = _startSprite;
+                break;
             case NodeType.Battle:
                 _iconImage.sprite = _battleSprite;
                 break;
             case NodeType.Shop:
                 _iconImage.sprite = _shopSprite;
                 break;
-            case NodeType.Reward: 
-                _iconImage.sprite = _rewardSprite;
+            case NodeType.Rest: 
+                _iconImage.sprite = _restSprite;
                 break;
             case NodeType.Event: 
                 _iconImage.sprite = _eventSprite;
                 break;
-            case NodeType.Start: 
-                _iconImage.sprite = _startSprite;
+            case NodeType.Move:
+                _iconImage.sprite = _moveSprite;
                 break;
             case NodeType.Boss: 
                 _iconImage.sprite = _bossSprite;

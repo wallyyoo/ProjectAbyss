@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -6,14 +5,15 @@ public class NodeTypeAssigner : INodeTypeAssigner
 {
     private Dictionary<NodeType, float> _weights;
 
-    public NodeTypeAssigner(float battleWeight, float shopWeight, float rewardWeight, float eventWeight)
+    public NodeTypeAssigner(float battleWeight, float shopWeight, float restWeight, float eventWeight, float emptyWeight)
     {
         _weights = new Dictionary<NodeType, float>
         {
             { NodeType.Battle, battleWeight },
             { NodeType.Shop, shopWeight },
-            { NodeType.Reward, rewardWeight },
-            { NodeType.Event, eventWeight }
+            { NodeType.Rest, restWeight },
+            { NodeType.Event, eventWeight },
+            {NodeType.Empty, emptyWeight }
         };
     }
     public NodeType AssignType(int currentRoomCount, int maxRoomCount)

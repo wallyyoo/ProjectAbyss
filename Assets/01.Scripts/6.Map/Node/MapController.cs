@@ -32,10 +32,11 @@ public class MapController : MonoBehaviour
     
     
     [Header("Node 확률 가중치")]
-    [SerializeField] private float _battleWeight = 1.0f;
-    [SerializeField] private float _shopWeight = 0.2f;
-    [SerializeField] private float _rewardWeight = 0.1f;
+    [SerializeField] private float _battleWeight = 0.15f;
+    [SerializeField] private float _shopWeight = 0.1f;
+    [SerializeField] private float _restWeight = 0.125f;
     [SerializeField] private float _eventWeight = 0.2f;
+    [SerializeField] private float _emptyWeight = 0.4f;
     
     
     
@@ -95,7 +96,8 @@ public class MapController : MonoBehaviour
             _mapModel,
             _currentRunCount,
             _currentNodeId,
-            _visitedNodes);
+            _visitedNodes
+            , NodeType.Move);
         
         // 5)화면 렌더링
         RenderMap();
@@ -225,17 +227,17 @@ public class MapController : MonoBehaviour
     /// </summary>
     private void CreateMapModel()
     {
-        NodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
-        BossRoomSelector bossRoomSelector = new BossRoomSelector();
+        NodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _restWeight, _eventWeight, _emptyWeight);
+        FarthestRoomSelector farthestRoomSelector = new FarthestRoomSelector();
         IMapGenerator generator;
         if (_mapType == MapType.Grid)
         {
-            generator = new GridMapGenerator(_columns, _rows,_roomCount, nodeTypeAssigner, bossRoomSelector);
+            generator = new GridMapGenerator(_columns, _rows,_roomCount, nodeTypeAssigner, farthestRoomSelector);
         }
         else
         {
             List<Vector2Int> pattern = GetCustomPattern(); 
-            generator = new CustomMapGenerator(pattern, nodeTypeAssigner, bossRoomSelector);
+            generator = new CustomMapGenerator(pattern, nodeTypeAssigner, farthestRoomSelector);
         }
 
         _mapModel = generator.Generate(0, 0, 0);
@@ -293,7 +295,8 @@ public class MapController : MonoBehaviour
             _mapModel,
             _currentRunCount,
             _currentNodeId,
-            _visitedNodes);
+            _visitedNodes
+            , NodeType.Move);
         
         
         UpdateAllNodeIcons();
