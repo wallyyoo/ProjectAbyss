@@ -48,8 +48,8 @@ public class PlayerDamageCalculator : MonoBehaviour //플레이어 데미지 계
         this.baseScore = handInfo.baseScore;
         this.multiplier = handInfo.multiplier;
         this.colorEffects = effects ?? new();
-        this.extraFlatBonus = flatBonus;
-        this.bonusMultiplier = multiplierBonus;
+       // this.extraFlatBonus = flatBonus;
+       // this.bonusMultiplier = multiplierBonus;
 
         UpdateDamageData(result.ScoringValues, handInfo.name);
     }
@@ -73,7 +73,8 @@ public class PlayerDamageCalculator : MonoBehaviour //플레이어 데미지 계
         // 최종 데미지 계산 공식
         int bonusScore = scoringValues.Sum() * 2;
         int attackScore = (baseScore + bonusScore) * multiplier;
-        float finalAttackScore = (attackScore + extraFlatBonus) * bonusMultiplier * result.redMultiplier;
+        float finalAttackScore = attackScore* result.redMultiplier;
+       // float finalAttackScore = (attackScore + extraFlatBonus) * bonusMultiplier * result.redMultiplier;
         
         result.finalDamage = Mathf.RoundToInt(finalAttackScore);
         
