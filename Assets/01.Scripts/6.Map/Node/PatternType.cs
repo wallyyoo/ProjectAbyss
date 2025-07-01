@@ -6,6 +6,6 @@ public enum PatternType
 {
     CircularRing,
     Pyramid,
-    Cross,
-    Diagonal
+    Diagonal,
+    Cross
 }

@@ -88,23 +88,34 @@ public class MapController : MonoBehaviour
         }
         else
         {
-            NodeTypeAssigner _nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
-            BossRoomSelector _bossRoomSelector = new BossRoomSelector();
+            NodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
+            BossRoomSelector bossRoomSelector = new BossRoomSelector();
+            IMapGenerator generator;
+            if (_mapType == MapType.Grid)
+            {
+                generator = new GridMapGenerator(_columns, _rows,_roomCount, nodeTypeAssigner, bossRoomSelector);
+            }
+            else
+            {
+                List<Vector2Int> pattern = GetCustomPattern(); 
+                generator = new CustomMapGenerator(pattern, nodeTypeAssigner, bossRoomSelector);
+            }
 
-            //기존 랜덤 맵 노드
-            //_mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
-            
-            //패턴으로 제작
-            //링패턴
-            //List<Vector2Int> _pattern = MapPatternLibrary.CreateCircularRing(8,6,3);
-            //피라미드
-            //List<Vector2Int> _pattern = MapPatternLibrary.CreatePyramid(6);
-            //십자가
-             List<Vector2Int> _pattern = MapPatternLibrary.CreateCross(6, 4);
-            //평행사변형
-            //List<Vector2Int> _pattern = MapPatternLibrary.CreateDiagonal(5,7);
-            
-            _mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            _mapModel = generator.Generate(0, 0, 0);
+            // //기존 랜덤 맵 노드
+            // //_mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            //
+            // //패턴으로 제작
+            // //링패턴
+            // //List<Vector2Int> _pattern = MapPatternLibrary.CreateCircularRing(8,6,3);
+            // //피라미드
+            // //List<Vector2Int> _pattern = MapPatternLibrary.CreatePyramid(6);
+            // //십자가
+            //  List<Vector2Int> _pattern = MapPatternLibrary.CreateCross(6, 4);
+            // //평행사변형
+            // //List<Vector2Int> _pattern = MapPatternLibrary.CreateDiagonal(5,7);
+            //
+            // _mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
             
             
             //수정하지 않는 로직
@@ -207,7 +218,24 @@ public class MapController : MonoBehaviour
                 edgeView.SetHighlight(true);
         }
     }
-    
+
+    private List<Vector2Int> GetCustomPattern()
+    {
+        switch (_patternType)
+        {
+            case PatternType.CircularRing:
+                return MapPatternLibrary.CreateCircularRing(_ringHorizontalRadius, _ringVerticalRadius,_ringThickness);
+            case PatternType.Pyramid:
+                return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
+            case PatternType.Diagonal:
+                return MapPatternLibrary.CreateDiagonal(_diagonalWidth, _diagonalHeight,_diagonalOffset);
+            case PatternType.Cross:
+                return MapPatternLibrary.CreateCross(_crossArmLength,_crossThickness);
+            default:
+                Debug.LogWarning($"Unknown PatternType{_patternType}, defaulting to Pyramid");
+                return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
+        }
+    }
     
     /// <summary>
     /// 유효한이동인지 검사 후 로직 수행
