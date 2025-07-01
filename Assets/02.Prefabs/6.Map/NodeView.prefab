@@ -365,13 +365,15 @@ MonoBehaviour:
   _backgroundImage: {fileID: 4142120152541116298}
   _iconImage: {fileID: 925902824771356664}
   _indicatorPrefab: {fileID: 1221275309272609591, guid: 0b54cb69a6bdfff4c864aad8241d83eb, type: 3}
+  _UnknownSprite: {fileID: 21300000, guid: 33593dd24ebfe2640b5a1c1ec96a156c, type: 3}
+  _startSprite: {fileID: 21300000, guid: a760b0e8f1f8be24e99a2f426232dfe7, type: 3}
   _battleSprite: {fileID: 21300000, guid: bc2eac3c2dc039743ae741666e403846, type: 3}
   _shopSprite: {fileID: 21300000, guid: 4a04881cb7b590f4a8af2b833d50e385, type: 3}
-  _rewardSprite: {fileID: 21300000, guid: 39d5c0cafb751034f833a91fa6dcf62b, type: 3}
+  _restSprite: {fileID: 21300000, guid: c95c29eef1db40d4cb670e1a8b22e4e9, type: 3}
   _eventSprite: {fileID: 21300000, guid: c89abbac0f3822c41903246c4f68addf, type: 3}
-  _startSprite: {fileID: 21300000, guid: a760b0e8f1f8be24e99a2f426232dfe7, type: 3}
+  _moveSprite: {fileID: 21300000, guid: c95c29eef1db40d4cb670e1a8b22e4e9, type: 3}
+  _emptySprite: {fileID: 21300000, guid: 1f136671398607d46abe2d059344367e, type: 3}
   _bossSprite: {fileID: 21300000, guid: 9276f2088b1057b4487b22a2d7ed8a3b, type: 3}
-  _UnknownSprite: {fileID: 21300000, guid: 33593dd24ebfe2640b5a1c1ec96a156c, type: 3}
   _defaultColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
   _currentColor: {r: 0, g: 1, b: 0, a: 1}
   _availableColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}

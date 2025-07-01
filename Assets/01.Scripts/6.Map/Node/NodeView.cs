@@ -22,7 +22,7 @@ public class NodeView : MonoBehaviour
     [SerializeField] private Sprite _restSprite;
     [SerializeField] private Sprite _eventSprite;
     [SerializeField] private Sprite _moveSprite;
-    [SerializeField] private Sprite _EmptySprite;
+    [SerializeField] private Sprite _emptySprite;
     [SerializeField] private Sprite _bossSprite;
     
     [Header("Type Color")]
@@ -125,7 +125,7 @@ public class NodeView : MonoBehaviour
             case NodeType.Boss: 
                 _iconImage.sprite = _bossSprite;
                 break;
-            default: _iconImage.sprite = null;
+            default: _iconImage.sprite = _emptySprite;
                 break;
         }
 

@@ -72,7 +72,8 @@ public class MapController : MonoBehaviour
         
         if (save != null) // 저장된게 있을 때
         {
-            RestoreMapFromSave(save);   
+            RestoreMapFromSave(save);
+            
         }
         else // 저장된게 없을 때 새로 만들기
         {
@@ -102,6 +103,7 @@ public class MapController : MonoBehaviour
             , NodeType.Move);
         
         // 5)화면 렌더링
+        
         RenderMap();
         UpdateCurrentLocationDisplay();
         ApplyHighlights();
@@ -111,6 +113,11 @@ public class MapController : MonoBehaviour
     private void Start()
     {
         InitializeStage();
+        NodeModel currentNode = _mapModel.Nodes.FirstOrDefault(n => n.Id == _currentNodeId);
+        if (currentNode != null)
+        {
+            _cameraSwitcher.SwitchTo(currentNode.Type);
+        }
     }
     
     /// <summary>
