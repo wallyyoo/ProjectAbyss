@@ -59,56 +59,54 @@ public class MapController : MonoBehaviour
     private INodeRevealStrategy _nodeRevealStrategy;
     
     
-    private void Start()
+    private void InitializeStage()
     { 
+        //저장된 데이터 로드
         SaveData save = SaveLoadManager.LoadGame();
-        int storedRunCount = (save != null) ? save.RunCount : 0;
-        _previousRunCount = (_useDebugRunCount) ? _debugRunCount : storedRunCount;
+        
+        
+        
         
         if (save != null) // 저장된게 있을 때 -> restorefromsave
         {
-            _mapModel = new MapModel();
-            foreach (var nd in save.Nodes)
-            {
-                var node = new NodeModel(
-                    nd.Id,
-                    nd.Type,
-                    new Vector2Int(nd.X, nd.Y)
-                    );
-                node.ConnectedNodeIds.AddRange(nd.ConndectedNodeIds);
-                _mapModel.Nodes.Add(node);
-            }
-
-            foreach (var ed in save.Edges)
-            {
-                _mapModel.Edges.Add(new EdgeModel(ed.FromNodeId, ed.ToNodeId));
-            }
-            _currentNodeId = save.CurrentNodeId;
-            _visitedNodes = new HashSet<int>(save.VisitedNodeIds);
+            RestoreMapFromSave(save);   
         }
         else // 저장된게 없을 때 새로 만들기
         {
+            _previousRunCount = _useDebugRunCount
+                ? _debugRunCount
+                : 0;
+            
+            //2) MapModel설정
             CreateMapModel();
             
-            //수정하지 않는 로직
+            //3) 최초 위치, 방문 초기화
             _currentNodeId = _mapModel.Nodes[0].Id;
             _visitedNodes = new HashSet<int>{_currentNodeId};
-
+            
             SaveGameWithRunCount();
         }
+        
         _currentRunCount = _previousRunCount + 1;
         
+        //4) Reveal 전략 생성
         _nodeRevealStrategy = new RunCountRevealStrategy(
             _mapModel,
             _currentRunCount,
             _currentNodeId,
             _visitedNodes);
         
+        // 5)화면 렌더링
         RenderMap();
         UpdateCurrentLocationDisplay();
         ApplyHighlights();
+        
     }
 
+    private void Start()
+    {
+        InitializeStage();
+    }
     /// <summary>
     /// 맵 모델에 따라 뷰를 인스턴스화
     /// </summary>
@@ -172,6 +170,10 @@ public class MapController : MonoBehaviour
         }
     }
 
+    private void OnBossCleared()
+    {
+        InitializeStage();
+    }
     private void ApplyHighlights()
     {
         foreach(NodeView nv in _nodeViews.Values)
@@ -230,25 +232,32 @@ public class MapController : MonoBehaviour
         _mapModel = generator.Generate(0, 0, 0);
     }
 
-    private void RestoreMapFromSave(SaveData dsave)
+    private void RestoreMapFromSave(SaveData save)
     {
-        
+        //RunCount 설정
+        _previousRunCount = _useDebugRunCount
+            ? _debugRunCount
+            : save.RunCount;
+            
+        _mapModel = new MapModel();
+        foreach (var nd in save.Nodes)
+        {
+            var node = new NodeModel(
+                nd.Id,
+                nd.Type,
+                new Vector2Int(nd.X, nd.Y)
+            );
+            node.ConnectedNodeIds.AddRange(nd.ConndectedNodeIds);
+            _mapModel.Nodes.Add(node);
+        }
+
+        foreach (var ed in save.Edges)
+        {
+            _mapModel.Edges.Add(new EdgeModel(ed.FromNodeId, ed.ToNodeId));
+        }
+        _currentNodeId = save.CurrentNodeId;
+        _visitedNodes = new HashSet<int>(save.VisitedNodeIds);
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     /// <summary>
     /// 유효한이동인지 검사 후 로직 수행
