@@ -4,13 +4,13 @@ using System.Linq;
 
 public class PlayerDamageCalculator : MonoBehaviour //플레이어 데미지 계산기 
 {
-    [Header("기본 주사위 능력치")] public int baseScore;
+    [Header("기본 주사위 능력치")] 
+	public int baseScore;
     public int multiplier;
 
-    [Header("임시 보너스 능력치 조절")] // 테스트용 
-    private int extraFlatBonus;
-
-    private float bonusMultiplier;
+  // [Header("임시 보너스 능력치 조절")] // 테스트용 
+  // private int extraFlatBonus;
+  // private float bonusMultiplier;
 
     private List<DiceColorEffect> colorEffects = new(); // 색상효과 리스트
 
