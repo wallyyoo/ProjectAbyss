@@ -7,16 +7,16 @@ using UnityEngine;
 public class CustomMapGenerator : IMapGenerator
 {
     private readonly INodeTypeAssigner _nodeTypeAssigner;
-    private readonly IFarthestRoomSelector _farthestRoomSelector;
+    //private readonly IFarthestRoomSelector _farthestRoomSelector;
     private readonly List<Vector2Int> _gridPositions;
     
     System.Random _random = new System.Random();
-    public CustomMapGenerator(List<Vector2Int> gridPositions, INodeTypeAssigner nodeTypeAssigner,
-        IFarthestRoomSelector farthestRoomSelector)
+    public CustomMapGenerator(List<Vector2Int> gridPositions, INodeTypeAssigner nodeTypeAssigner)
+        //IFarthestRoomSelector farthestRoomSelector)
     {
         _gridPositions = gridPositions;
         _nodeTypeAssigner = nodeTypeAssigner;
-        _farthestRoomSelector = farthestRoomSelector;
+        //_farthestRoomSelector = farthestRoomSelector;
     }
 
     public MapModel Generate(int unsuedDepth, int unused1, int unused2)
@@ -67,10 +67,10 @@ public class CustomMapGenerator : IMapGenerator
         }
         
        
-        int startNodeId = mapModel.Nodes[0].Id;
-        mapModel.Nodes.Find(n => n.Id == startNodeId).Type = NodeType.Start;
-        int bossNodeId = _farthestRoomSelector.SelectFarthestRoom(mapModel.Nodes, startNodeId);
-        mapModel.Nodes.Find(n=>n.Id==bossNodeId).Type = NodeType.Move;
+        // int startNodeId = mapModel.Nodes[0].Id;
+        // mapModel.Nodes.Find(n => n.Id == startNodeId).Type = NodeType.Start;
+        // int bossNodeId = _farthestRoomSelector.SelectFarthestRoom(mapModel.Nodes, startNodeId);
+        // mapModel.Nodes.Find(n=>n.Id==bossNodeId).Type = NodeType.Move;
         
         return mapModel;
     }

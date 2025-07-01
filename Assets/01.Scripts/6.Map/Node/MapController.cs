@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class MapController : MonoBehaviour
     [Header("Map Generator Settings")]
     [SerializeField] private MapType _mapType = MapType.Grid;
     [SerializeField] private PatternType _patternType = PatternType.CircularRing;
-    
+    [SerializeField] private bool _isBossStage = false;
     
     [Header("Grid Parameter")]
     [SerializeField] private int _columns = 9;
@@ -82,6 +83,7 @@ public class MapController : MonoBehaviour
             //2) MapModel설정
             CreateMapModel();
             
+            AssignStartAndEndNodes(_mapModel, _isBossStage);
             //3) 최초 위치, 방문 초기화
             _currentNodeId = _mapModel.Nodes[0].Id;
             _visitedNodes = new HashSet<int>{_currentNodeId};
@@ -232,14 +234,14 @@ public class MapController : MonoBehaviour
         IMapGenerator generator;
         if (_mapType == MapType.Grid)
         {
-            generator = new GridMapGenerator(_columns, _rows,_roomCount, nodeTypeAssigner, farthestRoomSelector);
+            generator = new GridMapGenerator(_columns, _rows,_roomCount, nodeTypeAssigner);//,farthestRoomSelector);
         }
         else
         {
-            List<Vector2Int> pattern = GetCustomPattern(); 
-            generator = new CustomMapGenerator(pattern, nodeTypeAssigner, farthestRoomSelector);
+            List<Vector2Int> pattern = GetCustomPattern();
+            generator = new CustomMapGenerator(pattern, nodeTypeAssigner); //, farthestRoomSelector);
         }
-
+        
         _mapModel = generator.Generate(0, 0, 0);
     }
 
@@ -307,6 +309,28 @@ public class MapController : MonoBehaviour
         
         
         //TODO: 현재위치 확인 -> 이동가능 여부 검사 -> 씬전환 or 전투 호출 등
+    }
+
+    private void AssignStartAndEndNodes(MapModel mapModel, bool isBossStage)
+    {
+        NodeModel startNode = mapModel.Nodes[0];
+        startNode.Type = NodeType.Start;
+        
+        IFarthestRoomSelector farthestRoomSelector = new FarthestRoomSelector();
+        int farthestNodeId = farthestRoomSelector.SelectFarthestRoom(
+            mapModel.Nodes,
+            startNode.Id);
+        
+        NodeModel farthestNode = mapModel.Nodes
+                                         .First(n=>n.Id == farthestNodeId);
+        if (isBossStage)
+        {
+            farthestNode.Type = NodeType.Boss;
+        }
+        else
+        {
+            farthestNode.Type = NodeType.Move;
+        }
     }
     private void UpdateCurrentLocationDisplay()
     {   
