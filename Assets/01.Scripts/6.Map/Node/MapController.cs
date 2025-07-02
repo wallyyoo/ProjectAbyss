@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
@@ -12,14 +13,15 @@ public class MapController : MonoBehaviour
     [Header("Map Generator Settings")]
     [SerializeField] private MapType _mapType = MapType.Grid;
     [SerializeField] private PatternType _patternType = PatternType.CircularRing;
-    [SerializeField] private bool _isBossStage = false;
     
-    [Header("StageType")]
+    
+    [Header("Stage Progress")]
     [SerializeField] private StageType _stageType;
-    [SerializeField] private int _currentStageIndex = 1;
 
-    [Header("Stage Settings")] [SerializeField]
-    private StageSetting[] _stageSettingList;
+
+    [Header("Stage Settings SO")]
+    [SerializeField] private StageSetting[] _stageSettingList;
+    [SerializeField] private ChapterSetting[] _chapterSettingList;
     
     [Header("Grid Parameter")]
     [SerializeField] private int _columns = 9;
@@ -59,7 +61,6 @@ public class MapController : MonoBehaviour
     [SerializeField] private Transform _nodes;
     [SerializeField] private CameraSwitcher _cameraSwitcher;
     
-    private StageSetting CurrentStageSetting => _stageSettingList.First(s => s.stageType == _stageType);
     private MapModel _mapModel;
     private Dictionary<int, NodeView> _nodeViews;
     private Dictionary<(int,int),EdgeView> _edgeViews; 
@@ -67,7 +68,20 @@ public class MapController : MonoBehaviour
     private int _currentNodeId;
     private int _previousRunCount;
     private int _currentRunCount;
+    private int _endNodeId;
     private INodeRevealStrategy _nodeRevealStrategy;
+    private StageProgress _stageProgress;
+
+    private ChapterSetting CurrentChapterSetting
+        => _chapterSettingList.First(c => c.ChapterNumber == _stageProgress.Chapter);
+    
+    private StageType CurrentStageType
+        => CurrentChapterSetting.StageSequence[_stageProgress.StageNumber-1];
+    
+    private StageSetting CurrentStageSetting
+        => _stageSettingList.First(s => s.stageType == CurrentStageType);
+
+    
     
     
     /// <summary>
@@ -77,11 +91,11 @@ public class MapController : MonoBehaviour
     { 
         //저장된 데이터 로드
         SaveData save = SaveLoadManager.LoadGame();
-        Debug.Log($"현재 스테이지{_currentStageIndex}");
         
         if (save != null) // 저장된게 있을 때
         {
             RestoreMapFromSave(save);
+            Debug.Log($"현재 회차: {_currentRunCount} 현재 챕터 : {save.Progress.Chapter}, 현재 스테이지: {save.Progress.StageNumber}");
             
         }
         else // 저장된게 없을 때 새로 만들기
@@ -89,6 +103,11 @@ public class MapController : MonoBehaviour
             _previousRunCount = _useDebugRunCount
                 ? _debugRunCount
                 : 0;
+            _stageProgress = new StageProgress
+            {
+                Chapter = 1,
+                StageNumber = 1,
+            };
             
             //2) MapModel설정
             CreateMapModel();
@@ -102,14 +121,14 @@ public class MapController : MonoBehaviour
         }
         
         _currentRunCount = _previousRunCount + 1;
-        
+        NodeModel _endNode = _mapModel.Nodes.First(n => n.Id == _endNodeId);
         //4) Reveal 전략 생성
         _nodeRevealStrategy = new RunCountRevealStrategy(
             _mapModel,
             _currentRunCount,
             _currentNodeId,
             _visitedNodes
-            , NodeType.Move);
+            , _endNode.Type);
         
         // 5)화면 렌더링
         
@@ -200,9 +219,14 @@ public class MapController : MonoBehaviour
 
     private void OnBossCleared()
     {
-        SaveLoadManager.DeleteSave();
-        _currentStageIndex++;
-        InitializeStage();
+        NodeModel currentNode = _mapModel.Nodes.Find(n => n.Id == _currentNodeId);
+        if (CurrentStageType != StageType.Boss || currentNode.Type != NodeType.Boss)
+        {
+            Debug.LogWarning($"보스 클리어 호출 시점이 Boss스테이지가 아닙니다.");
+            return;
+        }
+        
+        AdvanceStage();
     }
     private void ApplyHighlights()
     {
@@ -247,6 +271,7 @@ public class MapController : MonoBehaviour
     private void CreateMapModel()
     {
         StageSetting setting = CurrentStageSetting;
+        
         INodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(
             setting.battleWeight,
             setting.shopWeight,
@@ -267,6 +292,9 @@ public class MapController : MonoBehaviour
         _previousRunCount = _useDebugRunCount
             ? _debugRunCount
             : save.RunCount;
+        
+        _stageProgress = save.Progress;
+        
             
         _mapModel = new MapModel();
         foreach (var nd in save.Nodes)
@@ -296,8 +324,18 @@ public class MapController : MonoBehaviour
         Debug.Log($"{nodeModel.Id}노드클릭됨, Type{nodeModel.Type}");
         
         NodeModel currentNode = _mapModel.Nodes.Find(n=> n.Id == _currentNodeId);
+        NodeModel endNode =_mapModel.Nodes.Find(n=> n.Id == _endNodeId);
         if (!currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
             return;
+        
+        if (CurrentStageType == StageType.Exploration
+            && nodeModel.Type == NodeType.Move
+            && nodeModel.Id == _endNodeId)
+        {
+            AdvanceStage();
+            //InitializeStage();
+            return;
+        }
         
         //1)이전 노드 방문 처리
         _visitedNodes.Add(_currentNodeId);
@@ -314,7 +352,7 @@ public class MapController : MonoBehaviour
             _currentRunCount,
             _currentNodeId,
             _visitedNodes
-            , NodeType.Move);
+            , endNode.Type);
         
         
         UpdateAllNodeIcons();
@@ -333,7 +371,7 @@ public class MapController : MonoBehaviour
         {
             case StageType.Exploration:
             {
-                int roomCount = stageSetting.baseRoomCount + (_currentStageIndex - 1) * stageSetting.ExtraRoomPerStage;
+                int roomCount = stageSetting.baseRoomCount + (_stageProgress.StageNumber) * stageSetting.ExtraRoomPerStage;
                 return new GridMapGenerator(_columns, _rows, roomCount, nodeTypeAssigner);
             }
             case StageType.Boss:
@@ -345,19 +383,60 @@ public class MapController : MonoBehaviour
             default: goto case StageType.Exploration;
         }
     }
+    // private bool IsFarthestNode(int nodeId)
+    // {
+    //     int startId = _mapModel.Nodes[0].Id;
+    //     int farthestId = new FarthestRoomSelector()
+    //         .SelectFarthestRoom(_mapModel.Nodes, startId);
+    //     return nodeId == farthestId;
+    // }
+    private void AdvanceStage()
+    {
+        
+        ChapterSetting chapter = CurrentChapterSetting;
+
+        _stageProgress.StageNumber++;
+
+        // 장 안 스테이지 수 초과 → 새 장으로
+        if (_stageProgress.StageNumber > chapter.StageSequence.Length)
+        {
+            _stageProgress.Chapter++;
+            _stageProgress.StageNumber = 1;
+        }
+        
+        CreateMapModel();
+        AssignStartAndEndNodes(CurrentStageSetting);
+
+        _currentNodeId = _mapModel.Nodes[0].Id;
+        _visitedNodes = new HashSet<int> { _currentNodeId };
+
+        _nodeRevealStrategy = new RunCountRevealStrategy(
+            _mapModel,
+            _currentRunCount,
+            _currentNodeId,
+            _visitedNodes,
+            _mapModel.Nodes.First(n => n.Id == _endNodeId).Type
+        );
+        RenderMap();
+        UpdateCurrentLocationDisplay();
+        ApplyHighlights();
+            
+        SaveGameWithRunCount();
+    }
     private void AssignStartAndEndNodes(StageSetting setting)
     {
         NodeModel startNode = _mapModel.Nodes[0];
         startNode.Type = NodeType.Start;
         
+        
         IFarthestRoomSelector farthestRoomSelector = new FarthestRoomSelector();
-        int farthestNodeId = farthestRoomSelector.SelectFarthestRoom(
+        _endNodeId = farthestRoomSelector.SelectFarthestRoom(
             _mapModel.Nodes,
             startNode.Id);
         
-        NodeModel farthestNode = _mapModel.Nodes
-                                          .First(n=>n.Id == farthestNodeId);
-        farthestNode.Type = setting.FarthestNode;
+        NodeModel endNode = _mapModel.Nodes
+                                          .First(n=>n.Id == _endNodeId);
+        endNode.Type = setting.FarthestNode;
     }
     private void UpdateCurrentLocationDisplay()
     {   
@@ -394,11 +473,11 @@ public class MapController : MonoBehaviour
             NodeView nodeView = pair.Value;
 
             NodeModel nodeModel = _mapModel.Nodes.Find(n => n.Id == nodeId);
-            bool isVisitied = _visitedNodes.Contains(nodeId);
+            bool isVisited = _visitedNodes.Contains(nodeId);
             bool isRevealed = _nodeRevealStrategy.ShouldReveal(nodeModel);
             
                 
-            NodeType displayType = (isVisitied||isRevealed)
+            NodeType displayType = (isVisited||isRevealed)
                 ? nodeModel.Type:NodeType.Unknown;
             nodeView.SetType(displayType);
         }
@@ -412,7 +491,8 @@ public class MapController : MonoBehaviour
             Edges = new List<EdgeData>(),
             CurrentNodeId = _currentNodeId,
             VisitedNodeIds = new List<int>(_visitedNodes),
-            RunCount = _currentRunCount
+            RunCount = _currentRunCount,
+            Progress = _stageProgress
         };
         foreach (var node in _mapModel.Nodes)
         {

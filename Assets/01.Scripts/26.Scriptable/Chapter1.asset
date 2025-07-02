@@ -9,15 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4e192670775641498368226229d4a8c, type: 3}
-  m_Name: ExploreStageSetting
+  m_Script: {fileID: 11500000, guid: d2c8ba7cfc6960440abebda150fee239, type: 3}
+  m_Name: Chapter1
   m_EditorClassIdentifier: 
-  stageType: 0
-  baseRoomCount: 20
-  ExtraRoomPerStage: 2
-  FarthestNode: 6
-  battleWeight: 0.15
-  shopWeight: 0.1
-  restWeight: 0.125
-  eventWeight: 0.2
-  emptyWeight: 0.4
+  ChapterNumber: 2
+  StageSequence: 00000000000000000000000001000000

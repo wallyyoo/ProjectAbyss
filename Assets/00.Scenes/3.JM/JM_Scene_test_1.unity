@@ -1728,7 +1728,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mapType: 1
   _patternType: 2
-  _isBossStage: 0
+  _stageType: 0
+  _stageSettingList:
+  - {fileID: 11400000, guid: 79e004f91ffa880409c103b63ceef177, type: 2}
+  - {fileID: 11400000, guid: 76533c86bd76f7846bd900681608b90d, type: 2}
+  _chapterSettingList:
+  - {fileID: 11400000, guid: bd14f54c973a3834fadc3c1887d1f489, type: 2}
+  - {fileID: 11400000, guid: e12b0af65fd0ac746be6ec178eac082e, type: 2}
   _columns: 8
   _rows: 6
   _roomCount: 20
@@ -1742,11 +1748,6 @@ MonoBehaviour:
   _diagonalOffset: 3
   _crossArmLength: 3
   _crossThickness: 3
-  _battleWeight: 0.15
-  _shopWeight: 0.1
-  _restWeight: 0.125
-  _eventWeight: 0.125
-  _emptyWeight: 0.4
   _useDebugRunCount: 1
   _debugRunCount: 8
   _nodePrefab: {fileID: 445267991639944460, guid: ca85f0862fed33b408889f124e705bc6, type: 3}

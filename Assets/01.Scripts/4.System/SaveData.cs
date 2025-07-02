@@ -14,6 +14,8 @@ public class SaveData
     public int CurrentNodeId;
     public List<int> VisitedNodeIds;
     public int RunCount;
+
+    public StageProgress Progress;
 }
 
 [Serializable]
