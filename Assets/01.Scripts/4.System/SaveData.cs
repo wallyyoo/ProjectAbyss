@@ -13,6 +13,9 @@ public class SaveData
     public List<EdgeData> Edges;
     public int CurrentNodeId;
     public List<int> VisitedNodeIds;
+    public int RunCount;
+
+    public StageProgress Progress;
 }
 
 [Serializable]
