@@ -367,7 +367,7 @@ public class MapController : MonoBehaviour
 
     private IMapGenerator CreateGenerator(StageSetting stageSetting, INodeTypeAssigner nodeTypeAssigner)
     {
-        switch (_stageType)
+        switch (CurrentStageType)
         {
             case StageType.Exploration:
             {
@@ -376,6 +376,7 @@ public class MapController : MonoBehaviour
             }
             case StageType.Boss:
             {
+                Debug.Log("보스타입 스테이지 생성");
                 var pattern = GetCustomPattern();
                 return new CustomMapGenerator(
                     pattern, nodeTypeAssigner );

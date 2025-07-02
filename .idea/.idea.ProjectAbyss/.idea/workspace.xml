@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="75a9aa63-600e-475a-b31d-5cc6c5bf82ca" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectAbyss/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectAbyss/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/00.Scenes/3.JM/JM_Scene_test_1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/00.Scenes/3.JM/JM_Scene_test_1.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/ExploreStageSetting.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/ExploreStageSetting.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/4.System/SaveData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/4.System/SaveData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/4.System/StageProgress.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/4.System/StageProgress.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -138,7 +134,7 @@
       <workItem from="1750814563766" duration="8797000" />
       <workItem from="1750915539060" duration="14172000" />
       <workItem from="1750984749070" duration="18086000" />
-      <workItem from="1751418992162" duration="20572000" />
+      <workItem from="1751418992162" duration="21589000" />
     </task>
     <servers />
   </component>
