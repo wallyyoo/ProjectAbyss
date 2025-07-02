@@ -38,6 +38,7 @@ public class UIManager : Singleton<UIManager>
     [UIBind("UpgradePanel/Up_CloseButton")] private Button UpgradeClosebtn;
     [UIBind("UpgradePanel/Up_HandTypePanel/HandTypeTextManager")] private HandUIManager upgradeHandUI;
     [UIBind("UpgradePanel/Up_BaseStatPanel/StatTextManager")] private StatUIManager statUIManager;
+    [UIBind("TopBar/Button(test)")] private Button upgradePanelBtn;
 
     public HandUIManager UpgradeHandUI => upgradeHandUI;
     public HandUIManager CodexHandUI => codexHandUI;
@@ -56,6 +57,7 @@ public class UIManager : Singleton<UIManager>
         menuClosebtn.onClick.AddListener(CloseMenu);
         codexClosebtn.onClick.AddListener(CloseCodex);
         UpgradeClosebtn.onClick.AddListener(CloseUpgrade);
+        upgradePanelBtn.onClick.AddListener(OpenUpgrade);
     }
 
     /// <summary>
