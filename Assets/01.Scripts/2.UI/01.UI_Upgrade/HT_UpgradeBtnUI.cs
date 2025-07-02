@@ -2,14 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class HT_UpgradeUI : MonoBehaviour
+public class HT_UpgraBtnUI : MonoBehaviour
 {
     private void Awake()
     {
-        SetupUpgradeButtons();
+        SetupHandTypeUpgradeButtons();
     }
 
-    private void SetupUpgradeButtons()
+    private void SetupHandTypeUpgradeButtons()
     {
         foreach (Transform group in transform)
         {

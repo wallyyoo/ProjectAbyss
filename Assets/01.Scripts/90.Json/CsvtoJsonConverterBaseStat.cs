@@ -41,7 +41,7 @@ public class BaseStatJsonConverter : MonoBehaviour
             if (string.IsNullOrWhiteSpace(line)) continue;
 
             string[] cols = line.Split(','); // csv 파일 구분
-            if (cols.Length < 4) continue;
+            if (cols.Length < 5) continue;
 
             list.Add(new BaseStatTableData
             {
@@ -49,6 +49,7 @@ public class BaseStatJsonConverter : MonoBehaviour
                 level = int.Parse(cols[1]),
                 stats = int.Parse(cols[2]),
                 add_Stats = int.Parse(cols[3]),
+                manaCount = int.Parse(cols[4]),
             });
         }
 

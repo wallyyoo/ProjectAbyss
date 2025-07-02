@@ -9,7 +9,7 @@ public class HandUIManager : MonoBehaviour
     private Color defaultBgColor = new Color32(173, 185, 202, 255); // 원래 배경색
     private Color maxLevelBgColor = new Color32(249, 218, 119, 255); // 노란색
 
-    void Start()
+    void OnEnable()
     {
         Refresh();
     }
@@ -25,12 +25,15 @@ public class HandUIManager : MonoBehaviour
                 continue;
             }
 
-            ApplyBaseInfo(ui, baseInfo, upgrade);
+            int nextLevel = upgrade.level + 1;
+            var nextUpgrade = DiceTableDatabase.GetUpgradeData(ui.type, nextLevel);
+
+            ApplyBaseInfo(ui, baseInfo, upgrade, nextUpgrade);
             ApplyLevelVisual(ui, upgrade.level, ui.type);
         }
     }
 
-    private void ApplyBaseInfo(HandTypeUI ui, HandInfo baseInfo, HandTypeUpgradeData upgrade)
+    private void ApplyBaseInfo(HandTypeUI ui, HandInfo baseInfo, HandTypeUpgradeData upgrade, HandTypeUpgradeData nextUpgrade)
     {
         int upgradeScore = baseInfo.baseScore + upgrade.add_score;
         int upgradeMultiplier = baseInfo.multiplier + upgrade.add_multiplier;
@@ -40,7 +43,12 @@ public class HandUIManager : MonoBehaviour
         ui.multiplierText.text = upgradeMultiplier.ToString();
 
         if (ui.manaCountText != null)
-            ui.manaCountText.text = upgrade.manaCount.ToString();
+        {
+            if (nextUpgrade != null)
+                ui.manaCountText.text = nextUpgrade.manaCount.ToString();
+            else
+                ui.manaCountText.text = "Max";
+        }
     }
 
     private void ApplyLevelVisual(HandTypeUI ui, int currentLevel, HandType type)
@@ -64,8 +72,5 @@ public class HandUIManager : MonoBehaviour
             if (group != null)
                 group.alpha = isMax ? 0.4f : 1f;
         }
-
-        // 수정 소모량 Max 전환
-        ui.manaCountText.text = isMax ? "Max" : ui.manaCountText.text;
     }
 }

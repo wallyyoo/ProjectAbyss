@@ -14,7 +14,7 @@ public class UpgradeManager
     {
         var progress = PlayerProgressManager.Instance;
 
-        int currentLevel = progress.GetUpgradeLevel(type);
+        int currentLevel = progress.GetHandTypeUpgradeLevel(type);
         int maxLevel = DiceTableDatabase.GetMaxLevel(type);
 
         if (currentLevel >= maxLevel)
@@ -43,7 +43,7 @@ public class UpgradeManager
         }
 
         // 강화 성공 → 레벨 증가
-        progress.UpgradeLevelUp(type);
+        progress.UpgradeHandTypeLevelUp(type);
 
         // UI 갱신
         UIManager.Instance.UpdateEnchantCore(progress.GetEnchantCore());
@@ -63,7 +63,7 @@ public class UpgradeManager
     {
         var progress = PlayerProgressManager.Instance;
 
-        int currentLevel = progress.GetUpgradeLevel(type);
+        int currentLevel = progress.GetHandTypeUpgradeLevel(type);
 
         if (currentLevel <= 0)
         {
@@ -86,7 +86,7 @@ public class UpgradeManager
         progress.AddEnchantCore(returned);
 
         // 레벨 감소
-        progress.UpgradeLevelDown(type);
+        progress.UpgradeHandTypeLevelDown(type);
 
         // UI 갱신
         UIManager.Instance.UpdateEnchantCore(progress.GetEnchantCore());
@@ -102,7 +102,7 @@ public class UpgradeManager
     /// </summary>
     public static int GetCurrentLevel(HandType type)
     {
-        return PlayerProgressManager.Instance.GetUpgradeLevel(type);
+        return PlayerProgressManager.Instance.GetHandTypeUpgradeLevel(type);
     }
 
     /// <summary>

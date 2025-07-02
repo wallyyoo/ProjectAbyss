@@ -14,7 +14,7 @@ public static class UpgradeDatabase
 
         foreach (HandType type in Enum.GetValues(typeof(HandType)))
         {
-            int level = PlayerProgressManager.Instance.GetUpgradeLevel(type);
+            int level = PlayerProgressManager.Instance.GetHandTypeUpgradeLevel(type);
             var data = DiceTableDatabase.GetUpgradeData(type, level);
 
             if (data != null) table[type] = data;
@@ -23,7 +23,7 @@ public static class UpgradeDatabase
 
     public static void UpdateUpgradeData(HandType type)
     {
-        int level = PlayerProgressManager.Instance.GetUpgradeLevel(type);
+        int level = PlayerProgressManager.Instance.GetHandTypeUpgradeLevel(type);
         var data = DiceTableDatabase.GetUpgradeData(type, level);
 
         if (data != null)
