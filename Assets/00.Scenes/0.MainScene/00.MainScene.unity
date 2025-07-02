@@ -823,6 +823,7 @@ GameObject:
   - component: {fileID: 124713668}
   - component: {fileID: 124713667}
   - component: {fileID: 124713670}
+  - component: {fileID: 124713671}
   m_Layer: 5
   m_Name: DiceSlot_T3
   m_TagString: Untagged
@@ -871,11 +872,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.98039216}
+    m_HighlightedColor: {r: 1, g: 0.9387709, b: 0.9103774, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_SelectedColor: {r: 0.7169812, g: 0.6933073, b: 0.6933073, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -907,14 +908,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.43565944, g: 0.8207547, b: 0.058072258, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -259740865, guid: 4c5d73a619d67ea47b627c393b8e3324, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -946,6 +947,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diceImage: {fileID: 124713668}
   spriteSheetPath: DiceSheet
+--- !u!114 &124713671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124713665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8140d6436ff7bc942a01b30b44f16f02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteController: {fileID: 124713670}
 --- !u!1 &140174657
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,6 +973,7 @@ GameObject:
   - component: {fileID: 140174660}
   - component: {fileID: 140174659}
   - component: {fileID: 140174662}
+  - component: {fileID: 140174663}
   m_Layer: 5
   m_Name: DiceSlot_T0
   m_TagString: Untagged
@@ -1007,11 +1022,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.98039216}
+    m_HighlightedColor: {r: 1, g: 0.9387709, b: 0.9103774, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_SelectedColor: {r: 0.7169812, g: 0.6933073, b: 0.6933073, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -1043,14 +1058,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.43565944, g: 0.8207547, b: 0.058072258, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -29854321, guid: 4c5d73a619d67ea47b627c393b8e3324, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1082,6 +1097,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diceImage: {fileID: 140174660}
   spriteSheetPath: DiceSheet
+--- !u!114 &140174663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 140174657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8140d6436ff7bc942a01b30b44f16f02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteController: {fileID: 140174662}
 --- !u!1 &140331686
 GameObject:
   m_ObjectHideFlags: 0
@@ -2928,7 +2956,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 502208893}
-  - component: {fileID: 502208892}
+  - component: {fileID: 502208895}
+  - component: {fileID: 502208894}
   m_Layer: 0
   m_Name: Testplayer
   m_TagString: Untagged
@@ -2936,20 +2965,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &502208892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 502208891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cad98d2e40ea8d439559a4f93e71f14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentHP: 100
-  rerollBonus: 0
 --- !u!4 &502208893
 Transform:
   m_ObjectHideFlags: 0
@@ -2965,6 +2980,32 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1451508017}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &502208894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502208891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61f1eb473d5b4e888b4bf64a4289e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &502208895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 502208891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eb70d68eb22d47fda637f77ee50df29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 0}
+  PlayerHP: {fileID: 0}
 --- !u!1 &512025283
 GameObject:
   m_ObjectHideFlags: 0
@@ -3280,6 +3321,7 @@ GameObject:
   - component: {fileID: 539328699}
   - component: {fileID: 539328698}
   - component: {fileID: 539328701}
+  - component: {fileID: 539328702}
   m_Layer: 5
   m_Name: DiceSlot_T4
   m_TagString: Untagged
@@ -3328,11 +3370,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.98039216}
+    m_HighlightedColor: {r: 1, g: 0.9387709, b: 0.9103774, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_SelectedColor: {r: 0.7169812, g: 0.6933073, b: 0.6933073, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -3364,14 +3406,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.43565944, g: 0.8207547, b: 0.058072258, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -29854321, guid: 4c5d73a619d67ea47b627c393b8e3324, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3403,6 +3445,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diceImage: {fileID: 539328699}
   spriteSheetPath: DiceSheet
+--- !u!114 &539328702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539328696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8140d6436ff7bc942a01b30b44f16f02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteController: {fileID: 539328701}
 --- !u!1 &546030612
 GameObject:
   m_ObjectHideFlags: 0
@@ -8301,6 +8356,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1451508017}
   - component: {fileID: 1451508018}
+  - component: {fileID: 1451508019}
   m_Layer: 0
   m_Name: CombatTest
   m_TagString: Untagged
@@ -8337,10 +8393,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a805bd848592ddb4cadf9450f3afc019, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageCalculator: {fileID: 857875376}
-  scoreEffectController: {fileID: 0}
-  bonusFlatDamage: 0
-  bonusMultiplier: 1
+--- !u!114 &1451508019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451508016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dd79476c471347798e99d70d51e651e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1452400590
 GameObject:
   m_ObjectHideFlags: 0
@@ -9227,6 +9291,7 @@ GameObject:
   - component: {fileID: 1631911096}
   - component: {fileID: 1631911095}
   - component: {fileID: 1631911098}
+  - component: {fileID: 1631911099}
   m_Layer: 5
   m_Name: DiceSlot_T2
   m_TagString: Untagged
@@ -9275,11 +9340,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.98039216}
+    m_HighlightedColor: {r: 1, g: 0.9387709, b: 0.9103774, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_SelectedColor: {r: 0.7169812, g: 0.6933073, b: 0.6933073, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -9311,14 +9376,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.43565944, g: 0.8207547, b: 0.058072258, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -1189066402, guid: 4c5d73a619d67ea47b627c393b8e3324, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9350,6 +9415,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diceImage: {fileID: 1631911096}
   spriteSheetPath: DiceSheet
+--- !u!114 &1631911099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631911093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8140d6436ff7bc942a01b30b44f16f02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteController: {fileID: 1631911098}
 --- !u!1 &1637390588
 GameObject:
   m_ObjectHideFlags: 0
@@ -9666,6 +9744,7 @@ GameObject:
   - component: {fileID: 1744036859}
   - component: {fileID: 1744036858}
   - component: {fileID: 1744036861}
+  - component: {fileID: 1744036862}
   m_Layer: 5
   m_Name: DiceSlot_T1
   m_TagString: Untagged
@@ -9714,11 +9793,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.98039216}
+    m_HighlightedColor: {r: 1, g: 0.9387709, b: 0.9103774, a: 1}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_SelectedColor: {r: 0.7169812, g: 0.6933073, b: 0.6933073, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -9750,14 +9829,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.43565944, g: 0.8207547, b: 0.058072258, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -1951410981, guid: 4c5d73a619d67ea47b627c393b8e3324, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9789,6 +9868,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diceImage: {fileID: 1744036859}
   spriteSheetPath: DiceSheet
+--- !u!114 &1744036862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1744036856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8140d6436ff7bc942a01b30b44f16f02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteController: {fileID: 1744036861}
 --- !u!1 &1763174674
 GameObject:
   m_ObjectHideFlags: 0
@@ -11043,6 +11135,12 @@ MonoBehaviour:
   - {fileID: 1631911098}
   - {fileID: 124713670}
   - {fileID: 539328701}
+  diceRollAnimators:
+  - {fileID: 140174663}
+  - {fileID: 1744036862}
+  - {fileID: 1631911099}
+  - {fileID: 124713671}
+  - {fileID: 539328702}
 --- !u!4 &1985330041
 Transform:
   m_ObjectHideFlags: 0

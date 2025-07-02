@@ -15,7 +15,7 @@ public class DiceModel
     public int Value { get; private set; }
     public DiceColor Color { get; private set; }
 
-    public void Roll(bool keepColor = true)
+    public void Roll(bool keepColor = true) // 디폴트 굴린 값
     {
         Value = Random.Range(1, 7); //주사위 값 1~6
         if (!keepColor)

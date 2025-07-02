@@ -4,11 +4,13 @@ using System.Collections.Generic;
 
 public class DiceSpriteController : MonoBehaviour
 {
-    [Header("이미지에 적용할 타겟")] public Image diceImage; 
+    [Header("주사위 이미지")] 
+    public Image diceImage; 
 
-    [Header("스프라이트 시트")] [SerializeField] private string spriteSheetPath = "DiceSheet";
+    [Header("스프라이트 시트")] [SerializeField] 
+    private string spriteSheetPath = "DiceSheet";
     private Dictionary<string, Sprite> spriteMap;
-
+    
     public Sprite Sprite { get; private set; }
     private void Awake()
     {
@@ -40,5 +42,5 @@ public class DiceSpriteController : MonoBehaviour
             Sprite = null;
         }
     }
-    
+
 }
