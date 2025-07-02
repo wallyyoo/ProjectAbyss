@@ -371,7 +371,7 @@ MonoBehaviour:
   _shopSprite: {fileID: 21300000, guid: 4a04881cb7b590f4a8af2b833d50e385, type: 3}
   _restSprite: {fileID: 21300000, guid: c95c29eef1db40d4cb670e1a8b22e4e9, type: 3}
   _eventSprite: {fileID: 21300000, guid: c89abbac0f3822c41903246c4f68addf, type: 3}
-  _moveSprite: {fileID: 21300000, guid: c95c29eef1db40d4cb670e1a8b22e4e9, type: 3}
+  _moveSprite: {fileID: 21300000, guid: 7743bbbd75036c54bb2cb4e6d99fd351, type: 3}
   _emptySprite: {fileID: 21300000, guid: 1f136671398607d46abe2d059344367e, type: 3}
   _bossSprite: {fileID: 21300000, guid: 9276f2088b1057b4487b22a2d7ed8a3b, type: 3}
   _defaultColor: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}

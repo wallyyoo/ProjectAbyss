@@ -510,7 +510,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 120, y: -20, z: -10}
+  m_LocalPosition: {x: 0, y: -20, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1726,8 +1726,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c4c197732564142af0f71577d5b9be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mapType: 0
-  _patternType: 1
+  _mapType: 1
+  _patternType: 2
+  _isBossStage: 0
   _columns: 8
   _rows: 6
   _roomCount: 20
