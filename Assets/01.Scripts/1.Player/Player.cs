@@ -53,33 +53,4 @@ public class Player : MonoBehaviour
     {
         PlayerHP.text = $"{currentHP}";
     }
-
-    //======================= 테스트 코드 =======================
-    // [Button("골드 증가")]
-    // void GetGold()
-    // {
-    //     currentGold += 1000;
-    //     uiManager.UpdateGold(currentGold);
-    // }
-
-    // [Button("골드 감소")]
-    // void SpendGold()
-    // {
-    //     currentGold -= 1000;
-    //     uiManager.UpdateGold(currentGold);
-    // }
-
-    // [Button("수정 증가")]
-    // void GetEnchantCore()
-    // {
-    //     currentCore += 1000;
-    //     uiManager.UpdateEnchantCore(currentCore);
-    // }
-
-    // [Button("수정 감소")]
-    // void SpendEnchantCore()
-    // {
-    //     currentCore -= 1000;
-    //     uiManager.UpdateEnchantCore(currentCore);
-    // }
 }

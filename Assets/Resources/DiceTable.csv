@@ -1,55 +1,55 @@
-type,level,score,multiplier,total,manaCount,add_score,add_multiplier
-Mono Roll,0,200,8,1600,0,0,0
-Mono Roll,1,350,14,4900,195,150,6
-Mono Roll,2,505,21,10605,425,155,7
-Mono Roll,3,665,29,19285,770,160,8
-Mono Roll,4,830,38,31540,1260,165,9
-Mono Roll,5,1000,47,47000,1875,170,9
-Four Dice,0,120,6,720,0,0,0
-Four Dice,1,180,9,1620,225,60,3
-Four Dice,2,220,12,2640,460,40,3
-Four Dice,3,250,15,3750,875,30,3
-Four Dice,4,290,18,5220,910,40,3
-Four Dice,5,340,21,7140,995,50,3
-Large_Straight,0,100,5,500,0,0,0
-Large_Straight,1,150,8,1200,200,50,3
-Large_Straight,2,190,11,2090,435,40,3
-Large_Straight,3,220,14,3080,855,30,3
-Large_Straight,4,255,17,4335,905,35,3
-Large_Straight,5,295,20,5900,985,40,3
-Small_Straight,0,80,5,400,0,0,0
-Small_Straight,1,130,8,1040,135,50,3
-Small_Straight,2,170,11,1870,305,40,3
-Small_Straight,3,210,14,2940,640,40,3
-Small_Straight,4,250,17,4250,690,40,3
-Small_Straight,5,290,20,5800,755,40,3
-Full House,0,75,4,300,0,0,0
-Full House,1,105,6,630,95,30,2
-Full House,2,125,8,1000,200,20,2
-Full House,3,145,10,1450,430,20,2
-Full House,4,175,12,2100,415,30,2
-Full House,5,205,14,2870,425,30,2
-Triple,0,70,4,280,0,0,0
-Triple,1,95,6,570,90,25,2
-Triple,2,115,8,920,190,20,2
-Triple,3,135,10,1350,420,20,2
-Triple,4,155,12,1860,385,20,2
-Triple,5,185,14,2590,405,30,2
-Two Pair,0,60,2,120,0,0,0
-Two Pair,1,80,3,240,80,20,1
-Two Pair,2,100,4,400,175,20,1
-Two Pair,3,120,5,600,400,20,1
-Two Pair,4,140,6,840,370,20,1
-Two Pair,5,160,7,1120,370,20,1
-One Pair,0,40,2,80,0,0,0
-One Pair,1,55,3,165,20,15,1
-One Pair,2,75,4,300,45,20,1
-One Pair,3,100,6,600,120,25,2
-One Pair,4,130,8,1040,155,30,2
-One Pair,5,165,10,1650,195,35,2
-High Dice,0,30,1,30,0,0,0
-High Dice,1,45,2,90,10,15,1
-High Dice,2,65,4,260,20,20,2
-High Dice,3,90,6,540,40,25,2
-High Dice,4,115,8,920,55,25,2
-High Dice,5,140,10,1400,70,25,2
+type,level,score,multiplier,manaCount,add_score,add_multiplier
+Mono Roll,0,200,8,0,0,0
+Mono Roll,1,350,14,195,150,6
+Mono Roll,2,505,21,425,155,7
+Mono Roll,3,665,29,770,160,8
+Mono Roll,4,830,38,1260,165,9
+Mono Roll,5,1000,47,1875,170,9
+Four Dice,0,120,6,0,0,0
+Four Dice,1,180,9,225,60,3
+Four Dice,2,220,12,460,40,3
+Four Dice,3,250,15,875,30,3
+Four Dice,4,290,18,910,40,3
+Four Dice,5,340,21,995,50,3
+Large_Straight,0,100,5,0,0,0
+Large_Straight,1,150,8,200,50,3
+Large_Straight,2,190,11,435,40,3
+Large_Straight,3,220,14,855,30,3
+Large_Straight,4,255,17,905,35,3
+Large_Straight,5,295,20,985,40,3
+Small_Straight,0,80,5,0,0,0
+Small_Straight,1,130,8,135,50,3
+Small_Straight,2,170,11,305,40,3
+Small_Straight,3,210,14,640,40,3
+Small_Straight,4,250,17,690,40,3
+Small_Straight,5,290,20,755,40,3
+Full House,0,75,4,0,0,0
+Full House,1,105,6,95,30,2
+Full House,2,125,8,200,20,2
+Full House,3,145,10,430,20,2
+Full House,4,175,12,415,30,2
+Full House,5,205,14,425,30,2
+Triple,0,70,4,0,0,0
+Triple,1,95,6,90,25,2
+Triple,2,115,8,190,20,2
+Triple,3,135,10,420,20,2
+Triple,4,155,12,385,20,2
+Triple,5,185,14,405,30,2
+Two Pair,0,60,2,0,0,0
+Two Pair,1,80,3,80,20,1
+Two Pair,2,100,4,175,20,1
+Two Pair,3,120,5,400,20,1
+Two Pair,4,140,6,370,20,1
+Two Pair,5,160,7,370,20,1
+One Pair,0,40,2,0,0,0
+One Pair,1,55,3,20,15,1
+One Pair,2,75,4,45,20,1
+One Pair,3,100,6,120,25,2
+One Pair,4,130,8,155,30,2
+One Pair,5,165,10,195,35,2
+High Dice,0,30,1,0,0,0
+High Dice,1,45,2,10,15,1
+High Dice,2,65,4,20,20,2
+High Dice,3,90,6,40,25,2
+High Dice,4,115,8,55,25,2
+High Dice,5,140,10,70,25,2

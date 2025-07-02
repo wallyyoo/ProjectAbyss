@@ -54,5 +54,7 @@ public class CodexTabController : MonoBehaviour
             var Image = tabButtons[i].GetComponent<Image>();
             Image.color = (i == index) ? SelectedColor : normalColor;
         }
+
+        if (index == 0) UIManager.Instance.CodexHandUI.Refresh();
     }
 }

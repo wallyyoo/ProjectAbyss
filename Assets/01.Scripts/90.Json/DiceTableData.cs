@@ -10,7 +10,6 @@ public class DiceTableData
     public int level;
     public int score;
     public int multiplier;
-    public int total;
     public int manaCount;
     public int add_score;
     public int add_multiplier;

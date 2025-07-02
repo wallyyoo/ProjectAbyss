@@ -4,14 +4,14 @@ using UnityEngine;
 using Newtonsoft.Json;
 using System.IO;
 
-public class JsonConverter : MonoBehaviour
+public class BaseStatJsonConverter : MonoBehaviour
 {
     public TextAsset csvFile; // 에디터에서 CSV 드래그
-    public string outputFileName = "DiceTableData.json";
+    public string outputFileName = "StatTableData.json";
 
     void Start()
     {
-        List<DiceTableData> dataList = ParseCSV(csvFile.text);
+        List<BaseStatTableData> dataList = ParseCSV(csvFile.text);
 
         // JSON 직렬화 옵션 (enum은 문자열로)
         var settings = new JsonSerializerSettings
@@ -27,12 +27,12 @@ public class JsonConverter : MonoBehaviour
         Debug.Log($"JSON 파일 저장 완료: {path}");
 
         // 필요하면 JSON 파일로 저장
-        File.WriteAllText(Application.dataPath + "/DiceTableData.json", json);
+        File.WriteAllText(Application.dataPath + "/StatTableData.json", json);
     }
 
-    List<DiceTableData> ParseCSV(string csvText)
+    List<BaseStatTableData> ParseCSV(string csvText)
     {
-        var list = new List<DiceTableData>();
+        var list = new List<BaseStatTableData>();
         string[] lines = csvText.Split('\n');
 
         for (int i = 1; i < lines.Length; i++)
@@ -41,37 +41,25 @@ public class JsonConverter : MonoBehaviour
             if (string.IsNullOrWhiteSpace(line)) continue;
 
             string[] cols = line.Split(','); // csv 파일 구분
-            if (cols.Length < 8) continue;
+            if (cols.Length < 4) continue;
 
-            list.Add(new DiceTableData
+            list.Add(new BaseStatTableData
             {
-                handType = ParseHandType(cols[0]),
+                playerStatType = ParseStatType(cols[0]),
                 level = int.Parse(cols[1]),
-                score = int.Parse(cols[2]),
-                multiplier = int.Parse(cols[3]),
-                total = int.Parse(cols[4]),
-                manaCount = int.Parse(cols[5]),
-                add_score = int.Parse(cols[6]),
-                add_multiplier = int.Parse(cols[7])
+                stats = int.Parse(cols[2]),
+                add_Stats = int.Parse(cols[3]),
             });
         }
 
         return list;
     }
 
-    HandType ParseHandType(string raw)
+    PlayerStatType ParseStatType(string raw)
     {
         return raw.Trim() switch
         {
-            "Mono Roll" => HandType.MonoRoll,
-            "Four Dice" => HandType.FourDice,
-            "Large_Straight" => HandType.LargeStraight,
-            "Small_Straight" => HandType.SmallStraight,
-            "Full House" => HandType.FullHouse,
-            "Triple" => HandType.Triple,
-            "Two Pair" => HandType.TwoPair,
-            "One Pair" => HandType.OnePair,
-            "High Dice" => HandType.HighDice,
+            "hp" => PlayerStatType.MaxHP,
             _ => throw new System.Exception($"이상한게 들어 있음 {raw}")
         };
     }
