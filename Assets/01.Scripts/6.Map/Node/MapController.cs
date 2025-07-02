@@ -14,6 +14,13 @@ public class MapController : MonoBehaviour
     [SerializeField] private PatternType _patternType = PatternType.CircularRing;
     [SerializeField] private bool _isBossStage = false;
     
+    [Header("StageType")]
+    [SerializeField] private StageType _stageType;
+    [SerializeField] private int _currentStageIndex = 1;
+
+    [Header("Stage Settings")] [SerializeField]
+    private StageSetting[] _stageSettingList;
+    
     [Header("Grid Parameter")]
     [SerializeField] private int _columns = 9;
     [SerializeField] private int _rows = 5;
@@ -32,13 +39,13 @@ public class MapController : MonoBehaviour
     [SerializeField] private int _crossThickness;
     
     
-    [Header("Node 확률 가중치")]
-    [SerializeField] private float _battleWeight = 0.15f;
-    [SerializeField] private float _shopWeight = 0.1f;
-    [SerializeField] private float _restWeight = 0.125f;
-    [SerializeField] private float _eventWeight = 0.2f;
-    [SerializeField] private float _emptyWeight = 0.4f;
-    
+    // [Header("Node 확률 가중치")]
+    // [SerializeField] private float _battleWeight = 0.15f;
+    // [SerializeField] private float _shopWeight = 0.1f;
+    // [SerializeField] private float _restWeight = 0.125f;
+    // [SerializeField] private float _eventWeight = 0.2f;
+    // [SerializeField] private float _emptyWeight = 0.4f;
+    //
     
     
     [Header("Debug")]
@@ -52,6 +59,7 @@ public class MapController : MonoBehaviour
     [SerializeField] private Transform _nodes;
     [SerializeField] private CameraSwitcher _cameraSwitcher;
     
+    private StageSetting CurrentStageSetting => _stageSettingList.First(s => s.stageType == _stageType);
     private MapModel _mapModel;
     private Dictionary<int, NodeView> _nodeViews;
     private Dictionary<(int,int),EdgeView> _edgeViews; 
@@ -69,6 +77,7 @@ public class MapController : MonoBehaviour
     { 
         //저장된 데이터 로드
         SaveData save = SaveLoadManager.LoadGame();
+        Debug.Log($"현재 스테이지{_currentStageIndex}");
         
         if (save != null) // 저장된게 있을 때
         {
@@ -84,7 +93,7 @@ public class MapController : MonoBehaviour
             //2) MapModel설정
             CreateMapModel();
             
-            AssignStartAndEndNodes(_mapModel, _isBossStage);
+            AssignStartAndEndNodes(CurrentStageSetting);
             //3) 최초 위치, 방문 초기화
             _currentNodeId = _mapModel.Nodes[0].Id;
             _visitedNodes = new HashSet<int>{_currentNodeId};
@@ -192,6 +201,7 @@ public class MapController : MonoBehaviour
     private void OnBossCleared()
     {
         SaveLoadManager.DeleteSave();
+        _currentStageIndex++;
         InitializeStage();
     }
     private void ApplyHighlights()
@@ -236,20 +246,19 @@ public class MapController : MonoBehaviour
     /// </summary>
     private void CreateMapModel()
     {
-        NodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _restWeight, _eventWeight, _emptyWeight);
-        FarthestRoomSelector farthestRoomSelector = new FarthestRoomSelector();
-        IMapGenerator generator;
-        if (_mapType == MapType.Grid)
-        {
-            generator = new GridMapGenerator(_columns, _rows,_roomCount, nodeTypeAssigner);//,farthestRoomSelector);
-        }
-        else
-        {
-            List<Vector2Int> pattern = GetCustomPattern();
-            generator = new CustomMapGenerator(pattern, nodeTypeAssigner); //, farthestRoomSelector);
-        }
+        StageSetting setting = CurrentStageSetting;
+        INodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(
+            setting.battleWeight,
+            setting.shopWeight,
+            setting.restWeight,
+            setting.eventWeight,
+            setting.emptyWeight);
         
-        _mapModel = generator.Generate(0, 0, 0);
+        
+        IMapGenerator generator = CreateGenerator(setting, nodeTypeAssigner);
+       _mapModel = generator.Generate(0, 0, 0);
+       
+       AssignStartAndEndNodes(setting);
     }
 
     private void RestoreMapFromSave(SaveData save)
@@ -318,26 +327,37 @@ public class MapController : MonoBehaviour
         //TODO: 현재위치 확인 -> 이동가능 여부 검사 -> 씬전환 or 전투 호출 등
     }
 
-    private void AssignStartAndEndNodes(MapModel mapModel, bool isBossStage)
+    private IMapGenerator CreateGenerator(StageSetting stageSetting, INodeTypeAssigner nodeTypeAssigner)
     {
-        NodeModel startNode = mapModel.Nodes[0];
+        switch (_stageType)
+        {
+            case StageType.Exploration:
+            {
+                int roomCount = stageSetting.baseRoomCount + (_currentStageIndex - 1) * stageSetting.ExtraRoomPerStage;
+                return new GridMapGenerator(_columns, _rows, roomCount, nodeTypeAssigner);
+            }
+            case StageType.Boss:
+            {
+                var pattern = GetCustomPattern();
+                return new CustomMapGenerator(
+                    pattern, nodeTypeAssigner );
+            }
+            default: goto case StageType.Exploration;
+        }
+    }
+    private void AssignStartAndEndNodes(StageSetting setting)
+    {
+        NodeModel startNode = _mapModel.Nodes[0];
         startNode.Type = NodeType.Start;
         
         IFarthestRoomSelector farthestRoomSelector = new FarthestRoomSelector();
         int farthestNodeId = farthestRoomSelector.SelectFarthestRoom(
-            mapModel.Nodes,
+            _mapModel.Nodes,
             startNode.Id);
         
-        NodeModel farthestNode = mapModel.Nodes
-                                         .First(n=>n.Id == farthestNodeId);
-        if (isBossStage)
-        {
-            farthestNode.Type = NodeType.Boss;
-        }
-        else
-        {
-            farthestNode.Type = NodeType.Move;
-        }
+        NodeModel farthestNode = _mapModel.Nodes
+                                          .First(n=>n.Id == farthestNodeId);
+        farthestNode.Type = setting.FarthestNode;
     }
     private void UpdateCurrentLocationDisplay()
     {   
