@@ -4,15 +4,13 @@ using System.Collections.Generic;
 
 public class DiceSpriteController : MonoBehaviour
 {
-    [Header("이미지에 적용할 타겟")] public Image diceImage; 
+    [Header("주사위 이미지")] 
+    public Image diceImage; 
 
     [Header("스프라이트 시트")] [SerializeField] 
     private string spriteSheetPath = "DiceSheet";
     private Dictionary<string, Sprite> spriteMap;
     
-    [Header("주사위 애니메이터")]
-    [SerializeField] private Animator animator;
-
     public Sprite Sprite { get; private set; }
     private void Awake()
     {
@@ -44,17 +42,5 @@ public class DiceSpriteController : MonoBehaviour
             Sprite = null;
         }
     }
-    public void PlayRollAnimation(DiceColorType color)
-    {
-        string animName = color switch
-        {
-            DiceColorType.Red => "DiceRoll_Red",
-            DiceColorType.Blue => "DiceRoll_Blue",
-            DiceColorType.Yellow => "DiceRoll_Yello",
-            DiceColorType.Black => "DiceRoll_Black",
-            _ => "DiceRoll_Black"
-        };
 
-        animator.Play(animName, 0, 0f); // 애니메이션 재시작
-    }
 }

@@ -17,8 +17,9 @@ public class DiceActor : MonoBehaviour
     
     [Header("주사위 스프라이트 출력용")]
     [SerializeField] private DiceSpriteController[] diceSpriteControllers;
-
     
+    [Header("DoTween 애니메이션 전용 컨트롤러")]
+    [SerializeField] private DiceRollAnimation[] diceRollAnimators;
 
     private DiceHandModel model = new(); // 주사위 모델 인스턴스
     
@@ -65,16 +66,23 @@ public class DiceActor : MonoBehaviour
 
     public void OnClickReroll(int index)
     {
+        if (diceRollAnimators[index].IsRolling)
+            return;
+        
         if (!model.HasSubmitted && model.CurrentRerolls < model.MaxRerolls)
         {
             model.Reroll(index); // 선택한 주사위만 리롤
             model.Evaluate();   // 리롤한 걸 다시 족보 계산
             
-            DiceColorType color = model.DiceList[index].Color;
-            diceSpriteControllers[index].PlayRollAnimation(color); // DiceRollAnimator 호출
-
-            // 👉 일정 시간(애니메이션 끝날 시점)에 이미지 변경
-            StartCoroutine(DelayUpdateDiceSprite(index, color, model.DiceList[index].Value));
+            DiceModel dice = model.DiceList[index];
+            
+            diceButtons[index].interactable = false;// 리롤 버튼 비활성화
+            
+            // DoTween 기반 애니메이션 실행
+            diceRollAnimators[index].PlayRollAnimation(dice.Color, dice.Value, () =>
+            {
+                diceButtons[index].interactable = true; // 리롤 버튼 활성화
+            });
 
             // UI 나머지는 즉시 갱신 가능
             view.UpdateHandInfo(model.Info);
@@ -90,14 +98,6 @@ public class DiceActor : MonoBehaviour
         }
     }
 
-    
-    
-    private IEnumerator DelayUpdateDiceSprite(int index, DiceColorType color, int value)
-    {
-        yield return new WaitForSeconds(0.5f);
-        diceSpriteControllers[index].SetSprite(color, value);
-    }
-    
     public void OnClickSubmit()
     {
         if (model.HasSubmitted)
@@ -142,7 +142,7 @@ public class DiceActor : MonoBehaviour
         TurnManager.Instance.PlayerGetAttackDamage(result.finalDamage);
     }
     
-    private void UpdateAllDiceSprites()
+    private void UpdateAllDiceSprites() // 주사위의 실제값을 설정해줌
     {
         for (int i = 0; i < model.DiceList.Count; i++)
         {
