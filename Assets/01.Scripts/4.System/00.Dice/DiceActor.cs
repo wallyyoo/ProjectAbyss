@@ -49,7 +49,7 @@ public class DiceActor : MonoBehaviour
         
     }
 
-   public void OnClickRollAll() // 초기 주사위 모두굴림
+   public void OnClickRollAll()
    {
       // model.RollAll();    //모든 주사위 굴림
        model.Evaluate();   //족보 계산
@@ -63,7 +63,7 @@ public class DiceActor : MonoBehaviour
     view.UpdateSubmitButtonText(model.Info.description);
    }
 
-    public void OnClickReroll(int index) // 클릭 리롤
+    public void OnClickReroll(int index)
     {
         if (!model.HasSubmitted && model.CurrentRerolls < model.MaxRerolls)
         {

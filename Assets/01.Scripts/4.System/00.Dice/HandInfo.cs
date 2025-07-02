@@ -28,11 +28,11 @@ public static class HandDatabase
 {
     public static readonly Dictionary<HandType, HandInfo> table = new()
     {
-        { HandType.MonoRoll, new("MonoRoll", 200, 8, "같은 숫자 5개 전체 동일") },
+        { HandType.MonoRoll, new("MonoRoll", 150, 8, "같은 숫자 5개 전체 동일") },
         { HandType.FourDice, new("FourDice", 120, 6, "같은 숫자 4개") },
         { HandType.LargeStraight, new("LargeStraight", 100, 5, "연속된 숫자 5개") },
         { HandType.SmallStraight, new("SmallStraight", 80, 5, "연속된 숫자 4개") },
-        { HandType.FullHouse, new("FullHouse", 75, 4, "같은 숫자 3개 + 같은 숫자 2개") },
+        { HandType.FullHouse, new("FullHouse", 75, 5, "같은 숫자 3개 + 같은 숫자 2개") },
         { HandType.Triple, new("Triple", 70, 4, "같은 숫자 3개") },
         { HandType.TwoPair, new("TwoPair", 60, 2, "같은 숫자 2쌍") },
         { HandType.OnePair, new("OnePair", 40, 2, "같은 숫자 2개") },
