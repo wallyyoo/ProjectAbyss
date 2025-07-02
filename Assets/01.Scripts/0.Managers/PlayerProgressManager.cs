@@ -12,6 +12,33 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
     private Dictionary<HandType, int> handTypeUpgradeLevels = new();
     private Dictionary<PlayerStatType, int> statUpgradeLevels = new();
 
+    public PlayerProgress Progress { get; private set; }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // Progress = FindObjectOfType<PlayerProgress>();
+        // Progress.Init();
+    }
+
+    public void SyncUpgradeLevels()
+    {
+        // 스탯
+        foreach (PlayerStatType stat in Enum.GetValues(typeof(PlayerStatType)))
+        {
+            int lvl = GetStatUpgradeLevel(stat);
+            Progress.SetStatUpgradeLevel(stat, lvl);
+        }
+
+        // 족보
+        foreach (HandType hand in Enum.GetValues(typeof(HandType)))
+        {
+            int lvl = GetHandTypeUpgradeLevel(hand);
+            Progress.SetHandUpgradeLevel(hand, lvl);
+        }
+    }
+
     // =========== 재화 관련 ===========
     [Button("골드 추가")]
     public void AddGold(int amount = 1000)
@@ -76,12 +103,16 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         int current = GetHandTypeUpgradeLevel(type);
         int max = DiceTableDatabase.GetMaxLevel(type);
         handTypeUpgradeLevels[type] = Mathf.Clamp(current + 1, 0, max);
+
+        // SyncUpgradeLevels();
     }
 
     public void UpgradeHandTypeLevelDown(HandType type)
     {
         int current = GetHandTypeUpgradeLevel(type);
         handTypeUpgradeLevels[type] = Mathf.Max(current - 1, 0);
+
+        // SyncUpgradeLevels();
     }
 
     public void SetUpgradeHandTypeLevel(HandType type, int level)
@@ -101,12 +132,16 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         int current = GetStatUpgradeLevel(type);
         int max = StatTableDatabase.GetMaxLevel(type);
         statUpgradeLevels[type] = Mathf.Clamp(current + 1, 0, max);
+
+        // SyncUpgradeLevels();
     }
 
     public void UpgradeStatLevelDown(PlayerStatType type)
     {
         int current = GetStatUpgradeLevel(type);
         statUpgradeLevels[type] = Mathf.Max(current - 1, 0);
+
+        // SyncUpgradeLevels();
     }
 
     public void SetUpgradeStatLevel(PlayerStatType type, int level)
