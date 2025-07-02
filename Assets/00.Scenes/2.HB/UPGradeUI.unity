@@ -879,28 +879,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &236035518 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4784274191007386696, guid: 0ff0ea9bd6ea6407a9011c129fbe4c84, type: 3}
-  m_PrefabInstance: {fileID: 6305774323867015083}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &236035519 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 879268249490204146, guid: 0ff0ea9bd6ea6407a9011c129fbe4c84, type: 3}
   m_PrefabInstance: {fileID: 6305774323867015083}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &236035523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 236035518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13e8c30528d0a4b25905a4ab1a5ce5df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &246700853
 GameObject:
   m_ObjectHideFlags: 0
@@ -8950,17 +8933,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Up_BaseStatPanel
       objectReference: {fileID: 0}
-    - target: {fileID: 4784274191007386696, guid: 0ff0ea9bd6ea6407a9011c129fbe4c84, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4784274191007386696, guid: 0ff0ea9bd6ea6407a9011c129fbe4c84, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 236035523}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ff0ea9bd6ea6407a9011c129fbe4c84, type: 3}
 --- !u!224 &7306505709315761667 stripped
 RectTransform:

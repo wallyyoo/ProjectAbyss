@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UpgradeManager
+public class UpgradeHandTypeManager
 {
     /// <summary>
     /// 족보를 강화, 마력 수정 차감
@@ -49,8 +49,8 @@ public class UpgradeManager
         UIManager.Instance.UpdateEnchantCore(progress.GetEnchantCore());
         UpgradeDatabase.UpdateUpgradeData(type);
         UIManager.Instance.UpgradeHandUI.Refresh();
-        onSuccess?.Invoke();
 
+        onSuccess?.Invoke();
         return true;
     }
 

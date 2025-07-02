@@ -21,13 +21,13 @@ public class HT_UpgraBtnUI : MonoBehaviour
 
             if (up) up.onClick.AddListener(() =>
             {
-                UpgradeManager.TryUpgrade(type,
+                UpgradeHandTypeManager.TryUpgrade(type,
                 onSuccess: () => UIManager.Instance.UpgradeHandUI.Refresh(),
                 onFail: () => Debug.Log("업그레이드 실패"));
             });
             if (down) down.onClick.AddListener(() =>
             {
-                UpgradeManager.TryDowngrade(type,
+                UpgradeHandTypeManager.TryDowngrade(type,
                 onSuccess: () => UIManager.Instance.UpgradeHandUI.Refresh(),
                 onFail: () => Debug.Log("다운 그레이드 실패"));
             });
