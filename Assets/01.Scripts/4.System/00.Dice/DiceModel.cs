@@ -4,7 +4,7 @@ using UnityEngine;
 public enum DiceColor
 {   
     Black,
-    Yellow,
+    Yello,
     Blue,
     Red,
     None
@@ -22,11 +22,11 @@ public class DiceModel
             Color = (DiceColor)Random.Range(0, 4); // 색상 값 1~4
     }
 
-    public void Init()// 초기화 시 
-    {
-        Value = 1;      // 주사위 값은 1
-        Color = DiceColor.None; // 컬러는 없음
-    }
+  public void Init()// 초기화 시 
+  {
+      Value = 1;      // 주사위 값은 1
+      Color = DiceColor.None; // 컬러는 없음
+  }
     
     // 추후 색상을 고정해야하는 능력이 추가된다면 사용.
    // public void SetColor(DiceColor color)
