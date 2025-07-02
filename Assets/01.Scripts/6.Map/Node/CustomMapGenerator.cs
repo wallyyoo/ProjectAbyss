@@ -7,16 +7,16 @@ using UnityEngine;
 public class CustomMapGenerator : IMapGenerator
 {
     private readonly INodeTypeAssigner _nodeTypeAssigner;
-    private readonly IBossRoomSelector _bossRoomSelector;
+    //private readonly IFarthestRoomSelector _farthestRoomSelector;
     private readonly List<Vector2Int> _gridPositions;
     
     System.Random _random = new System.Random();
-    public CustomMapGenerator(List<Vector2Int> gridPositions, INodeTypeAssigner nodeTypeAssigner,
-        IBossRoomSelector bossRoomSelector)
+    public CustomMapGenerator(List<Vector2Int> gridPositions, INodeTypeAssigner nodeTypeAssigner)
+        //IFarthestRoomSelector farthestRoomSelector)
     {
         _gridPositions = gridPositions;
         _nodeTypeAssigner = nodeTypeAssigner;
-        _bossRoomSelector = bossRoomSelector;
+        //_farthestRoomSelector = farthestRoomSelector;
     }
 
     public MapModel Generate(int unsuedDepth, int unused1, int unused2)
@@ -66,56 +66,42 @@ public class CustomMapGenerator : IMapGenerator
             b.ConnectedNodeIds.Add(a.Id);
         }
         
-        
-        // Vector2Int[] dirs =
-        // {
-        //     new Vector2Int(1, 0),
-        //     new Vector2Int(-1, 0),
-        //     new Vector2Int(0, 1),
-        //     new Vector2Int(0, -1)
-        //
-        // };
-        // foreach (KeyValuePair<Vector2Int, NodeModel> entry in positionNodeMap)
-        // {
-        //     Vector2Int currentPosition = entry.Key;
-        //     NodeModel currentNode = entry.Value;
-        //
-        //     foreach (Vector2Int dir in dirs)
-        //     {
-        //         Vector2Int neighborPosition = currentPosition + dir;
-        //         if (positionNodeMap.ContainsKey(neighborPosition))
-        //         {
-        //             NodeModel neighborNode = positionNodeMap[neighborPosition];
-        //             if (currentNode.Id < neighborNode.Id)
-        //             {
-        //                 currentNode.ConnectedNodeIds.Add(neighborNode.Id);
-        //                 neighborNode.ConnectedNodeIds.Add(currentNode.Id);
-        //                 mapModel.Edges.Add(
-        //                     new EdgeModel(currentNode.Id, neighborNode.Id));
-        //                 
-        //             }
-        //         }
-        //     }
-        // }
-        int startNodeId = mapModel.Nodes[0].Id;
-        mapModel.Nodes.Find(n => n.Id == startNodeId).Type = NodeType.Start;
-        int bossNodeId = _bossRoomSelector.SelectBoss(mapModel.Nodes, startNodeId);
-        mapModel.Nodes.Find(n=>n.Id==bossNodeId).Type = NodeType.Boss;
+       
+        // int startNodeId = mapModel.Nodes[0].Id;
+        // mapModel.Nodes.Find(n => n.Id == startNodeId).Type = NodeType.Start;
+        // int bossNodeId = _farthestRoomSelector.SelectFarthestRoom(mapModel.Nodes, startNodeId);
+        // mapModel.Nodes.Find(n=>n.Id==bossNodeId).Type = NodeType.Move;
         
         return mapModel;
     }
 
+    // 2) 외곽 노드 필터링
     private void FilterOutNodes(MapModel model, Dictionary<Vector2Int, NodeModel> posMap, int keepPercent)
     {
-        int maxDist2 = posMap.Keys.Max(p=>p.x*p.x +p.y*p.y);
+        if (posMap == null || posMap.Count <= 1)
+            return;
 
+        var distances = posMap.Keys
+                              .Select(p => p.x * p.x + p.y * p.y);
+        if (!distances.Any())
+            return;
+        
+        //최대 거리 계산
+        int maxDist2 = distances.Max();
+        
+        //외곽 노드 리스트
         List<NodeModel> outerNodes = model.Nodes
                                           .Where(n => n.GridPos.x * n.GridPos.x
                                               + n.GridPos.y * n.GridPos.y == maxDist2)
                                           .ToList();
+        
+        //최소 유지 개수
         int minKeep = outerNodes.Count * keepPercent / 100;
         int removeCount = outerNodes.Count - minKeep;
+        if (removeCount <= 0)
+            return;
         
+        //랜덤으로 제거
         outerNodes
             .OrderBy(_ => _random.Next())
             .Take(removeCount)
@@ -133,6 +119,7 @@ public class CustomMapGenerator : IMapGenerator
         posMap.Remove(node.GridPos);
     }
 
+    // 3) 인접 리스트 구성
     private Dictionary<NodeModel, List<NodeModel>> BuildAdjacency(
         Dictionary<Vector2Int, NodeModel> posMap)
     {
@@ -167,18 +154,27 @@ public class CustomMapGenerator : IMapGenerator
         var stack = new Stack<NodeModel>();
         
 
-        NodeModel start = model.Nodes.Find(n => n.Id == 0);
+        NodeModel start = model.Nodes.FirstOrDefault(n => n.Id == 0&&adj.ContainsKey(n));
+        if (start == null && adj.Count > 0)
+        {
+            start = adj.Keys.First();
+        }
+
+        if (start == null)
+        {
+            return edges;
+        }
         visited.Add(start);
         stack.Push(start);
 
         while (stack.Count > 0)
         {
             NodeModel current = stack.Pop();
-            
-            List<NodeModel> neighbors = adj[current]
-                .OrderBy(_ => _random.Next()).ToList();
 
-            foreach (NodeModel neighbor in neighbors)
+            if (!adj.TryGetValue(current, out var neighbors))
+                continue;
+            
+            foreach (NodeModel neighbor in neighbors.OrderBy(_=>_random.Next()))
             {
                 if (!visited.Contains(neighbor))
                 {

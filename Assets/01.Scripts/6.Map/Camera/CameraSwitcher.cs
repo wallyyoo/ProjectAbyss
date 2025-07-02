@@ -8,7 +8,9 @@ public class CameraSwitcher : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera startCam;
     [SerializeField] private CinemachineVirtualCamera battleCam;
     [SerializeField] private CinemachineVirtualCamera shopCam;
-    [SerializeField] private CinemachineVirtualCamera rewardCam;
+    [SerializeField] private CinemachineVirtualCamera restCam;
+    [SerializeField] private CinemachineVirtualCamera moveCam;
+    [SerializeField] private CinemachineVirtualCamera emptyCam;
     [SerializeField] private CinemachineVirtualCamera eventCam;
     [SerializeField] private CinemachineVirtualCamera bossCam;
     
@@ -20,7 +22,9 @@ public class CameraSwitcher : MonoBehaviour
         startCam.Priority = NON_PlAY_PRIORITY;
         battleCam.Priority = NON_PlAY_PRIORITY;
         shopCam.Priority = NON_PlAY_PRIORITY;
-        rewardCam.Priority = NON_PlAY_PRIORITY;
+        restCam.Priority = NON_PlAY_PRIORITY;
+        moveCam.Priority = NON_PlAY_PRIORITY;
+        emptyCam.Priority = NON_PlAY_PRIORITY;
         eventCam.Priority = NON_PlAY_PRIORITY;
         bossCam.Priority = NON_PlAY_PRIORITY;
 
@@ -35,14 +39,20 @@ public class CameraSwitcher : MonoBehaviour
             case NodeType.Shop:
                 shopCam.Priority = PLAY_PRIORITY;
                 break;
-            case NodeType.Reward:
-                rewardCam.Priority = PLAY_PRIORITY;
+            case NodeType.Rest:
+                restCam.Priority = PLAY_PRIORITY;
                 break;
             case NodeType.Event:
                 eventCam.Priority = PLAY_PRIORITY;
                 break;
             case NodeType.Boss:
                 bossCam.Priority = PLAY_PRIORITY;
+                break;
+            case NodeType.Empty:
+                emptyCam.Priority = PLAY_PRIORITY;
+                break;
+            case NodeType.Move :
+                moveCam.Priority = PLAY_PRIORITY;
                 break;
         }
         

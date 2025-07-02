@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
     
@@ -23,8 +22,9 @@ public class DeleteSave:MonoBehaviour
     {
         MapUi.enabled = false;
     }
+
+    //[Button("RunCountup")]
     
-        
     
         
 }

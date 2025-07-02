@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-using Unity.VisualScripting;
 
 /// <summary>
 /// 화면에 표시되는 노드 뷰. 클릭 이벤트를 MapController에 전달.
@@ -17,18 +15,23 @@ public class NodeView : MonoBehaviour
     [SerializeField] private Image _indicatorPrefab; // 이동가능 연결 부분 표시
     
     [Header("Type Icons")]
+    [SerializeField] private Sprite _UnknownSprite;
+    [SerializeField] private Sprite _startSprite;
     [SerializeField] private Sprite _battleSprite;
     [SerializeField] private Sprite _shopSprite;
-    [SerializeField] private Sprite _rewardSprite;
+    [SerializeField] private Sprite _restSprite;
     [SerializeField] private Sprite _eventSprite;
-    [SerializeField] private Sprite _startSprite;
+    [SerializeField] private Sprite _moveSprite;
+    [SerializeField] private Sprite _emptySprite;
     [SerializeField] private Sprite _bossSprite;
     
-    
+    [Header("Type Color")]
     [SerializeField] private Color _defaultColor = Color.gray;
     [SerializeField] private Color _currentColor = Color.green;
     [SerializeField] private Color _availableColor = Color.yellow;
     [SerializeField] private Color _visitedColor = Color.white;
+
+    [Header("Highlight")] [SerializeField] private GameObject _highlightBorder;
     
     private NodeModel _nodeModel;
     private Action<NodeModel> _onClick;
@@ -44,7 +47,7 @@ public class NodeView : MonoBehaviour
         _onClick = onClick;
         transform.localPosition = pos;
         _button.onClick.AddListener(() => _onClick?.Invoke(_nodeModel));
-        SetupTypeDisplay(_nodeModel.Type);
+        SetType(_nodeModel.Type);
         SetDefault();
     }
 
@@ -86,31 +89,52 @@ public class NodeView : MonoBehaviour
         _backgroundImage.color = _defaultColor;
     }
 
-    public void SetupTypeDisplay(NodeType type)
+    public void SetType(NodeType type)
+    {
+        if (type == NodeType.Unknown)
+        {
+            _iconImage.sprite = _UnknownSprite;
+        }
+        else
+        {
+            _iconImage.sprite = SetupTypeDisplay(type);
+        }
+    }
+    public Sprite SetupTypeDisplay(NodeType type)
     {
         switch (type)
         {
+            case NodeType.Start: 
+                _iconImage.sprite = _startSprite;
+                break;
             case NodeType.Battle:
                 _iconImage.sprite = _battleSprite;
                 break;
             case NodeType.Shop:
                 _iconImage.sprite = _shopSprite;
                 break;
-            case NodeType.Reward: 
-                _iconImage.sprite = _rewardSprite;
+            case NodeType.Rest: 
+                _iconImage.sprite = _restSprite;
                 break;
             case NodeType.Event: 
                 _iconImage.sprite = _eventSprite;
                 break;
-            case NodeType.Start: 
-                _iconImage.sprite = _startSprite;
+            case NodeType.Move:
+                _iconImage.sprite = _moveSprite;
                 break;
             case NodeType.Boss: 
                 _iconImage.sprite = _bossSprite;
                 break;
-            default: _iconImage.sprite = null;
+            default: _iconImage.sprite = _emptySprite;
                 break;
         }
+
+        return _iconImage.sprite;
     }
-    
+
+    public void SetHighlight(bool highlight)
+    {
+        if(_highlightBorder != null) 
+            _highlightBorder.SetActive(highlight);
+    }
 }

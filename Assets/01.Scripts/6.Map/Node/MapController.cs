@@ -1,132 +1,166 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using NaughtyAttributes;
+using UnityEngine;
+
 
 /// <summary>
 /// 맵 생성부터 클릭 처리, 노드 이동 로직을 총괄
 /// </summary>
 public class MapController : MonoBehaviour
 {
-    [SerializeField] private NodeView _nodePrefab;
-    [SerializeField] private EdgeView _edgePrefab;
-
-    [SerializeField] private Transform _edges;
-    [SerializeField] private Transform _nodes;
+    [Header("Map Generator Settings")]
+    [SerializeField] private MapType _mapType = MapType.Grid;
+    [SerializeField] private PatternType _patternType = PatternType.CircularRing;
     
-    [SerializeField] private CameraSwitcher _cameraSwitcher;
+    
+    [Header("Stage Progress")]
+    [SerializeField] private StageType _stageType;
 
-    //맵 생성 파라미터
+
+    [Header("Stage Settings SO")]
+    [SerializeField] private StageSetting[] _stageSettingList;
+    [SerializeField] private ChapterSetting[] _chapterSettingList;
+    
+    [Header("Grid Parameter")]
     [SerializeField] private int _columns = 9;
     [SerializeField] private int _rows = 5;
     [SerializeField] private int _roomCount = 12;
     [SerializeField] private float CellSize = 150f;
-    
-    [SerializeField] private float _battleWeight = 1.0f;
-    [SerializeField] private float _shopWeight = 0.2f;
-    [SerializeField] private float _rewardWeight = 0.1f;
-    [SerializeField] private float _eventWeight = 0.2f;
 
-    //호출 하는 Action
-    //public Action OnMapNodeAction = OnMapNode;
-    //public Action OffMapNodeAction = OffMapNode;
+    [Header("Pattern Parameter")]
+    [SerializeField] private int _ringHorizontalRadius;
+    [SerializeField] private int _ringVerticalRadius;
+    [SerializeField] private int _ringThickness;
+    [SerializeField] private int _pyramidLevels;
+    [SerializeField] private int _diagonalWidth;
+    [SerializeField] private int _diagonalHeight;
+    [SerializeField] private int _diagonalOffset;
+    [SerializeField] private int _crossArmLength;
+    [SerializeField] private int _crossThickness;
+    
+    
+    // [Header("Node 확률 가중치")]
+    // [SerializeField] private float _battleWeight = 0.15f;
+    // [SerializeField] private float _shopWeight = 0.1f;
+    // [SerializeField] private float _restWeight = 0.125f;
+    // [SerializeField] private float _eventWeight = 0.2f;
+    // [SerializeField] private float _emptyWeight = 0.4f;
+    //
+    
+    
+    [Header("Debug")]
+    [SerializeField] private bool _useDebugRunCount = false;
+    [SerializeField] private int _debugRunCount = 0;
+    
+    [Header("References")]
+    [SerializeField] private NodeView _nodePrefab;
+    [SerializeField] private EdgeView _edgePrefab;
+    [SerializeField] private Transform _edges;
+    [SerializeField] private Transform _nodes;
+    [SerializeField] private CameraSwitcher _cameraSwitcher;
     
     private MapModel _mapModel;
     private Dictionary<int, NodeView> _nodeViews;
-    private int _currentNodeId;
+    private Dictionary<(int,int),EdgeView> _edgeViews; 
     private HashSet<int> _visitedNodes;
+    private int _currentNodeId;
+    private int _previousRunCount;
+    private int _currentRunCount;
+    private int _endNodeId;
+    private INodeRevealStrategy _nodeRevealStrategy;
+    private StageProgress _stageProgress;
+
+    private ChapterSetting CurrentChapterSetting
+        => _chapterSettingList.First(c => c.ChapterNumber == _stageProgress.Chapter);
+    
+    private StageType CurrentStageType
+        => CurrentChapterSetting.StageSequence[_stageProgress.StageNumber-1];
+    
+    private StageSetting CurrentStageSetting
+        => _stageSettingList.First(s => s.stageType == CurrentStageType);
+
     
     
-    private void Start()
+    
+    /// <summary>
+    /// 스테이지 시작 시 호출
+    /// </summary>
+    private void InitializeStage()
     { 
+        //저장된 데이터 로드
         SaveData save = SaveLoadManager.LoadGame();
-        if (save != null)
+        
+        if (save != null) // 저장된게 있을 때
         {
-            _mapModel = new MapModel();
-            foreach (var nd in save.Nodes)
-            {
-                var node = new NodeModel(
-                    nd.Id,
-                    nd.Type,
-                    new Vector2Int(nd.X, nd.Y)
-                    );
-                node.ConnectedNodeIds.AddRange(nd.ConndectedNodeIds);
-                _mapModel.Nodes.Add(node);
-            }
-
-            foreach (var ed in save.Edges)
-            {
-                _mapModel.Edges.Add(new EdgeModel(ed.FromNodeId, ed.ToNodeId));
-            }
-            _currentNodeId = save.CurrentNodeId;
-            _visitedNodes = new HashSet<int>(save.VisitedNodeIds);
+            RestoreMapFromSave(save);
+            Debug.Log($"현재 회차: {_currentRunCount} 현재 챕터 : {save.Progress.Chapter}, 현재 스테이지: {save.Progress.StageNumber}");
+            
         }
-        else
+        else // 저장된게 없을 때 새로 만들기
         {
-            NodeTypeAssigner _nodeTypeAssigner = new NodeTypeAssigner(_battleWeight, _shopWeight, _rewardWeight, _eventWeight);
-            BossRoomSelector _bossRoomSelector = new BossRoomSelector();
-
-            //기존 랜덤 맵 노드
-            //_mapModel = new GridMapGenerator(_columns,_rows, _roomCount,_nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
+            _previousRunCount = _useDebugRunCount
+                ? _debugRunCount
+                : 0;
+            _stageProgress = new StageProgress
+            {
+                Chapter = 1,
+                StageNumber = 1,
+            };
             
-            //패턴으로 제작
-            //링패턴
-            //List<Vector2Int> _pattern = MapPatternLibrary.CreateCircularRing(8,6,3);
-            //피라미드
-            //List<Vector2Int> _pattern = MapPatternLibrary.CreatePyramid(6);
-            //십자가
-            List<Vector2Int> _pattern = MapPatternLibrary.CreateCross(6, 3);
-            //평행사변형
-            //List<Vector2Int> _pattern = MapPatternLibrary.CreateDiagonal(5,7);
+            //2) MapModel설정
+            CreateMapModel();
             
-            _mapModel = new CustomMapGenerator(_pattern, _nodeTypeAssigner,_bossRoomSelector).Generate(0, 0, 0);
-            
-            
-            //수정하지 않는 로직
+            AssignStartAndEndNodes(CurrentStageSetting);
+            //3) 최초 위치, 방문 초기화
             _currentNodeId = _mapModel.Nodes[0].Id;
             _visitedNodes = new HashSet<int>{_currentNodeId};
-
-            var toSave = new SaveData
-            {
-                Nodes = new List<NodeData>(),
-                Edges = new List<EdgeData>(),
-                CurrentNodeId = _currentNodeId,
-                VisitedNodeIds = new List<int>(_visitedNodes)
-            };
-            foreach (var node in _mapModel.Nodes)
-            {
-                toSave.Nodes.Add(new NodeData
-                {
-                    Id = node.Id,
-                    Type = node.Type,
-                    X = node.GridPos.x,
-                    Y = node.GridPos.y, 
-                    ConndectedNodeIds = new List<int>(node.ConnectedNodeIds)
-                });
-            }
-
-            foreach (var ed in _mapModel.Edges)
-            {
-                toSave.Edges.Add(new EdgeData
-                {
-                        FromNodeId = ed.FromNodeId,
-                        ToNodeId = ed.ToNodeId 
-                });
-            }
-            SaveLoadManager.SaveGame(toSave);
+            
+            SaveGameWithRunCount();
         }
+        
+        _currentRunCount = _previousRunCount + 1;
+        NodeModel _endNode = _mapModel.Nodes.First(n => n.Id == _endNodeId);
+        //4) Reveal 전략 생성
+        _nodeRevealStrategy = new RunCountRevealStrategy(
+            _mapModel,
+            _currentRunCount,
+            _currentNodeId,
+            _visitedNodes
+            , _endNode.Type);
+        
+        // 5)화면 렌더링
         
         RenderMap();
         UpdateCurrentLocationDisplay();
+        ApplyHighlights();
+        
     }
 
+    private void Start()
+    {
+        InitializeStage();
+        NodeModel currentNode = _mapModel.Nodes.FirstOrDefault(n => n.Id == _currentNodeId);
+        if (currentNode != null)
+        {
+            _cameraSwitcher.SwitchTo(currentNode.Type);
+        }
+    }
+    
     /// <summary>
     /// 맵 모델에 따라 뷰를 인스턴스화
     /// </summary>
     private void RenderMap()
     {
+        if (_nodeViews != null)
+        {
+            foreach(var nv in _nodeViews.Values) Destroy(nv.gameObject);
+            foreach(var ev in _edgeViews.Values) Destroy(ev.gameObject);
+        }
+        
         _nodeViews = new Dictionary<int, NodeView>();
+        _edgeViews = new Dictionary<(int,int),EdgeView>();
         Dictionary<int,Vector2> screenPositions = new Dictionary<int, Vector2>();
         
         
@@ -154,30 +188,26 @@ public class MapController : MonoBehaviour
             
             NodeView view = Instantiate(_nodePrefab, _nodes);
             view.Initialize(node,pos,OnNodeClicked);
+            bool isReveal = _nodeRevealStrategy.ShouldReveal(node);
+            bool isVisited = _visitedNodes.Contains(node.Id);
+
+            NodeType displayType = (isVisited || isReveal)
+                ? node.Type
+                : NodeType.Unknown;
+            view.SetType(displayType);
             _nodeViews[node.Id] = view;
         }
         
-        //랜덤노드에서 사용되던 시작점이 중앙에 위치하던 구조
-        //위의 로직을 사용하면 노드 전체의 좌우를 기준으로 중앙점을 찾아 화면중앙에 위치해줌
-        // foreach (NodeModel node in _mapModel.Nodes)
-        // {
-        //     float x = (node.GridPos.x - (_columns - 1) * 0.5f) * CellSize;
-        //     float y = (node.GridPos.y - (_rows - 1)*0.5f)* CellSize;
-        //     Vector2 pos = new Vector2(x, y);
-        //
-        //     screenPositions[node.Id] = pos;
-        //
-        //     NodeView view = Instantiate(_nodePrefab, transform);
-        //     view.Initialize(node, pos, OnNodeClicked);
-        //     _nodeViews[node.Id] = view;
-        // }
-
+        //엣지 생성
         foreach (EdgeModel edge in _mapModel.Edges)
         {
             Vector2 from =screenPositions[edge.FromNodeId];
             Vector2 to = screenPositions[edge.ToNodeId];
             EdgeView edgeView = Instantiate(_edgePrefab, _edges);
             edgeView.Initialize(from, to);
+            
+            _edgeViews[(edge.FromNodeId, edge.ToNodeId)] = edgeView;
+            _edgeViews[(edge.ToNodeId, edge.FromNodeId)] = edgeView;
         }
 
         foreach (NodeModel node in _mapModel.Nodes)
@@ -187,7 +217,104 @@ public class MapController : MonoBehaviour
         }
     }
 
-    
+    private void OnBossCleared()
+    {
+        NodeModel currentNode = _mapModel.Nodes.Find(n => n.Id == _currentNodeId);
+        if (CurrentStageType != StageType.Boss || currentNode.Type != NodeType.Boss)
+        {
+            Debug.LogWarning($"보스 클리어 호출 시점이 Boss스테이지가 아닙니다.");
+            return;
+        }
+        
+        AdvanceStage();
+    }
+    private void ApplyHighlights()
+    {
+        foreach(NodeView nv in _nodeViews.Values)
+            nv.SetHighlight(false);
+        foreach(EdgeView ev in _edgeViews.Values)
+            ev.SetHighlight(false);
+
+        foreach (int nodeId in _nodeRevealStrategy.GetHighlightedNodeIds())
+        {
+            _nodeViews[nodeId].SetHighlight(true);
+        }
+
+        foreach ((int from, int to) in _nodeRevealStrategy.GetHighlightedEdges())
+        {
+            if(_edgeViews.TryGetValue((from,to), out EdgeView edgeView))
+                edgeView.SetHighlight(true);
+        }
+    }
+
+    private List<Vector2Int> GetCustomPattern()
+    {
+        switch (_patternType)
+        {
+            case PatternType.CircularRing:
+                return MapPatternLibrary.CreateCircularRing(_ringHorizontalRadius, _ringVerticalRadius,_ringThickness);
+            case PatternType.Pyramid:
+                return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
+            case PatternType.Diagonal:
+                return MapPatternLibrary.CreateDiagonal(_diagonalWidth, _diagonalHeight,_diagonalOffset);
+            case PatternType.Cross:
+                return MapPatternLibrary.CreateCross(_crossArmLength,_crossThickness);
+            default:
+                Debug.LogWarning($"Unknown PatternType{_patternType}, defaulting to Pyramid");
+                return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
+        }
+    }
+
+    /// <summary>
+    /// MapType에 따라 Grid 혹은 Custom - Type 생성기 호출
+    /// </summary>
+    private void CreateMapModel()
+    {
+        StageSetting setting = CurrentStageSetting;
+        
+        INodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(
+            setting.battleWeight,
+            setting.shopWeight,
+            setting.restWeight,
+            setting.eventWeight,
+            setting.emptyWeight);
+        
+        
+        IMapGenerator generator = CreateGenerator(setting, nodeTypeAssigner);
+       _mapModel = generator.Generate(0, 0, 0);
+       
+       AssignStartAndEndNodes(setting);
+    }
+
+    private void RestoreMapFromSave(SaveData save)
+    {
+        //RunCount 설정
+        _previousRunCount = _useDebugRunCount
+            ? _debugRunCount
+            : save.RunCount;
+        
+        _stageProgress = save.Progress;
+        
+            
+        _mapModel = new MapModel();
+        foreach (var nd in save.Nodes)
+        {
+            var node = new NodeModel(
+                nd.Id,
+                nd.Type,
+                new Vector2Int(nd.X, nd.Y)
+            );
+            node.ConnectedNodeIds.AddRange(nd.ConndectedNodeIds);
+            _mapModel.Nodes.Add(node);
+        }
+
+        foreach (var ed in save.Edges)
+        {
+            _mapModel.Edges.Add(new EdgeModel(ed.FromNodeId, ed.ToNodeId));
+        }
+        _currentNodeId = save.CurrentNodeId;
+        _visitedNodes = new HashSet<int>(save.VisitedNodeIds);
+    }
     
     /// <summary>
     /// 유효한이동인지 검사 후 로직 수행
@@ -195,53 +322,122 @@ public class MapController : MonoBehaviour
     private void OnNodeClicked(NodeModel nodeModel)
     {
         Debug.Log($"{nodeModel.Id}노드클릭됨, Type{nodeModel.Type}");
+        
         NodeModel currentNode = _mapModel.Nodes.Find(n=> n.Id == _currentNodeId);
-        if (currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
+        NodeModel endNode =_mapModel.Nodes.Find(n=> n.Id == _endNodeId);
+        if (!currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
+            return;
+        
+        if (CurrentStageType == StageType.Exploration
+            && nodeModel.Type == NodeType.Move
+            && nodeModel.Id == _endNodeId)
         {
-            _visitedNodes.Add(_currentNodeId);
-            Debug.Log($"이동가능 : Node{_currentNodeId} -> Node{nodeModel.Id}");
-            _currentNodeId = nodeModel.Id;
-            UpdateCurrentLocationDisplay();
-
-            var save = new SaveData
-            {
-                Nodes = new List<NodeData>(),
-                Edges = new List<EdgeData>(),
-                CurrentNodeId = _currentNodeId,
-                VisitedNodeIds = new List<int>(_visitedNodes)
-            };
-            foreach (var node in _mapModel.Nodes)
-            {
-                save.Nodes.Add(new NodeData
-                {
-                    Id = node.Id,
-                    Type = node.Type,
-                    X = node.GridPos.x,
-                    Y = node.GridPos.y, 
-                    ConndectedNodeIds = new List<int>(node.ConnectedNodeIds)
-                });
-            }
-
-            foreach (var ed in _mapModel.Edges)
-            {
-                save.Edges.Add(new EdgeData
-                {
-                    FromNodeId = ed.FromNodeId,
-                    ToNodeId = ed.ToNodeId 
-                });
-            }
-            SaveLoadManager.SaveGame(save);
-            
-            _cameraSwitcher.SwitchTo(nodeModel.Type);
-            
-            //전환되고 꺼짐, 씬 종료 되면 다시 켜짐
-            //this.gameObject.SetActive(false);
+            AdvanceStage();
+            //InitializeStage();
+            return;
         }
-        else
-        {
-            Debug.Log("이동불가");
-        }
+        
+        //1)이전 노드 방문 처리
+        _visitedNodes.Add(_currentNodeId);
+        Debug.Log($"이동가능 : Node{_currentNodeId} -> Node{nodeModel.Id}");
+        
+        //2)현재 위치 갱신
+        _currentNodeId = nodeModel.Id;
+        
+        //3)새 위치도 즉시 방문 처리
+        _visitedNodes.Add(_currentNodeId);
+        
+        _nodeRevealStrategy = new RunCountRevealStrategy(
+            _mapModel,
+            _currentRunCount,
+            _currentNodeId,
+            _visitedNodes
+            , endNode.Type);
+        
+        
+        UpdateAllNodeIcons();
+        UpdateCurrentLocationDisplay();
+        ApplyHighlights();
+        SaveGameWithRunCount();
+        _cameraSwitcher.SwitchTo(nodeModel.Type);
+        
+        
         //TODO: 현재위치 확인 -> 이동가능 여부 검사 -> 씬전환 or 전투 호출 등
+    }
+
+    private IMapGenerator CreateGenerator(StageSetting stageSetting, INodeTypeAssigner nodeTypeAssigner)
+    {
+        switch (CurrentStageType)
+        {
+            case StageType.Exploration:
+            {
+                int roomCount = stageSetting.baseRoomCount + (_stageProgress.StageNumber) * stageSetting.ExtraRoomPerStage;
+                return new GridMapGenerator(_columns, _rows, roomCount, nodeTypeAssigner);
+            }
+            case StageType.Boss:
+            {
+                Debug.Log("보스타입 스테이지 생성");
+                var pattern = GetCustomPattern();
+                return new CustomMapGenerator(
+                    pattern, nodeTypeAssigner );
+            }
+            default: goto case StageType.Exploration;
+        }
+    }
+    // private bool IsFarthestNode(int nodeId)
+    // {
+    //     int startId = _mapModel.Nodes[0].Id;
+    //     int farthestId = new FarthestRoomSelector()
+    //         .SelectFarthestRoom(_mapModel.Nodes, startId);
+    //     return nodeId == farthestId;
+    // }
+    private void AdvanceStage()
+    {
+        
+        ChapterSetting chapter = CurrentChapterSetting;
+
+        _stageProgress.StageNumber++;
+
+        // 장 안 스테이지 수 초과 → 새 장으로
+        if (_stageProgress.StageNumber > chapter.StageSequence.Length)
+        {
+            _stageProgress.Chapter++;
+            _stageProgress.StageNumber = 1;
+        }
+        
+        CreateMapModel();
+        AssignStartAndEndNodes(CurrentStageSetting);
+
+        _currentNodeId = _mapModel.Nodes[0].Id;
+        _visitedNodes = new HashSet<int> { _currentNodeId };
+
+        _nodeRevealStrategy = new RunCountRevealStrategy(
+            _mapModel,
+            _currentRunCount,
+            _currentNodeId,
+            _visitedNodes,
+            _mapModel.Nodes.First(n => n.Id == _endNodeId).Type
+        );
+        RenderMap();
+        UpdateCurrentLocationDisplay();
+        ApplyHighlights();
+            
+        SaveGameWithRunCount();
+    }
+    private void AssignStartAndEndNodes(StageSetting setting)
+    {
+        NodeModel startNode = _mapModel.Nodes[0];
+        startNode.Type = NodeType.Start;
+        
+        
+        IFarthestRoomSelector farthestRoomSelector = new FarthestRoomSelector();
+        _endNodeId = farthestRoomSelector.SelectFarthestRoom(
+            _mapModel.Nodes,
+            startNode.Id);
+        
+        NodeModel endNode = _mapModel.Nodes
+                                          .First(n=>n.Id == _endNodeId);
+        endNode.Type = setting.FarthestNode;
     }
     private void UpdateCurrentLocationDisplay()
     {   
@@ -270,13 +466,62 @@ public class MapController : MonoBehaviour
         }
     }
 
-    public void OnMapNode()
+    private void UpdateAllNodeIcons()
     {
-        gameObject.SetActive(true);
+        foreach (KeyValuePair<int, NodeView> pair in _nodeViews)
+        {
+            int nodeId = pair.Key;
+            NodeView nodeView = pair.Value;
+
+            NodeModel nodeModel = _mapModel.Nodes.Find(n => n.Id == nodeId);
+            bool isVisited = _visitedNodes.Contains(nodeId);
+            bool isRevealed = _nodeRevealStrategy.ShouldReveal(nodeModel);
+            
+                
+            NodeType displayType = (isVisited||isRevealed)
+                ? nodeModel.Type:NodeType.Unknown;
+            nodeView.SetType(displayType);
+        }
     }
 
-    public void OffMapNode()
+    private void SaveGameWithRunCount()
     {
-        gameObject.SetActive(false);
+        var save = new SaveData
+        {
+            Nodes = new List<NodeData>(),
+            Edges = new List<EdgeData>(),
+            CurrentNodeId = _currentNodeId,
+            VisitedNodeIds = new List<int>(_visitedNodes),
+            RunCount = _currentRunCount,
+            Progress = _stageProgress
+        };
+        foreach (var node in _mapModel.Nodes)
+        {
+            save.Nodes.Add(new NodeData
+            {
+                Id = node.Id,
+                Type = node.Type,
+                X = node.GridPos.x,
+                Y = node.GridPos.y, 
+                ConndectedNodeIds = new List<int>(node.ConnectedNodeIds)
+            });
+        }
+
+        foreach (var ed in _mapModel.Edges)
+        {
+            save.Edges.Add(new EdgeData
+            {
+                FromNodeId = ed.FromNodeId,
+                ToNodeId = ed.ToNodeId 
+            });
+        }
+        SaveLoadManager.SaveGame(save);
     }
+
+    [Button("bossclear")]
+    private void bossclear()
+    {
+        OnBossCleared();
+    }
+    
 }

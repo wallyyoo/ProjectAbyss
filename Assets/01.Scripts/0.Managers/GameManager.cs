@@ -1,10 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    // Start is called before the first frame update
+    protected override void Awake()
+    {
+        base.Awake();
+
+        UpgradeDatabase.Init(); // 로드한 Json 데이터 초기화
+        StatUpgradeDatabase.Init();
+    }
+
     void Start()
     {
         

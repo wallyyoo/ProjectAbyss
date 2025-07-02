@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IBossRoomSelector
+public interface IFarthestRoomSelector
 {
-    int SelectBoss(List<NodeModel> nodes, int startNodeId);
+    int SelectFarthestRoom(List<NodeModel> nodes, int startNodeId);
 }
-public class BossRoomSelector:IBossRoomSelector
+public class FarthestRoomSelector:IFarthestRoomSelector
 {
-
-    public int SelectBoss(List<NodeModel> nodes, int startNodeId)
+    public int SelectFarthestRoom(List<NodeModel> nodes, int startNodeId)
     {
         var distanceByNode = new Dictionary<int, int>();
         foreach (var node in nodes)

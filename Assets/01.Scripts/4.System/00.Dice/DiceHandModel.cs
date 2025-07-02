@@ -1,40 +1,50 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
-public class DiceHandModel  // 5개의 주사위 굴림, 족보 판정, 색상조합 확인
+public class DiceHandModel
 {
-    public List<DiceModel> DiceList { get; private set; } = new(); //주사위 리스트
-    public HandType Type { get; private set; }  //족보 종류
-    public HandInfo Info { get; private set; }  //족보 정보
-    public int FinalScore => Info != null ? Info.baseScore * Info.multiplier : 0; // 최종점수 계산
-
+    public List<DiceModel> DiceList { get; private set; } = new();
+    public HandType Type { get; private set; }
+    public HandInfo Info { get; private set; }
+    public HandResult Result { get; private set; }
+    public int FinalScore => Info != null ? Info.baseScore * Info.multiplier : 0;
     public int MaxRerolls { get; private set; } = 3;
     public int CurrentRerolls { get; private set; } = 0;
     public bool HasSubmitted { get; private set; } = false;
 
-    public void Init() // 시작시 주사위 5개 초기화
+    public void Init()
     {
-        DiceList.Clear();
+        DiceList.Clear();               // 기존 주사위 리스트 삭제
         for (int i = 0; i < 5; i++)
         {
-            var model = new DiceModel();
-            model.Init();
-            DiceList.Add(model);
+            var model = new DiceModel();// 새로운 주사위 모델 생성
+            model.Init();                 // 초기화
+            model.Roll(false);  // 디폴트 주사위 굴린값
+            DiceList.Add(model);         
         }
-
         CurrentRerolls = 0;
+
+        int rerollBouns = TurnManager.Instance.GetExtraRerollBonusValue();
+        MaxRerolls = 3 + rerollBouns;// 리롤 보너스 적용
+
+        Debug.Log($"리롤보너스 +{rerollBouns} 적용됨 = {MaxRerolls}");
+        
         HasSubmitted = false;
         Type = HandType.None;
         Info = null;
+        Result = null;
     }
 
-    public void RollAll()
+    public void Evaluate()
     {
-        foreach (var die in DiceList)
-            die.Roll(false); //색상은 유지하고 값만 변경
+        var values = DiceList.Select(d => d.Value).ToList();
+        Result = HandEvaluator.Evaluate(values);
+        Type = Result.Type;
+        Info = HandDatabase.table[Type];
     }
 
-    public void Reroll(int index) // 특정 인덱스의 주사위만 리롤
+    public void Reroll(int index)
     {
         if (index < 0 || index >= DiceList.Count || CurrentRerolls >= MaxRerolls || HasSubmitted)
             return;
@@ -43,19 +53,24 @@ public class DiceHandModel  // 5개의 주사위 굴림, 족보 판정, 색상�
         CurrentRerolls++;
     }
 
-    public void Evaluate()  // 현재 주사위값으로 족보 판정
-    {
-        var values = DiceList.Select(d => d.Value).ToList();
-        Type = HandEvaluator.Evaluate(values);  //족보 판정
-        Info = HandDatabase.table[Type];        //족보 점수, 정보 
-    }
-
-    public void Submit()    // 주사위 제출
+    public void Submit()
     {
         if (!HasSubmitted)
         {
-            Evaluate();     // 제출 시점 족보를 다시 계산
+            if (DiceList == null || DiceList.Count == 0)
+                {
+                    Debug.LogError("[DiceHandModel] 주사위가 존재하지 않아 Submit을 할 수 없습니다.");
+                    return;
+                }
+            
+            
+            Evaluate();
             HasSubmitted = true;
         }
     }
-} 
+
+    public void SetExtraReroll(int bonus)
+    {
+        MaxRerolls = 3 + bonus;
+    }
+}
