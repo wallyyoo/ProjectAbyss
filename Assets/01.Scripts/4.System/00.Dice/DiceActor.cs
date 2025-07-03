@@ -13,7 +13,6 @@ public class DiceActor : MonoBehaviour
     [Header("전투 데미지 처리용")]
     [SerializeField] private PlayerDamageCalculator damageCalculator; 
     [SerializeField] private ScoreEffectController scoreEffectController; 
-    [SerializeField] private Player testPlayer;
     
     [Header("주사위 스프라이트 출력용")]
     [SerializeField] private DiceSpriteController[] diceSpriteControllers;
@@ -39,6 +38,7 @@ public class DiceActor : MonoBehaviour
         view.ClearUI(); // UI 초기화
         view.UpdateDiceDisplay(handModel); // 주사위 화면 갱신
         view.UpdateRerollCount(handModel.MaxRerolls - handModel.CurrentRerolls); // 남은 리롤 수 표시
+        
         view.UpdateHandInfo(handModel.Info); //바로 핸드 족보 판별
        
         if (handModel.Info != null)
@@ -46,8 +46,7 @@ public class DiceActor : MonoBehaviour
             view.UpdateSubmitButtonText(handModel.Info.description); // 족보 설명 부분
         }
 
-     //  view.SetRollButtonActive(true); // 최초 스타트 롤 버튼 활성화
-     //  view.SetSubmitButtonActive(false);  // 제출 버튼 비활성화
+        view.ShowHandBorders(handModel.Result.Indices); //족보 주사위 효과
 
         // 각 버튼에 리롤 리스너 등록
         foreach (var (btn, index) in diceButtons.Select((b, i) => (b, i)))
@@ -96,6 +95,8 @@ public class DiceActor : MonoBehaviour
             // UI 나머지는 즉시 갱신 가능
             view.UpdateHandInfo(handModel.Info);
             view.UpdateRerollCount(handModel.MaxRerolls - handModel.CurrentRerolls);
+            
+            view.ShowHandBorders(handModel.Result.Indices);//족보 주사위 효과
         }
         else if (handModel.CurrentRerolls >= handModel.MaxRerolls)
         {
@@ -115,6 +116,19 @@ public class DiceActor : MonoBehaviour
             return;
         }
 
+        
+        if (handModel.Info == null || handModel.Result == null)
+        {
+            Debug.Log("[OnClickSubmit] Info 또는 Result가 null입니다.");
+            return;
+        }
+
+        if (damageCalculator == null)
+        {
+            Debug.Log("[OnClickSubmit] damageCalculator가 null입니다. 인스펙터 연결 확인 요망.");
+            return;
+        }
+        
         handModel.Submit(); // 제출됨 
         view.UpdateHandInfo(handModel.Info,true);
         view.SetSubmitButtonInteractable(false);
@@ -130,18 +144,17 @@ public class DiceActor : MonoBehaviour
         // 데미지 계산기 초기화
         damageCalculator.Init(handModel.Info, handModel.Result, colorEffects, 0, 1f);
 
+        
         // 최종 데미지 데이터 출력
         PlayerDamageData result = damageCalculator.GetPlayerDamageData();
-        int totalDisplayScore = (result.baseScore + result.bonusScore) * result.multiplier;
+        int totalDisplayScore = (result.baseScore + result.upgradeScore + result.bonusScore)
+        * (result.multiplier + result.upgradeMultiplier);
         scoreEffectController?.PreviewHand(result.handName, totalDisplayScore, result.multiplier);// UI 미리보기 (점수 애니메이션)
-        //Debug.Log($"[제출 완료] {result}");
-
-        TurnManager.Instance.GetCounterReduction(result.counterDamageReduction);
         
-
-        //  플레이어에게 전달 (테스트)
-        // testPlayer?.GetDamageFromCalculator(result); 
-        TurnManager.Instance.PlayerGetAttackDamage(result.finalDamage);
+        //TurnManager로 전달
+        TurnManager.Instance.PlayerGetAttackDamage(result.finalDamage); 
+        TurnManager.Instance.GetCounterReduction(result.counterDamageReduction);
+        TurnManager.Instance.GetExtraRerollBouns(result.nextTurnExtraReroll);
     }
     
     private void UpdateAllDiceSprites() // 주사위의 실제값을 설정해줌

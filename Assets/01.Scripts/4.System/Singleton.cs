@@ -1,7 +1,5 @@
 using System;
 using UnityEngine;
-using TMPro;
-using System.Collections;
 
 public abstract class Singleton<T> : MonoBehaviour where T : Component
 {

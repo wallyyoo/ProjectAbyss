@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a3d3d09218c3dc4e9e481219075f339, type: 3}
+  m_Name: Stage2-1
+  m_EditorClassIdentifier: 
+  FarthestNode: 6
+  BattleWeight: 0.222
+  ShopWeight: 0.083
+  RestWeight: 0.111
+  EventWeight: 0.083
+  EmptyWeight: 0.445
+  PatternType: 0
+  RingHorizontalRadius: 4
+  RingVerticalRadius: 4
+  RingThickness: 2
+  PyramidLevels: 0
+  DiagonalWidth: 0
+  DiagonalHeight: 0
+  DiagonalOffset: 0
+  CrossArmLength: 0
+  CrossThickness: 0
+  BossInnerRadius: 0
+  BossOuterDistance: 0

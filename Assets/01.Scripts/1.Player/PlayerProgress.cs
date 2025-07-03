@@ -22,10 +22,12 @@ public class PlayerProgress : MonoBehaviour
         {
             int lvl = PlayerProgressManager.Instance.GetStatUpgradeLevel(type);
             statLevels[type] = lvl;
+            // Debug.Log($"[Progress] {type} 레벨: {lvl}");
 
             // DB에서 해당 레벨 데이터 조회 후 캐싱
             var data = StatTableDatabase.GetUpgradeData(type, lvl);
             statDataCache[type] = data;
+            // Debug.Log($"[Progress] {type} 데이터 캐싱 완료: {(data == null ? "null" : "ok")}");
         }
 
         // 모든 족보 타입 순회
@@ -38,6 +40,22 @@ public class PlayerProgress : MonoBehaviour
             var data = DiceTableDatabase.GetUpgradeData(type, lvl);
             handDataCache[type] = data;
         }
+    }
+
+    public int GetHandTypeAddScore(HandType type)
+    {
+        if (handDataCache.TryGetValue(type, out var data))
+            return data?.add_score ?? 0;
+
+        return 0;
+    }
+
+    public int GetHandAddMultiplier(HandType type)
+    {
+        if (handDataCache.TryGetValue(type, out var data))
+            return data?.add_multiplier ?? 0;
+
+        return 0;
     }
 
     /// <summary>

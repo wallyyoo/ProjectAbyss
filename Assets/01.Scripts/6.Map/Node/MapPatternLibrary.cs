@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class MapPatternLibrary
@@ -89,14 +90,14 @@ public static class MapPatternLibrary
     ///<summary>십자 패턴</summary>
     public static List<Vector2Int> CreateCross(int armLength, int thickness)
     {
-        HashSet<Vector2Int> positionSet = new HashSet<Vector2Int>();
+        HashSet<Vector2Int> positions = new HashSet<Vector2Int>();
         int halfThickness = thickness/2;
         
         for (int x = -armLength; x <= armLength; x++)
         {
             for (int y = -halfThickness; y <= halfThickness; y++)
             {
-                positionSet.Add(new Vector2Int(x,y));
+                positions.Add(new Vector2Int(x,y));
             }
         }
 
@@ -104,9 +105,38 @@ public static class MapPatternLibrary
         {
             for (int y = -armLength; y<=armLength; y++)
             {
-                positionSet.Add(new Vector2Int(x,y));
+                positions.Add(new Vector2Int(x,y));
             }
         }
-        return new List<Vector2Int>(positionSet);
+        return new List<Vector2Int>(positions);
     }
+
+    public static List<Vector2Int> CreateBossRing(int innerRadius, int outerDistance)
+    {
+        List<Vector2Int> positions = new List<Vector2Int>();
+
+        positions.Add(new Vector2Int(0, outerDistance));
+        positions.Add(new Vector2Int(outerDistance, 0));
+        positions.Add(new Vector2Int(0, -outerDistance));
+        positions.Add(new Vector2Int(-outerDistance, 0));
+
+        for (int x = -innerRadius; x <= innerRadius; x++)
+        {
+            for (int y = -innerRadius; y <= innerRadius; y++)
+            {
+                // if (x == 0 && y == 0)
+                // {
+                //     continue;
+                // }
+                 positions.Add(new Vector2Int(x, y));
+            }
+        }
+
+        return positions.Distinct().ToList();
+    }
+
+    // public static List<Vector2Int> CreateRectangleRing(int width, int height)
+    // {
+    //     return 
+    // }
 }

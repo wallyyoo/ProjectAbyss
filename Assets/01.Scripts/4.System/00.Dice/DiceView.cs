@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
+
 
 public class DiceView : MonoBehaviour // 주사위ui 전체를 관리
 {
@@ -25,6 +27,8 @@ public class DiceView : MonoBehaviour // 주사위ui 전체를 관리
     public ScoreEffectController scoreEffectController;
     
     public DiceSpriteController[] diceSpriteController;
+    
+    [SerializeField] private GameObject[] borderEffects;
     
     private bool popupManualCloseEnabled = false; // 팝업창 
 
@@ -115,8 +119,7 @@ public class DiceView : MonoBehaviour // 주사위ui 전체를 관리
 
     public void ClearUI() // ui초기화
     {
-        handInfoText.text = "주사위를 굴리세요";
-        rerollButtonText.text = "3";
+        
         popupObject.SetActive(false);
         scoreEffectController.ClearPreview();
         
@@ -135,5 +138,36 @@ public class DiceView : MonoBehaviour // 주사위ui 전체를 관리
 //          _ => Color.gray
 //      };
 //  }
+
+    public void ShowHandBorders(List<int> indices)
+    {
+        ClearHandBorders();
+
+        if (indices == null || indices.Count == 0)
+        {
+            Debug.LogWarning("[ShowHandBorders] 인덱스 리스트가 비어있음");
+            return;
+        }
+
+        if (borderEffects == null || borderEffects.Length == 0)
+        {
+            Debug.LogError("[ShowHandBorders] borderEffects가 연결되지 않음");
+            return;
+        }
+
+        foreach (int i in indices)
+        {
+            if (i >= 0 && i < borderEffects.Length && borderEffects[i] != null)
+                borderEffects[i].SetActive(true);
+            else
+                Debug.LogWarning($"[ShowHandBorders] 잘못된 인덱스 접근: {i}");
+        }
+    }
+
+    public void ClearHandBorders()
+    {
+        foreach (var eff in borderEffects)
+            eff.SetActive(false);
+    }
 }
 

@@ -8,6 +8,7 @@ public class TurnManager : Singleton<TurnManager>
 {
     private Enemy enemy;
     private Player player;
+    private PlayerFSM playerFSM;
     private int playerAttackDamage;
 
     private float currentCounterReduction = 0f; // 데미지 감소 값 저장
@@ -15,7 +16,8 @@ public class TurnManager : Singleton<TurnManager>
     private float currentStunChance = 0f;
     private int extraRerollBonus = 0;
     private DiceActor diceActor;
-   
+
+    public bool isPlayerInit = false;
 
     public TurnPhase CurrentPhase { get; private set; } = TurnPhase.Ready;
 
@@ -27,7 +29,7 @@ public class TurnManager : Singleton<TurnManager>
     {
         diceActor = actor;
     }
-    
+
     /// <summary>
     /// 활성화 된 플레이어 확인
     /// </summary>
@@ -35,6 +37,14 @@ public class TurnManager : Singleton<TurnManager>
     public void RegisterPlayer(Player p)
     {
         player = p;
+        playerFSM = player.GetComponent<PlayerFSM>();
+
+        // 전투 노트 진입시로 바뀐다면 이걸로 초기화 진행 해주세요.
+        // if (!isPlayerInit)
+        // {
+        //     player.Init();
+        //     isPlayerInit = true;
+        // }
     }
 
     /// <summary>
@@ -47,24 +57,36 @@ public class TurnManager : Singleton<TurnManager>
     }
 
     /// <summary>
+    /// 임시 초기화용
+    /// </summary>
+    void Start()
+    {
+        if (!isPlayerInit && player != null)
+        {
+            player.Init();
+            isPlayerInit = true;
+        }
+    }
+
+    /// <summary>
     /// 페이즈 설정
     /// </summary>
     /// <param name="nextPhase"></param>
     public void SetTurnPhase(TurnPhase nextPhase)
     {
-        Debug.Log($"▶ SetTurnPhase 호출됨: {nextPhase}");
+        Debug.Log($"SetTurnPhase 호출됨: {nextPhase}");
         CurrentPhase = nextPhase;
 
         if (nextPhase == TurnPhase.Ready) //새 턴이 시작하면 주사위 초기화 
         {
             currentCounterReduction = 0f;
             currentStunChance = 0f;
-            extraRerollBonus = 0;
 
             if (diceActor != null)
             {
                 diceActor.StartTurn();
-            }
+            } 
+            extraRerollBonus = 0;
         }
     }
 
@@ -100,7 +122,7 @@ public class TurnManager : Singleton<TurnManager>
     {
         return extraRerollBonus;
     }
-    
+
     /// <summary>
     /// 적 기절 확률 저장
     /// </summary>
@@ -113,14 +135,15 @@ public class TurnManager : Singleton<TurnManager>
     {
         return currentStunChance;
     }
-    
+
     /// <summary>
     /// 플레이어 공격 페이즈 시작
     /// </summary>
     [Button("플레이어 공격 테스트")]
     public void PlayerAttackPhase()
     {
-        StartCoroutine(PlayerAttackSequence());
+        // 코루틴 대신 플레이어 FSM의 공격 상태 진입 호출
+        if (playerFSM != null) playerFSM.EnterState(PlayerState.Attack);
     }
 
     /// <summary>
@@ -148,38 +171,29 @@ public class TurnManager : Singleton<TurnManager>
             SetTurnPhase(TurnPhase.Ready);
             return;
         }
-        
+
         enemy.ProcessTurn();
     }
 
     /// <summary>
-    /// 플레이어 공격 페이즈 코루틴
+    /// PlayerFSM의 공격 애니메이션 종료 시 호출해서 적 데미지 적용 및 턴 전환 처리
     /// </summary>
-    /// <returns></returns>
-    private IEnumerator PlayerAttackSequence()
+    public void PlayerAttackFinished()
     {
-        CurrentPhase = TurnPhase.PlayerAttack;
-
-        // 애니메이션 실행 부분 플레이어에 추가할 가능성도 있음
-
-        yield return new WaitForSeconds(1); // 공격 애니메이션 시간만큼 기다리게 설정
-
         if (enemy == null)
         {
             SetTurnPhase(TurnPhase.Ready);
-            yield break;
+            return;
         }
 
-        enemy.TakeDamage(playerAttackDamage); // 사망 처리 포함
-
-        // 적 피격 애니메이션
-
-        // yield return new WaitForSeconds(1); // 피격 애니메이션 시간만큼 기다리게 설정
+        enemy.TakeDamage(playerAttackDamage); // 데미지 적용
 
         if (!enemy.IsAlive)
         {
-            // 승리 결과창 출력 메서드 + 페이즈 레디로 다시 설정
-            yield break;
+            // TODO: 승리 처리 및 결과창 출력 구현 필요
+            Debug.Log("적 사망 - 승리 처리 필요");
+            SetTurnPhase(TurnPhase.Ready);
+            return;
         }
 
         PlayerTurnEnd();

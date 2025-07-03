@@ -14,12 +14,21 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
 
     public PlayerProgress Progress { get; private set; }
 
+    public event Action<PlayerStatType> OnStatUpgraded; // 플레이어 체력 갱신용 이벤트
+
     protected override void Awake()
     {
         base.Awake();
 
-        // Progress = FindObjectOfType<PlayerProgress>();
-        // Progress.Init();
+        Progress = FindObjectOfType<PlayerProgress>();
+        if (Progress == null)
+        {
+            GameObject go = new GameObject("PlayerProgress");
+            Progress = go.AddComponent<PlayerProgress>();
+            go.transform.SetParent(transform);
+        }
+        Progress.Init();
+        SyncUpgradeLevels();
     }
 
     public void SyncUpgradeLevels()
@@ -27,6 +36,8 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         // 스탯
         foreach (PlayerStatType stat in Enum.GetValues(typeof(PlayerStatType)))
         {
+            if (stat == PlayerStatType.None) continue;
+
             int lvl = GetStatUpgradeLevel(stat);
             Progress.SetStatUpgradeLevel(stat, lvl);
         }
@@ -34,10 +45,14 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         // 족보
         foreach (HandType hand in Enum.GetValues(typeof(HandType)))
         {
+            if (hand == HandType.None) continue;
+
             int lvl = GetHandTypeUpgradeLevel(hand);
             Progress.SetHandUpgradeLevel(hand, lvl);
         }
     }
+
+    
 
     // =========== 재화 관련 ===========
     [Button("골드 추가")]
@@ -104,7 +119,7 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         int max = DiceTableDatabase.GetMaxLevel(type);
         handTypeUpgradeLevels[type] = Mathf.Clamp(current + 1, 0, max);
 
-        // SyncUpgradeLevels();
+        SyncUpgradeLevels();
     }
 
     public void UpgradeHandTypeLevelDown(HandType type)
@@ -112,7 +127,7 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         int current = GetHandTypeUpgradeLevel(type);
         handTypeUpgradeLevels[type] = Mathf.Max(current - 1, 0);
 
-        // SyncUpgradeLevels();
+        SyncUpgradeLevels();
     }
 
     public void SetUpgradeHandTypeLevel(HandType type, int level)
@@ -133,7 +148,9 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         int max = StatTableDatabase.GetMaxLevel(type);
         statUpgradeLevels[type] = Mathf.Clamp(current + 1, 0, max);
 
-        // SyncUpgradeLevels();
+        SyncUpgradeLevels();
+
+        OnStatUpgraded?.Invoke(type);
     }
 
     public void UpgradeStatLevelDown(PlayerStatType type)
@@ -141,7 +158,9 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         int current = GetStatUpgradeLevel(type);
         statUpgradeLevels[type] = Mathf.Max(current - 1, 0);
 
-        // SyncUpgradeLevels();
+        SyncUpgradeLevels();
+
+        OnStatUpgraded?.Invoke(type);
     }
 
     public void SetUpgradeStatLevel(PlayerStatType type, int level)
