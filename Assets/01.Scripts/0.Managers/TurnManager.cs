@@ -12,8 +12,22 @@ public class TurnManager : Singleton<TurnManager>
 
     private float currentCounterReduction = 0f; // 데미지 감소 값 저장
 
+    private float currentStunChance = 0f;
+    private int extraRerollBonus = 0;
+    private DiceActor diceActor;
+   
+
     public TurnPhase CurrentPhase { get; private set; } = TurnPhase.Ready;
 
+    /// <summary>
+    /// 주사위 로직 가져오기
+    /// </summary>
+    /// <param name="p"></param>
+    public void ResiterDiceActor(DiceActor actor)
+    {
+        diceActor = actor;
+    }
+    
     /// <summary>
     /// 활성화 된 플레이어 확인
     /// </summary>
@@ -38,7 +52,20 @@ public class TurnManager : Singleton<TurnManager>
     /// <param name="nextPhase"></param>
     public void SetTurnPhase(TurnPhase nextPhase)
     {
+        Debug.Log($"▶ SetTurnPhase 호출됨: {nextPhase}");
         CurrentPhase = nextPhase;
+
+        if (nextPhase == TurnPhase.Ready) //새 턴이 시작하면 주사위 초기화 
+        {
+            currentCounterReduction = 0f;
+            currentStunChance = 0f;
+            extraRerollBonus = 0;
+
+            if (diceActor != null)
+            {
+                diceActor.StartTurn();
+            }
+        }
     }
 
     /// <summary>
@@ -61,6 +88,32 @@ public class TurnManager : Singleton<TurnManager>
         currentCounterReduction = reduction;
     }
 
+    /// <summary>
+    /// 추가 리롤 횟수 저장
+    /// </summary>
+    /// <param name="rerollBonus"></param>
+    public void GetExtraRerollBouns(int rerollBonus)
+    {
+        extraRerollBonus = rerollBonus;
+    }
+    public int GetExtraRerollBonusValue()
+    {
+        return extraRerollBonus;
+    }
+    
+    /// <summary>
+    /// 적 기절 확률 저장
+    /// </summary>
+    /// /// <param name="stunChance"></param>
+    public void GetStunChance(float stunChance)
+    {
+        currentStunChance = stunChance;
+    }
+    public float GetStunChanceValue()
+    {
+        return currentStunChance;
+    }
+    
     /// <summary>
     /// 플레이어 공격 페이즈 시작
     /// </summary>
@@ -86,6 +139,16 @@ public class TurnManager : Singleton<TurnManager>
     {
         CurrentPhase = TurnPhase.EnemyAttack;
 
+        float chance = GetStunChanceValue();
+        bool isstuned = Random.value < chance;
+
+        if (isstuned)
+        {
+            Debug.Log($"적 기절 성공");
+            SetTurnPhase(TurnPhase.Ready);
+            return;
+        }
+        
         enemy.ProcessTurn();
     }
 

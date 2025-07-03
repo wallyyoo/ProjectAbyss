@@ -1,31 +1,152 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class PlayerProgressManager : Singleton<PlayerProgressManager>
 {
-    [SerializeField] private PlayerData data;
+    private int gold;
+    private int enchantCore;
 
-    public int CurrentHP { get; private set; }
-    public int CurrentGold { get; private set; }
+    private Dictionary<HandType, int> handTypeUpgradeLevels = new();
+    private Dictionary<PlayerStatType, int> statUpgradeLevels = new();
 
-    [Header("업그레이드 관련")]
-    private int hpUpgradeAmount;
-    private int hpUpgradeLevel;
+    public PlayerProgress Progress { get; private set; }
 
-    private Dictionary<HandType, int> handTypeUpgradeBonus = new();
-
-    public int MaxHP => data.MaxHP + (hpUpgradeAmount * hpUpgradeLevel);
-
-    /// <summary>
-    /// 초기 데이터(SO)를 기반으로 초기화 및 초기값 세팅, 새게임 시작 같은 부분에서도 사용 가능
-    /// </summary>
-    public void Init()
+    protected override void Awake()
     {
-        hpUpgradeAmount = 10;
-        hpUpgradeLevel = 0;
-        CurrentGold = 0;
-        CurrentHP = MaxHP;
-        handTypeUpgradeBonus.Clear();
+        base.Awake();
+
+        // Progress = FindObjectOfType<PlayerProgress>();
+        // Progress.Init();
+    }
+
+    public void SyncUpgradeLevels()
+    {
+        // 스탯
+        foreach (PlayerStatType stat in Enum.GetValues(typeof(PlayerStatType)))
+        {
+            int lvl = GetStatUpgradeLevel(stat);
+            Progress.SetStatUpgradeLevel(stat, lvl);
+        }
+
+        // 족보
+        foreach (HandType hand in Enum.GetValues(typeof(HandType)))
+        {
+            int lvl = GetHandTypeUpgradeLevel(hand);
+            Progress.SetHandUpgradeLevel(hand, lvl);
+        }
+    }
+
+    // =========== 재화 관련 ===========
+    [Button("골드 추가")]
+    public void AddGold(int amount = 1000)
+    {
+        if (amount < 0)
+        {
+            Debug.Log("골드 음수 추가 방지!");
+            return;
+        }
+
+        gold += amount;
+        UIManager.Instance.UpdateGold(gold);
+    }
+
+    [Button("골드 소모")]
+    public bool SpendGold(int amount = 1000)
+    {
+        if (gold < amount) return false;
+
+        gold -= amount;
+        UIManager.Instance.UpdateGold(gold);
+
+        return true;
+    }
+
+    public int GetGold() => gold;
+
+    [Button("마력 수정 추가")]
+    public void AddEnchantCore(int amount = 1000)
+    {
+        if (amount < 0)
+        {
+            Debug.Log("마력 수정 음수 추가 방지!");
+            return;
+        }
+
+        enchantCore += amount;
+        UIManager.Instance.UpdateEnchantCore(enchantCore);
+    }
+
+    [Button("마력 수정 소모")]
+    public bool SpendEnchantCore(int amount = 1000)
+    {
+        if (enchantCore < amount) return false;
+
+        enchantCore -= amount;
+        UIManager.Instance.UpdateEnchantCore(enchantCore);
+
+        return true;
+    }
+
+    public int GetEnchantCore() => enchantCore;
+
+    // =========== 강화 관련 (족보) ===========
+    public int GetHandTypeUpgradeLevel(HandType type)
+    {
+        return handTypeUpgradeLevels.GetValueOrDefault(type, 0);
+    }
+
+    public void UpgradeHandTypeLevelUp(HandType type)
+    {
+        int current = GetHandTypeUpgradeLevel(type);
+        int max = DiceTableDatabase.GetMaxLevel(type);
+        handTypeUpgradeLevels[type] = Mathf.Clamp(current + 1, 0, max);
+
+        // SyncUpgradeLevels();
+    }
+
+    public void UpgradeHandTypeLevelDown(HandType type)
+    {
+        int current = GetHandTypeUpgradeLevel(type);
+        handTypeUpgradeLevels[type] = Mathf.Max(current - 1, 0);
+
+        // SyncUpgradeLevels();
+    }
+
+    public void SetUpgradeHandTypeLevel(HandType type, int level)
+    {
+        int max = DiceTableDatabase.GetMaxLevel(type);
+        handTypeUpgradeLevels[type] = Mathf.Clamp(level, 0, max);
+    }
+
+    // =========== 강화 관련 (스탯) ===========
+    public int GetStatUpgradeLevel(PlayerStatType type)
+    {
+        return statUpgradeLevels.GetValueOrDefault(type, 0);
+    }
+
+    public void UpgradeStatLevelUp(PlayerStatType type)
+    {
+        int current = GetStatUpgradeLevel(type);
+        int max = StatTableDatabase.GetMaxLevel(type);
+        statUpgradeLevels[type] = Mathf.Clamp(current + 1, 0, max);
+
+        // SyncUpgradeLevels();
+    }
+
+    public void UpgradeStatLevelDown(PlayerStatType type)
+    {
+        int current = GetStatUpgradeLevel(type);
+        statUpgradeLevels[type] = Mathf.Max(current - 1, 0);
+
+        // SyncUpgradeLevels();
+    }
+
+    public void SetUpgradeStatLevel(PlayerStatType type, int level)
+    {
+        int max = StatTableDatabase.GetMaxLevel(type);
+        statUpgradeLevels[type] = Mathf.Clamp(level, 0, max);
     }
 }

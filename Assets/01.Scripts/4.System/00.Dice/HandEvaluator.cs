@@ -29,7 +29,7 @@ public static class HandEvaluator // 주사위 값 리스트를 받아서 족보
         if (isSmallStraight)
             return new HandResult(HandType.SmallStraight, values);
 
-        if (counts.Values.Count(v => v == 3) == 1 && counts.Values.Count(v => v == 2) == 1)
+        if (counts.Values.Contains(3) && counts.Values.Contains(2))
         {
             int triple = counts.First(p => p.Value == 3).Key;
             int pair = counts.First(p => p.Value == 2).Key;
@@ -42,7 +42,7 @@ public static class HandEvaluator // 주사위 값 리스트를 받아서 족보
             return new HandResult(HandType.Triple, Enumerable.Repeat(val, 3).ToList());
         }
 
-        if (counts.Values.Where(v => v == 2).Count() == 2)
+        if (counts.Values.Count(v => v == 2) == 2)
         {
             var pairs = counts.Where(p => p.Value == 2)
                               .SelectMany(p => Enumerable.Repeat(p.Key, 2)).ToList();

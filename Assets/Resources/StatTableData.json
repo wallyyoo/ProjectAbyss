@@ -1,0 +1,79 @@
+[
+  {
+    "playerStatType": "MaxHP",
+    "level": 0,
+    "stats": 1000,
+    "add_Stats": 0,
+    "manaCount": 0
+  },
+  {
+    "playerStatType": "MaxHP",
+    "level": 1,
+    "stats": 1100,
+    "add_Stats": 100,
+    "manaCount": 85
+  },
+  {
+    "playerStatType": "MaxHP",
+    "level": 2,
+    "stats": 1250,
+    "add_Stats": 250,
+    "manaCount": 135
+  },
+  {
+    "playerStatType": "MaxHP",
+    "level": 3,
+    "stats": 1450,
+    "add_Stats": 450,
+    "manaCount": 200
+  },
+  {
+    "playerStatType": "MaxHP",
+    "level": 4,
+    "stats": 1700,
+    "add_Stats": 700,
+    "manaCount": 315
+  },
+  {
+    "playerStatType": "MaxHP",
+    "level": 5,
+    "stats": 2000,
+    "add_Stats": 1000,
+    "manaCount": 430
+  },
+  {
+    "playerStatType": "MaxHP",
+    "level": 6,
+    "stats": 2350,
+    "add_Stats": 1350,
+    "manaCount": 585
+  },
+  {
+    "playerStatType": "MaxHP",
+    "level": 7,
+    "stats": 2750,
+    "add_Stats": 1750,
+    "manaCount": 500
+  },
+  {
+    "playerStatType": "MaxHP",
+    "level": 8,
+    "stats": 3200,
+    "add_Stats": 2200,
+    "manaCount": 450
+  },
+  {
+    "playerStatType": "MaxHP",
+    "level": 9,
+    "stats": 3700,
+    "add_Stats": 2700,
+    "manaCount": 415
+  },
+  {
+    "playerStatType": "MaxHP",
+    "level": 10,
+    "stats": 4250,
+    "add_Stats": 3250,
+    "manaCount": 395
+  }
+]

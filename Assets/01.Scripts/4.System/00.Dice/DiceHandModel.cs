@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class DiceHandModel
 {
@@ -14,15 +15,21 @@ public class DiceHandModel
 
     public void Init()
     {
-        DiceList.Clear();
+        DiceList.Clear();               // 기존 주사위 리스트 삭제
         for (int i = 0; i < 5; i++)
         {
-            var model = new DiceModel();
-            model.Init();
-            model.Roll(false);
-            DiceList.Add(model);
+            var model = new DiceModel();// 새로운 주사위 모델 생성
+            model.Init();                 // 초기화
+            model.Roll(false);  // 디폴트 주사위 굴린값
+            DiceList.Add(model);         
         }
         CurrentRerolls = 0;
+
+        int rerollBouns = TurnManager.Instance.GetExtraRerollBonusValue();
+        MaxRerolls = 3 + rerollBouns;// 리롤 보너스 적용
+
+        Debug.Log($"리롤보너스 +{rerollBouns} 적용됨 = {MaxRerolls}");
+        
         HasSubmitted = false;
         Type = HandType.None;
         Info = null;
@@ -50,8 +57,20 @@ public class DiceHandModel
     {
         if (!HasSubmitted)
         {
+            if (DiceList == null || DiceList.Count == 0)
+                {
+                    Debug.LogError("[DiceHandModel] 주사위가 존재하지 않아 Submit을 할 수 없습니다.");
+                    return;
+                }
+            
+            
             Evaluate();
             HasSubmitted = true;
         }
+    }
+
+    public void SetExtraReroll(int bonus)
+    {
+        MaxRerolls = 3 + bonus;
     }
 }
