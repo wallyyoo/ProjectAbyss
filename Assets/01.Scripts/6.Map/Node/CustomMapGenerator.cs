@@ -149,7 +149,7 @@ public class CustomMapGenerator : IMapGenerator
 
                 if (_patternType == PatternType.CircularRing)
                 {
-                    if ((node.GridPos == startPos && np == rightPos) || (node.GridPos == rightPos && np == rightUpPos))
+                    if ((node.GridPos == startPos && np == rightPos) || (node.GridPos == rightPos && np == startPos))
                     {
                         continue;
                     }
