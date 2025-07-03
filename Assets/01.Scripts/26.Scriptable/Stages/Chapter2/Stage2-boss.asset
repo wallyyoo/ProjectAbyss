@@ -18,13 +18,15 @@ MonoBehaviour:
   RestWeight: 0.077
   EventWeight: 0.077
   EmptyWeight: 0.538
-  PatternType: 0
-  RingHorizontalRadius: 1
-  RingVerticalRadius: 1
-  RingThickness: 3
+  PatternType: 4
+  RingHorizontalRadius: 0
+  RingVerticalRadius: 0
+  RingThickness: 0
   PyramidLevels: 0
   DiagonalWidth: 0
   DiagonalHeight: 0
   DiagonalOffset: 0
   CrossArmLength: 0
   CrossThickness: 0
+  BossInnerRadius: 1
+  BossOuterDistance: 2

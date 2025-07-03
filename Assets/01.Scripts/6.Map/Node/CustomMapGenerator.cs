@@ -37,7 +37,7 @@ public class CustomMapGenerator : IMapGenerator
         }
         
         // 2) 외각 노드 필터링: 전체 외곽의 최소 50%는 남기고 나머지 랜덤 제거
-        FilterOutNodes(mapModel, positionNodeMap, keepPercent: 50);
+       // FilterOutNodes(mapModel, positionNodeMap, keepPercent: 50);
         
         // 3)남은 노드들로 인접 리스트 구성
         Dictionary<NodeModel, List<NodeModel>> adjacency =

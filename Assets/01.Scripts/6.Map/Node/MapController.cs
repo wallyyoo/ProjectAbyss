@@ -250,23 +250,23 @@ public class MapController : MonoBehaviour
         }
     }
 
-    private List<Vector2Int> GetCustomPattern() // 현재는 그냥 패턴 따라인데 StageType따라 분기하면 되지않나
-    {
-        switch (_patternType)
-        {
-            case PatternType.CircularRing:
-                return MapPatternLibrary.CreateCircularRing(_ringHorizontalRadius, _ringVerticalRadius,_ringThickness);
-            case PatternType.Pyramid:
-                return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
-            case PatternType.Diagonal:
-                return MapPatternLibrary.CreateDiagonal(_diagonalWidth, _diagonalHeight,_diagonalOffset);
-            case PatternType.Cross:
-                return MapPatternLibrary.CreateCross(_crossArmLength,_crossThickness);
-            default:
-                Debug.LogWarning($"Unknown PatternType{_patternType}, defaulting to Pyramid");
-                return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
-        }
-    }
+    // private List<Vector2Int> GetCustomPattern() // 현재는 그냥 패턴 따라인데 StageType따라 분기하면 되지않나
+    // {
+    //     switch (_patternType)
+    //     {
+    //         case PatternType.CircularRing:
+    //             return MapPatternLibrary.CreateCircularRing(_ringHorizontalRadius, _ringVerticalRadius,_ringThickness);
+    //         case PatternType.Pyramid:
+    //             return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
+    //         case PatternType.Diagonal:
+    //             return MapPatternLibrary.CreateDiagonal(_diagonalWidth, _diagonalHeight,_diagonalOffset);
+    //         case PatternType.Cross:
+    //             return MapPatternLibrary.CreateCross(_crossArmLength,_crossThickness);
+    //         default:
+    //             Debug.LogWarning($"Unknown PatternType{_patternType}, defaulting to Pyramid");
+    //             return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
+    //     }
+    // }
 
     /// <summary>
     /// MapType에 따라 Grid 혹은 Custom - Type 생성기 호출

@@ -7,28 +7,12 @@
     <list default="true" id="75a9aa63-600e-475a-b31d-5cc6c5bf82ca" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectAbyss/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectAbyss/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/00.Scenes/3.JM/JM_Scene_test_1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/00.Scenes/3.JM/JM_Scene_test_1.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/BossStageSetting.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/BossStageSetting.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/Chapter1.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/Chapter1.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/Chapter2.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/Chapter2.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/ExploreStageSetting.asset" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/ExploreStageSetting.asset.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/ChapterSetting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/ChapterSetting.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/Stages/Chapter2/Stage2-boss.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/26.Scriptable/Stages/Chapter2/Stage2-boss.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Enum/PatternType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Enum/PatternType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/CustomMapGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/CustomMapGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/CustomStageConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/CustomStageConfig.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapType.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/NodeType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/NodeType.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/PatternType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/PatternType.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/StageSetting.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/StageSetting.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/StagyType.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/StagyType.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Stage/StageConfiguration.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Stage/StageConfiguration.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapPatternLibrary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapPatternLibrary.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,7 +143,7 @@
       <workItem from="1750915539060" duration="14172000" />
       <workItem from="1750984749070" duration="18086000" />
       <workItem from="1751418992162" duration="21589000" />
-      <workItem from="1751502209692" duration="7596000" />
+      <workItem from="1751502209692" duration="12128000" />
     </task>
     <servers />
   </component>

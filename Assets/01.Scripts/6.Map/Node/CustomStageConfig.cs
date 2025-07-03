@@ -16,6 +16,10 @@ public class CustomStageConfig : StageConfig
     [SerializeField] private int DiagonalOffset;
     [SerializeField] private int CrossArmLength;
     [SerializeField] private int CrossThickness;
+    [SerializeField] private int BossInnerRadius;
+    [SerializeField] private int BossOuterDistance;
+    
+    
 
     public override IMapGenerator CreateGenerator(
         int columns,
@@ -29,7 +33,9 @@ public class CustomStageConfig : StageConfig
                 RingThickness),
             PatternType.Pyramid => MapPatternLibrary.CreatePyramid(PyramidLevels),
             PatternType.Diagonal => MapPatternLibrary.CreateDiagonal(DiagonalWidth, DiagonalHeight, DiagonalOffset),
-            PatternType.Cross => MapPatternLibrary.CreateCross(CrossArmLength, CrossThickness)
+            PatternType.Cross => MapPatternLibrary.CreateCross(CrossArmLength, CrossThickness),
+            PatternType.BossRing => MapPatternLibrary.CreateBossRing(BossInnerRadius, BossOuterDistance),
+            
         };
         var assigner = new NodeTypeAssigner(BattleWeight,ShopWeight,RestWeight,EventWeight,EmptyWeight);
 
