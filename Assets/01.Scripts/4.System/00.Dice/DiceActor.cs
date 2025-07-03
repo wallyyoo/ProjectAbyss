@@ -118,13 +118,13 @@ public class DiceActor : MonoBehaviour
         
         if (handModel.Info == null || handModel.Result == null)
         {
-            Debug.LogError("[OnClickSubmit] Info 또는 Result가 null입니다.");
+            Debug.Log("[OnClickSubmit] Info 또는 Result가 null입니다.");
             return;
         }
 
         if (damageCalculator == null)
         {
-            Debug.LogError("[OnClickSubmit] damageCalculator가 null입니다. 인스펙터 연결 확인 요망.");
+            Debug.Log("[OnClickSubmit] damageCalculator가 null입니다. 인스펙터 연결 확인 요망.");
             return;
         }
         
