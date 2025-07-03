@@ -115,8 +115,7 @@ public class DiceView : MonoBehaviour // 주사위ui 전체를 관리
 
     public void ClearUI() // ui초기화
     {
-        handInfoText.text = "주사위를 굴리세요";
-        rerollButtonText.text = "3";
+        
         popupObject.SetActive(false);
         scoreEffectController.ClearPreview();
         
