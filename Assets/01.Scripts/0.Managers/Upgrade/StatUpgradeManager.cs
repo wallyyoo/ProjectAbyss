@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public static class StatUpgradeManager
+public class StatUpgradeManager
 {
     /// <summary>
     /// 스탯 강화 시도

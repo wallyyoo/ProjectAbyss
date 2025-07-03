@@ -10,12 +10,14 @@ public class PlayerDamageData //플레이어 데미지, 부가효과 를 저장�
     public string handName;
     public int baseScore;
     public int bonusScore;
+    public int upgradeScore;
     public int multiplier;
+    public int upgradeMultiplier;
     
     public override string ToString() // 로그 확인 용
     {
         return $"[Damage: {finalDamage}] " +
-               $"[Red:데미지x{ redMultiplier}] " +
+               $"[Red:데미지x{redMultiplier}] " +
                $"[blue:받는 피해감소{counterDamageReduction}] " +
                $"[black:스턴확률{stunChance}] " +
                $"[yellow:리롤갯수 {nextTurnExtraReroll}]";
