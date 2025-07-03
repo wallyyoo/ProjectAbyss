@@ -148,14 +148,11 @@ public class DiceActor : MonoBehaviour
         PlayerDamageData result = damageCalculator.GetPlayerDamageData();
         int totalDisplayScore = (result.baseScore + result.bonusScore) * result.multiplier;
         scoreEffectController?.PreviewHand(result.handName, totalDisplayScore, result.multiplier);// UI 미리보기 (점수 애니메이션)
-        //Debug.Log($"[제출 완료] {result}");
-
-        TurnManager.Instance.GetCounterReduction(result.counterDamageReduction);
         
-
-        //  플레이어에게 전달 (테스트)
-        // testPlayer?.GetDamageFromCalculator(result); 
-        TurnManager.Instance.PlayerGetAttackDamage(result.finalDamage);
+        //TurnManager로 전달
+        TurnManager.Instance.PlayerGetAttackDamage(result.finalDamage); 
+        TurnManager.Instance.GetCounterReduction(result.counterDamageReduction);
+        TurnManager.Instance.GetExtraRerollBouns(result.nextTurnExtraReroll);
     }
     
     private void UpdateAllDiceSprites() // 주사위의 실제값을 설정해줌
