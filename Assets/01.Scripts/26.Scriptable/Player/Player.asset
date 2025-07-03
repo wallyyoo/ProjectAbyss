@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   characterName: chad
-  maxHP: 100
-  startingGold: 1000
+  maxHP: 1000

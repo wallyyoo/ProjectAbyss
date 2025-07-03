@@ -48,13 +48,16 @@ public class PlayerDamageCalculator : MonoBehaviour //플레이어 데미지 계
         this.baseScore = handInfo.baseScore;
         this.multiplier = handInfo.multiplier;
         this.colorEffects = effects ?? new();
-       // this.extraFlatBonus = flatBonus;
-       // this.bonusMultiplier = multiplierBonus;
+        // this.extraFlatBonus = flatBonus;
+        // this.bonusMultiplier = multiplierBonus;
+        var upgradeData = PlayerProgressManager.Instance?.Progress?.GetHandData(result.Type);
+        int addScore = upgradeData?.add_score ?? 0;
+        int addMultiplier = upgradeData?.add_multiplier ?? 0;
 
-        UpdateDamageData(result.ScoringValues, handInfo.name);
+        UpdateDamageData(result.ScoringValues, handInfo.name, addScore, addMultiplier);
     }
 
-    private void UpdateDamageData(List<int> scoringValues, string handName) // 색상효과 및 보너스 데미지 포함 계산
+    private void UpdateDamageData(List<int> scoringValues, string handName, int upgradeScore, int upgradeMultiplier) // 색상효과 및 보너스 데미지 포함 계산
     {
         PlayerDamageData result = new PlayerDamageData
         {
@@ -71,16 +74,21 @@ public class PlayerDamageCalculator : MonoBehaviour //플레이어 데미지 계
         }
 
         // 최종 데미지 계산 공식
+        int totalBaseScore = baseScore + upgradeScore;
+        int totalMultiplier = multiplier + upgradeMultiplier;
+
         int bonusScore = scoringValues.Sum() * 2;
-        int attackScore = (baseScore + bonusScore) * multiplier;
+        int attackScore = (totalBaseScore + bonusScore) * totalMultiplier;
         float finalAttackScore = attackScore* result.redMultiplier;
        // float finalAttackScore = (attackScore + extraFlatBonus) * bonusMultiplier * result.redMultiplier;
         
         result.finalDamage = Mathf.RoundToInt(finalAttackScore);
         
         result.baseScore = baseScore;
+        result.upgradeScore = upgradeScore;
         result.bonusScore = bonusScore;
         result.multiplier = multiplier;
+        result.upgradeMultiplier = upgradeMultiplier;
         result.handName = handName;
         
         currentData = result;

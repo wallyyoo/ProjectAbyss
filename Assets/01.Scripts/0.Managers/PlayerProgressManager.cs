@@ -14,6 +14,8 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
 
     public PlayerProgress Progress { get; private set; }
 
+    public event Action<PlayerStatType> OnStatUpgraded; // 플레이어 체력 갱신용 이벤트
+
     protected override void Awake()
     {
         base.Awake();
@@ -26,6 +28,7 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
             go.transform.SetParent(transform);
         }
         Progress.Init();
+        SyncUpgradeLevels();
     }
 
     public void SyncUpgradeLevels()
@@ -33,6 +36,8 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         // 스탯
         foreach (PlayerStatType stat in Enum.GetValues(typeof(PlayerStatType)))
         {
+            if (stat == PlayerStatType.None) continue;
+
             int lvl = GetStatUpgradeLevel(stat);
             Progress.SetStatUpgradeLevel(stat, lvl);
         }
@@ -40,10 +45,14 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         // 족보
         foreach (HandType hand in Enum.GetValues(typeof(HandType)))
         {
+            if (hand == HandType.None) continue;
+
             int lvl = GetHandTypeUpgradeLevel(hand);
             Progress.SetHandUpgradeLevel(hand, lvl);
         }
     }
+
+    
 
     // =========== 재화 관련 ===========
     [Button("골드 추가")]
@@ -140,6 +149,8 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         statUpgradeLevels[type] = Mathf.Clamp(current + 1, 0, max);
 
         SyncUpgradeLevels();
+
+        OnStatUpgraded?.Invoke(type);
     }
 
     public void UpgradeStatLevelDown(PlayerStatType type)
@@ -148,6 +159,8 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         statUpgradeLevels[type] = Mathf.Max(current - 1, 0);
 
         SyncUpgradeLevels();
+
+        OnStatUpgraded?.Invoke(type);
     }
 
     public void SetUpgradeStatLevel(PlayerStatType type, int level)

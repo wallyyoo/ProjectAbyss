@@ -146,7 +146,8 @@ public class DiceActor : MonoBehaviour
         
         // 최종 데미지 데이터 출력
         PlayerDamageData result = damageCalculator.GetPlayerDamageData();
-        int totalDisplayScore = (result.baseScore + result.bonusScore) * result.multiplier;
+        int totalDisplayScore = (result.baseScore + result.upgradeScore + result.bonusScore)
+        * (result.multiplier + result.upgradeMultiplier);
         scoreEffectController?.PreviewHand(result.handName, totalDisplayScore, result.multiplier);// UI 미리보기 (점수 애니메이션)
         //Debug.Log($"[제출 완료] {result}");
 
