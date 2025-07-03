@@ -52,7 +52,7 @@ public class TurnManager : Singleton<TurnManager>
     /// <param name="nextPhase"></param>
     public void SetTurnPhase(TurnPhase nextPhase)
     {
-        Debug.Log($"▶ SetTurnPhase 호출됨: {nextPhase}");
+        Debug.Log($" SetTurnPhase 호출됨: {nextPhase}");
         CurrentPhase = nextPhase;
 
         if (nextPhase == TurnPhase.Ready) //새 턴이 시작하면 주사위 초기화 
