@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2c8ba7cfc6960440abebda150fee239, type: 3}
   m_Name: Chapter1
   m_EditorClassIdentifier: 
-  ChapterNumber: 2
-  StageSequence: 00000000000000000000000001000000
+  ChapterNumber: 1
+  Stages:
+  - {fileID: 11400000, guid: 9220f852bdc9f4342b250faf2f4af384, type: 2}
+  - {fileID: 11400000, guid: 295dc5aeac61da5478ab36ae52e9c49b, type: 2}
+  - {fileID: 11400000, guid: 09435a1c8cd97314198753198506b8f5, type: 2}
+  - {fileID: 11400000, guid: f9bd5f5ba76d0534c859971342a945a2, type: 2}

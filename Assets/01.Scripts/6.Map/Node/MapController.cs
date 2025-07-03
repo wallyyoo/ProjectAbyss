@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
@@ -10,17 +9,7 @@ using UnityEngine;
 /// </summary>
 public class MapController : MonoBehaviour
 {
-    [Header("Map Generator Settings")]
-    [SerializeField] private MapType _mapType = MapType.Grid;
-    [SerializeField] private PatternType _patternType = PatternType.CircularRing;
-    
-    
-    [Header("Stage Progress")]
-    [SerializeField] private StageType _stageType;
-
-
     [Header("Stage Settings SO")]
-    [SerializeField] private StageSetting[] _stageSettingList;
     [SerializeField] private ChapterSetting[] _chapterSettingList;
     
     [Header("Grid Parameter")]
@@ -29,27 +18,17 @@ public class MapController : MonoBehaviour
     [SerializeField] private int _roomCount = 12;
     [SerializeField] private float CellSize = 150f;
 
-    [Header("Pattern Parameter")]
-    [SerializeField] private int _ringHorizontalRadius;
-    [SerializeField] private int _ringVerticalRadius;
-    [SerializeField] private int _ringThickness;
-    [SerializeField] private int _pyramidLevels;
-    [SerializeField] private int _diagonalWidth;
-    [SerializeField] private int _diagonalHeight;
-    [SerializeField] private int _diagonalOffset;
-    [SerializeField] private int _crossArmLength;
-    [SerializeField] private int _crossThickness;
-    
-    
-    // [Header("Node 확률 가중치")]
-    // [SerializeField] private float _battleWeight = 0.15f;
-    // [SerializeField] private float _shopWeight = 0.1f;
-    // [SerializeField] private float _restWeight = 0.125f;
-    // [SerializeField] private float _eventWeight = 0.2f;
-    // [SerializeField] private float _emptyWeight = 0.4f;
-    //
-    
-    
+    // [Header("Pattern Parameter")]
+    // [SerializeField] private int _ringHorizontalRadius;
+    // [SerializeField] private int _ringVerticalRadius;
+    // [SerializeField] private int _ringThickness;
+    // [SerializeField] private int _pyramidLevels;
+    // [SerializeField] private int _diagonalWidth;
+    // [SerializeField] private int _diagonalHeight;
+    // [SerializeField] private int _diagonalOffset;
+    // [SerializeField] private int _crossArmLength;
+    // [SerializeField] private int _crossThickness;
+
     [Header("Debug")]
     [SerializeField] private bool _useDebugRunCount = false;
     [SerializeField] private int _debugRunCount = 0;
@@ -71,15 +50,17 @@ public class MapController : MonoBehaviour
     private int _endNodeId;
     private INodeRevealStrategy _nodeRevealStrategy;
     private StageProgress _stageProgress;
-
+    private StageConfig CurrentStageConfig => _chapterSettingList
+                                              .First(c=>c.ChapterNumber == _stageProgress.Chapter)
+                                              .Stages[_stageProgress.StageNumber -1]; 
     private ChapterSetting CurrentChapterSetting
-        => _chapterSettingList.First(c => c.ChapterNumber == _stageProgress.Chapter);
-    
-    private StageType CurrentStageType
-        => CurrentChapterSetting.StageSequence[_stageProgress.StageNumber-1];
-    
-    private StageSetting CurrentStageSetting
-        => _stageSettingList.First(s => s.stageType == CurrentStageType);
+    => _chapterSettingList.First(c => c.ChapterNumber == _stageProgress.Chapter);
+   //  
+   //  private StageType CurrentStageType
+   //      => CurrentChapterSetting.Stages[_stageProgress.StageNumber-1];
+   //  
+   //  private StageSetting CurrentStageSetting
+   //      => _stageSettingList.First(s => s.stageType == CurrentStageType);
 
     
     
@@ -96,6 +77,7 @@ public class MapController : MonoBehaviour
         {
             RestoreMapFromSave(save);
             Debug.Log($"현재 회차: {_currentRunCount} 현재 챕터 : {save.Progress.Chapter}, 현재 스테이지: {save.Progress.StageNumber}");
+            //AssignStartAndEndNodes(CurrentStageConfig);
             
         }
         else // 저장된게 없을 때 새로 만들기
@@ -112,9 +94,9 @@ public class MapController : MonoBehaviour
             //2) MapModel설정
             CreateMapModel();
             
-            AssignStartAndEndNodes(CurrentStageSetting);
+            AssignStartAndEndNodes(CurrentStageConfig);
             //3) 최초 위치, 방문 초기화
-            _currentNodeId = _mapModel.Nodes[0].Id;
+            //_currentNodeId = _mapModel.Nodes[0].Id;
             _visitedNodes = new HashSet<int>{_currentNodeId};
             
             SaveGameWithRunCount();
@@ -220,7 +202,7 @@ public class MapController : MonoBehaviour
     private void OnBossCleared()
     {
         NodeModel currentNode = _mapModel.Nodes.Find(n => n.Id == _currentNodeId);
-        if (CurrentStageType != StageType.Boss || currentNode.Type != NodeType.Boss)
+        if (currentNode.Type != NodeType.Boss)
         {
             Debug.LogWarning($"보스 클리어 호출 시점이 Boss스테이지가 아닙니다.");
             return;
@@ -247,43 +229,18 @@ public class MapController : MonoBehaviour
         }
     }
 
-    private List<Vector2Int> GetCustomPattern()
-    {
-        switch (_patternType)
-        {
-            case PatternType.CircularRing:
-                return MapPatternLibrary.CreateCircularRing(_ringHorizontalRadius, _ringVerticalRadius,_ringThickness);
-            case PatternType.Pyramid:
-                return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
-            case PatternType.Diagonal:
-                return MapPatternLibrary.CreateDiagonal(_diagonalWidth, _diagonalHeight,_diagonalOffset);
-            case PatternType.Cross:
-                return MapPatternLibrary.CreateCross(_crossArmLength,_crossThickness);
-            default:
-                Debug.LogWarning($"Unknown PatternType{_patternType}, defaulting to Pyramid");
-                return MapPatternLibrary.CreatePyramid(_pyramidLevels);;
-        }
-    }
-
     /// <summary>
     /// MapType에 따라 Grid 혹은 Custom - Type 생성기 호출
     /// </summary>
     private void CreateMapModel()
     {
-        StageSetting setting = CurrentStageSetting;
-        
-        INodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(
-            setting.battleWeight,
-            setting.shopWeight,
-            setting.restWeight,
-            setting.eventWeight,
-            setting.emptyWeight);
+        StageConfig cfg = CurrentStageConfig; 
         
         
-        IMapGenerator generator = CreateGenerator(setting, nodeTypeAssigner);
+        IMapGenerator generator = cfg.CreateGenerator(_columns,_rows, _currentRunCount,_stageProgress);
        _mapModel = generator.Generate(0, 0, 0);
        
-       AssignStartAndEndNodes(setting);
+       //AssignStartAndEndNodes(cfg);
     }
 
     private void RestoreMapFromSave(SaveData save)
@@ -314,6 +271,7 @@ public class MapController : MonoBehaviour
         }
         _currentNodeId = save.CurrentNodeId;
         _visitedNodes = new HashSet<int>(save.VisitedNodeIds);
+        _endNodeId = _mapModel.Nodes.First(n => n.Type == CurrentStageConfig.FarthestNode).Id;
     }
     
     /// <summary>
@@ -328,8 +286,7 @@ public class MapController : MonoBehaviour
         if (!currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
             return;
         
-        if (CurrentStageType == StageType.Exploration
-            && nodeModel.Type == NodeType.Move
+        if (nodeModel.Type == NodeType.Move
             && nodeModel.Id == _endNodeId)
         {
             AdvanceStage();
@@ -364,26 +321,7 @@ public class MapController : MonoBehaviour
         
         //TODO: 현재위치 확인 -> 이동가능 여부 검사 -> 씬전환 or 전투 호출 등
     }
-
-    private IMapGenerator CreateGenerator(StageSetting stageSetting, INodeTypeAssigner nodeTypeAssigner)
-    {
-        switch (CurrentStageType)
-        {
-            case StageType.Exploration:
-            {
-                int roomCount = stageSetting.baseRoomCount + (_stageProgress.StageNumber) * stageSetting.ExtraRoomPerStage;
-                return new GridMapGenerator(_columns, _rows, roomCount, nodeTypeAssigner);
-            }
-            case StageType.Boss:
-            {
-                Debug.Log("보스타입 스테이지 생성");
-                var pattern = GetCustomPattern();
-                return new CustomMapGenerator(
-                    pattern, nodeTypeAssigner );
-            }
-            default: goto case StageType.Exploration;
-        }
-    }
+    
     // private bool IsFarthestNode(int nodeId)
     // {
     //     int startId = _mapModel.Nodes[0].Id;
@@ -399,16 +337,18 @@ public class MapController : MonoBehaviour
         _stageProgress.StageNumber++;
 
         // 장 안 스테이지 수 초과 → 새 장으로
-        if (_stageProgress.StageNumber > chapter.StageSequence.Length)
+        if (_stageProgress.StageNumber > chapter.Stages.Length)
         {
             _stageProgress.Chapter++;
             _stageProgress.StageNumber = 1;
         }
         
         CreateMapModel();
-        AssignStartAndEndNodes(CurrentStageSetting);
+        AssignStartAndEndNodes(CurrentStageConfig);
 
-        _currentNodeId = _mapModel.Nodes[0].Id;
+        if(!(_stageProgress.Chapter==2 && CurrentStageConfig.FarthestNode == NodeType.Boss))
+            _currentNodeId = _mapModel.Nodes[0].Id;
+        
         _visitedNodes = new HashSet<int> { _currentNodeId };
 
         _nodeRevealStrategy = new RunCountRevealStrategy(
@@ -424,20 +364,64 @@ public class MapController : MonoBehaviour
             
         SaveGameWithRunCount();
     }
-    private void AssignStartAndEndNodes(StageSetting setting)
+    private void AssignStartAndEndNodes(StageConfig setting)
     {
-        NodeModel startNode = _mapModel.Nodes[0];
-        startNode.Type = NodeType.Start;
-        
-        
-        IFarthestRoomSelector farthestRoomSelector = new FarthestRoomSelector();
-        _endNodeId = farthestRoomSelector.SelectFarthestRoom(
-            _mapModel.Nodes,
-            startNode.Id);
-        
-        NodeModel endNode = _mapModel.Nodes
-                                          .First(n=>n.Id == _endNodeId);
-        endNode.Type = setting.FarthestNode;
+        Debug.Log("보스 분기 진입");
+        List<NodeModel> allNodes = _mapModel.Nodes;
+        foreach (var node in _mapModel.Nodes)
+        {
+            if (node.Type == NodeType.Start || node.Type == NodeType.Boss)
+                node.Type = NodeType.Unknown;
+        }
+        if (setting.FarthestNode == NodeType.Boss && _stageProgress.Chapter == 2)
+        {
+            Debug.Log("보스 스테이지, 챕터 2 진입");
+            int minX = allNodes.Min(n => n.GridPos.x);
+            int maxX = allNodes.Max(n => n.GridPos.x);
+            int minY = allNodes.Min(n => n.GridPos.y);
+            int maxY = allNodes.Max(n => n.GridPos.y);  
+
+            var topCandidates = allNodes.Where(n => n.GridPos.y == maxY);
+            var bottomCandidates = allNodes.Where(n => n.GridPos.y == minY);
+            var leftCandidates = allNodes.Where(n => n.GridPos.x == minX);
+            var rightCandidates = allNodes.Where(n => n.GridPos.x == maxX);
+
+            int direction = Random.Range(0, 4);
+            NodeModel startNode;
+            switch (direction)
+            {
+                case 0 : startNode = topCandidates.OrderBy(_=>Random.value).First(); break;
+                case 1 : startNode = bottomCandidates.OrderBy(_=>Random.value).First(); break;
+                case 2 : startNode = leftCandidates.OrderBy(_=>Random.value).First(); break;
+                default : startNode = rightCandidates.OrderBy(_=>Random.value).First(); break;
+            }
+
+            _currentNodeId = startNode.Id; 
+            startNode.Type = NodeType.Start;
+            
+            var center = new Vector2Int((minX+ maxX)/2, (minY+maxY)/2);
+            NodeModel bossNode = allNodes.First(n => n.GridPos == center);
+            bossNode.Type = NodeType.Boss;
+            _endNodeId = bossNode.Id;
+        }
+
+
+
+        else
+        {
+            NodeModel startNode = _mapModel.Nodes[0];
+            startNode.Type = NodeType.Start;
+            
+            
+            IFarthestRoomSelector farthestRoomSelector = new FarthestRoomSelector();
+            _endNodeId = farthestRoomSelector.SelectFarthestRoom(
+                _mapModel.Nodes,
+                startNode.Id);
+            
+            NodeModel endNode = _mapModel.Nodes
+                                              .First(n=>n.Id == _endNodeId);
+            endNode.Type = setting.FarthestNode;
+        }
     }
     private void UpdateCurrentLocationDisplay()
     {   
