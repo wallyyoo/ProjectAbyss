@@ -18,8 +18,14 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
     {
         base.Awake();
 
-        // Progress = FindObjectOfType<PlayerProgress>();
-        // Progress.Init();
+        Progress = FindObjectOfType<PlayerProgress>();
+        if (Progress == null)
+        {
+            GameObject go = new GameObject("PlayerProgress");
+            Progress = go.AddComponent<PlayerProgress>();
+            go.transform.SetParent(transform);
+        }
+        Progress.Init();
     }
 
     public void SyncUpgradeLevels()
@@ -104,7 +110,7 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         int max = DiceTableDatabase.GetMaxLevel(type);
         handTypeUpgradeLevels[type] = Mathf.Clamp(current + 1, 0, max);
 
-        // SyncUpgradeLevels();
+        SyncUpgradeLevels();
     }
 
     public void UpgradeHandTypeLevelDown(HandType type)
@@ -112,7 +118,7 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         int current = GetHandTypeUpgradeLevel(type);
         handTypeUpgradeLevels[type] = Mathf.Max(current - 1, 0);
 
-        // SyncUpgradeLevels();
+        SyncUpgradeLevels();
     }
 
     public void SetUpgradeHandTypeLevel(HandType type, int level)
@@ -133,7 +139,7 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         int max = StatTableDatabase.GetMaxLevel(type);
         statUpgradeLevels[type] = Mathf.Clamp(current + 1, 0, max);
 
-        // SyncUpgradeLevels();
+        SyncUpgradeLevels();
     }
 
     public void UpgradeStatLevelDown(PlayerStatType type)
@@ -141,7 +147,7 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
         int current = GetStatUpgradeLevel(type);
         statUpgradeLevels[type] = Mathf.Max(current - 1, 0);
 
-        // SyncUpgradeLevels();
+        SyncUpgradeLevels();
     }
 
     public void SetUpgradeStatLevel(PlayerStatType type, int level)
