@@ -39,7 +39,7 @@ public class CustomStageConfig : StageConfig
         };
         var assigner = new NodeTypeAssigner(BattleWeight,ShopWeight,RestWeight,EventWeight,EmptyWeight);
 
-        return new CustomMapGenerator(
+        return new CustomMapGenerator(PatternType,
             pattern, assigner);
     }
     

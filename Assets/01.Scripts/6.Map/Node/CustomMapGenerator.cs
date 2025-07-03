@@ -9,11 +9,13 @@ public class CustomMapGenerator : IMapGenerator
     private readonly INodeTypeAssigner _nodeTypeAssigner;
     //private readonly IFarthestRoomSelector _farthestRoomSelector;
     private readonly List<Vector2Int> _gridPositions;
+    private readonly PatternType _patternType;
     
     System.Random _random = new System.Random();
-    public CustomMapGenerator(List<Vector2Int> gridPositions, INodeTypeAssigner nodeTypeAssigner)
+    public CustomMapGenerator(PatternType patternType, List<Vector2Int> gridPositions, INodeTypeAssigner nodeTypeAssigner)
         //IFarthestRoomSelector farthestRoomSelector)
     {
+        _patternType = patternType;
         _gridPositions = gridPositions;
         _nodeTypeAssigner = nodeTypeAssigner;
         //_farthestRoomSelector = farthestRoomSelector;
@@ -118,11 +120,16 @@ public class CustomMapGenerator : IMapGenerator
         model.Nodes.Remove(node);
         posMap.Remove(node.GridPos);
     }
-
+    
     // 3) 인접 리스트 구성
     private Dictionary<NodeModel, List<NodeModel>> BuildAdjacency(
         Dictionary<Vector2Int, NodeModel> posMap)
     {
+        Vector2Int startPos = _gridPositions[0];
+        Vector2Int rightPos = startPos + Vector2Int.right;
+        Vector2Int rightUpPos = startPos + Vector2Int.right + Vector2Int.up;
+        
+        
         Vector2Int[] dirs = new Vector2Int[]
         {
             new Vector2Int(1, 0), new Vector2Int(-1, 0),
@@ -135,10 +142,26 @@ public class CustomMapGenerator : IMapGenerator
             foreach (Vector2Int dir in dirs)
             {
                 Vector2Int np = node.GridPos + dir;
-                if (posMap.ContainsKey(np))
+                if (!posMap.ContainsKey(np))
                 {
-                    adjacency[node].Add(posMap[np]);
+                    continue;
                 }
+
+                if (_patternType == PatternType.CircularRing)
+                {
+                    if ((node.GridPos == startPos && np == rightPos) || (node.GridPos == rightPos && np == rightUpPos))
+                    {
+                        continue;
+                    }
+
+                    if ((node.GridPos == rightPos && np == rightUpPos) ||
+                        (node.GridPos == rightUpPos && np == rightPos))
+                    {
+                        continue;
+                    }
+                }
+                    
+                adjacency[node].Add(posMap[np]);
             }
         }
 

@@ -134,4 +134,9 @@ public static class MapPatternLibrary
 
         return positions.Distinct().ToList();
     }
+
+    // public static List<Vector2Int> CreateRectangleRing(int width, int height)
+    // {
+    //     return 
+    // }
 }

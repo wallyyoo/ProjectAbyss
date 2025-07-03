@@ -28,3 +28,5 @@ MonoBehaviour:
   DiagonalOffset: 0
   CrossArmLength: 0
   CrossThickness: 0
+  BossInnerRadius: 0
+  BossOuterDistance: 0

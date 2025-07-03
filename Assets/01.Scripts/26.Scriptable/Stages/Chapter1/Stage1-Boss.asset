@@ -19,12 +19,14 @@ MonoBehaviour:
   EventWeight: 0
   EmptyWeight: 0.5
   PatternType: 2
-  RingHorizontalRadius: 0
-  RingVerticalRadius: 0
-  RingThickness: 0
+  RingHorizontalRadius: 4
+  RingVerticalRadius: 4
+  RingThickness: 2
   PyramidLevels: 0
-  DiagonalWidth: 5
+  DiagonalWidth: 4
   DiagonalHeight: 2
   DiagonalOffset: 1
   CrossArmLength: 0
   CrossThickness: 0
+  BossInnerRadius: 0
+  BossOuterDistance: 0
