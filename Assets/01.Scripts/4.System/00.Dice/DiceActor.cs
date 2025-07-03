@@ -46,8 +46,7 @@ public class DiceActor : MonoBehaviour
             view.UpdateSubmitButtonText(handModel.Info.description); // 족보 설명 부분
         }
 
-     //  view.SetRollButtonActive(true); // 최초 스타트 롤 버튼 활성화
-     //  view.SetSubmitButtonActive(false);  // 제출 버튼 비활성화
+        view.ShowHandBorders(handModel.Result.Indices); //족보 주사위 효과
 
         // 각 버튼에 리롤 리스너 등록
         foreach (var (btn, index) in diceButtons.Select((b, i) => (b, i)))
@@ -96,6 +95,8 @@ public class DiceActor : MonoBehaviour
             // UI 나머지는 즉시 갱신 가능
             view.UpdateHandInfo(handModel.Info);
             view.UpdateRerollCount(handModel.MaxRerolls - handModel.CurrentRerolls);
+            
+            view.ShowHandBorders(handModel.Result.Indices);//족보 주사위 효과
         }
         else if (handModel.CurrentRerolls >= handModel.MaxRerolls)
         {
@@ -148,14 +149,11 @@ public class DiceActor : MonoBehaviour
         PlayerDamageData result = damageCalculator.GetPlayerDamageData();
         int totalDisplayScore = (result.baseScore + result.bonusScore) * result.multiplier;
         scoreEffectController?.PreviewHand(result.handName, totalDisplayScore, result.multiplier);// UI 미리보기 (점수 애니메이션)
-        //Debug.Log($"[제출 완료] {result}");
-
-        TurnManager.Instance.GetCounterReduction(result.counterDamageReduction);
         
-
-        //  플레이어에게 전달 (테스트)
-        // testPlayer?.GetDamageFromCalculator(result); 
-        TurnManager.Instance.PlayerGetAttackDamage(result.finalDamage);
+        //TurnManager로 전달
+        TurnManager.Instance.PlayerGetAttackDamage(result.finalDamage); 
+        TurnManager.Instance.GetCounterReduction(result.counterDamageReduction);
+        TurnManager.Instance.GetExtraRerollBouns(result.nextTurnExtraReroll);
     }
     
     private void UpdateAllDiceSprites() // 주사위의 실제값을 설정해줌
