@@ -6,5 +6,5 @@ public enum StageType
 {
     Exploration,
     Boss,
-    
+    Corridor,
 }

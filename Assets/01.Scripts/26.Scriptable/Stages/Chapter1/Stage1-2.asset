@@ -9,15 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4e192670775641498368226229d4a8c, type: 3}
-  m_Name: ExploreStageSetting
+  m_Script: {fileID: 11500000, guid: 547bc1a8b025ab24bb76318ef67d088e, type: 3}
+  m_Name: Stage1-2
   m_EditorClassIdentifier: 
-  stageType: 0
-  baseRoomCount: 20
-  ExtraRoomPerStage: 2
   FarthestNode: 6
-  battleWeight: 0.15
-  shopWeight: 0.1
-  restWeight: 0.125
-  eventWeight: 0.2
-  emptyWeight: 0.4
+  BattleWeight: 0.25
+  ShopWeight: 0.1
+  RestWeight: 0.12
+  EventWeight: 0.1
+  EmptyWeight: 0.33
+  MinRoomCount: 20
+  MaxRoomCount: 24

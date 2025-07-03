@@ -12,15 +12,15 @@ public class MapController : MonoBehaviour
 {
     [Header("Map Generator Settings")]
     [SerializeField] private MapType _mapType = MapType.Grid;
-    [SerializeField] private PatternType _patternType = PatternType.CircularRing;
+    [SerializeField] private PatternType _patternType;
     
     
     [Header("Stage Progress")]
-    [SerializeField] private StageType _stageType;
+    //[SerializeField] private StageType _stageType;
 
 
     [Header("Stage Settings SO")]
-    [SerializeField] private StageSetting[] _stageSettingList;
+   // [SerializeField] private StageConfig[] _stageSettingList;
     [SerializeField] private ChapterSetting[] _chapterSettingList;
     
     [Header("Grid Parameter")]
@@ -71,15 +71,17 @@ public class MapController : MonoBehaviour
     private int _endNodeId;
     private INodeRevealStrategy _nodeRevealStrategy;
     private StageProgress _stageProgress;
-
+    private StageConfig CurrentStageConfig => _chapterSettingList
+                                              .First(c=>c.ChapterNumber == _stageProgress.Chapter)
+                                              .Stages[_stageProgress.StageNumber -1]; 
     private ChapterSetting CurrentChapterSetting
-        => _chapterSettingList.First(c => c.ChapterNumber == _stageProgress.Chapter);
-    
-    private StageType CurrentStageType
-        => CurrentChapterSetting.StageSequence[_stageProgress.StageNumber-1];
-    
-    private StageSetting CurrentStageSetting
-        => _stageSettingList.First(s => s.stageType == CurrentStageType);
+    => _chapterSettingList.First(c => c.ChapterNumber == _stageProgress.Chapter);
+   //  
+   //  private StageType CurrentStageType
+   //      => CurrentChapterSetting.Stages[_stageProgress.StageNumber-1];
+   //  
+   //  private StageSetting CurrentStageSetting
+   //      => _stageSettingList.First(s => s.stageType == CurrentStageType);
 
     
     
@@ -96,6 +98,7 @@ public class MapController : MonoBehaviour
         {
             RestoreMapFromSave(save);
             Debug.Log($"현재 회차: {_currentRunCount} 현재 챕터 : {save.Progress.Chapter}, 현재 스테이지: {save.Progress.StageNumber}");
+            AssignStartAndEndNodes(CurrentStageConfig);
             
         }
         else // 저장된게 없을 때 새로 만들기
@@ -112,7 +115,7 @@ public class MapController : MonoBehaviour
             //2) MapModel설정
             CreateMapModel();
             
-            AssignStartAndEndNodes(CurrentStageSetting);
+            AssignStartAndEndNodes(CurrentStageConfig);
             //3) 최초 위치, 방문 초기화
             _currentNodeId = _mapModel.Nodes[0].Id;
             _visitedNodes = new HashSet<int>{_currentNodeId};
@@ -220,7 +223,7 @@ public class MapController : MonoBehaviour
     private void OnBossCleared()
     {
         NodeModel currentNode = _mapModel.Nodes.Find(n => n.Id == _currentNodeId);
-        if (CurrentStageType != StageType.Boss || currentNode.Type != NodeType.Boss)
+        if (currentNode.Type != NodeType.Boss)
         {
             Debug.LogWarning($"보스 클리어 호출 시점이 Boss스테이지가 아닙니다.");
             return;
@@ -247,7 +250,7 @@ public class MapController : MonoBehaviour
         }
     }
 
-    private List<Vector2Int> GetCustomPattern()
+    private List<Vector2Int> GetCustomPattern() // 현재는 그냥 패턴 따라인데 StageType따라 분기하면 되지않나
     {
         switch (_patternType)
         {
@@ -270,20 +273,13 @@ public class MapController : MonoBehaviour
     /// </summary>
     private void CreateMapModel()
     {
-        StageSetting setting = CurrentStageSetting;
-        
-        INodeTypeAssigner nodeTypeAssigner = new NodeTypeAssigner(
-            setting.battleWeight,
-            setting.shopWeight,
-            setting.restWeight,
-            setting.eventWeight,
-            setting.emptyWeight);
+        StageConfig cfg = CurrentStageConfig; 
         
         
-        IMapGenerator generator = CreateGenerator(setting, nodeTypeAssigner);
+        IMapGenerator generator = cfg.CreateGenerator(_columns,_rows, _currentRunCount,_stageProgress);
        _mapModel = generator.Generate(0, 0, 0);
        
-       AssignStartAndEndNodes(setting);
+       AssignStartAndEndNodes(cfg);
     }
 
     private void RestoreMapFromSave(SaveData save)
@@ -328,8 +324,7 @@ public class MapController : MonoBehaviour
         if (!currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
             return;
         
-        if (CurrentStageType == StageType.Exploration
-            && nodeModel.Type == NodeType.Move
+        if (nodeModel.Type == NodeType.Move
             && nodeModel.Id == _endNodeId)
         {
             AdvanceStage();
@@ -365,25 +360,31 @@ public class MapController : MonoBehaviour
         //TODO: 현재위치 확인 -> 이동가능 여부 검사 -> 씬전환 or 전투 호출 등
     }
 
-    private IMapGenerator CreateGenerator(StageSetting stageSetting, INodeTypeAssigner nodeTypeAssigner)
-    {
-        switch (CurrentStageType)
-        {
-            case StageType.Exploration:
-            {
-                int roomCount = stageSetting.baseRoomCount + (_stageProgress.StageNumber) * stageSetting.ExtraRoomPerStage;
-                return new GridMapGenerator(_columns, _rows, roomCount, nodeTypeAssigner);
-            }
-            case StageType.Boss:
-            {
-                Debug.Log("보스타입 스테이지 생성");
-                var pattern = GetCustomPattern();
-                return new CustomMapGenerator(
-                    pattern, nodeTypeAssigner );
-            }
-            default: goto case StageType.Exploration;
-        }
-    }
+    // private IMapGenerator CreateGenerator(StageConfig stageSetting, INodeTypeAssigner nodeTypeAssigner)
+    // {
+    //     switch (CurrentStageType)
+    //     {
+    //         case StageType.Exploration:
+    //         {
+    //             int roomCount = stageSetting.roomCount + (_stageProgress.StageNumber) * stageSetting.ExtraRoomPerStage;
+    //             return new GridMapGenerator(_columns, _rows, roomCount, nodeTypeAssigner);
+    //         }
+    //         case StageType.Boss:
+    //         {
+    //             Debug.Log("보스타입 스테이지 생성");
+    //             var pattern = GetCustomPattern();
+    //             return new CustomMapGenerator(
+    //                 pattern, nodeTypeAssigner );
+    //         }
+    //         case StageType.Corridor:
+    //         { 
+    //             var pattern = GetCustomPattern();
+    //             return new CustomMapGenerator(
+    //                 pattern, nodeTypeAssigner );
+    //         }
+    //         default: goto case StageType.Exploration;
+    //     }
+    //}
     // private bool IsFarthestNode(int nodeId)
     // {
     //     int startId = _mapModel.Nodes[0].Id;
@@ -399,14 +400,14 @@ public class MapController : MonoBehaviour
         _stageProgress.StageNumber++;
 
         // 장 안 스테이지 수 초과 → 새 장으로
-        if (_stageProgress.StageNumber > chapter.StageSequence.Length)
+        if (_stageProgress.StageNumber > chapter.Stages.Length)
         {
             _stageProgress.Chapter++;
             _stageProgress.StageNumber = 1;
         }
         
         CreateMapModel();
-        AssignStartAndEndNodes(CurrentStageSetting);
+        AssignStartAndEndNodes(CurrentStageConfig);
 
         _currentNodeId = _mapModel.Nodes[0].Id;
         _visitedNodes = new HashSet<int> { _currentNodeId };
@@ -424,7 +425,7 @@ public class MapController : MonoBehaviour
             
         SaveGameWithRunCount();
     }
-    private void AssignStartAndEndNodes(StageSetting setting)
+    private void AssignStartAndEndNodes(StageConfig setting)
     {
         NodeModel startNode = _mapModel.Nodes[0];
         startNode.Type = NodeType.Start;

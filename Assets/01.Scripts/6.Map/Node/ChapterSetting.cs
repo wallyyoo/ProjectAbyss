@@ -13,6 +13,6 @@ public class ChapterSetting : ScriptableObject
     public int ChapterNumber;
 
     [Tooltip("이 장에서 순서대로 등장할 스테이지 타입 목록")]
-    public StageType[] StageSequence;
+    public StageConfig[] Stages;
 
 }

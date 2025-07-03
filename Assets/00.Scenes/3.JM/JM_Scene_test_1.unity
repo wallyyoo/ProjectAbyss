@@ -1728,10 +1728,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mapType: 1
   _patternType: 2
-  _stageType: 0
-  _stageSettingList:
-  - {fileID: 11400000, guid: 79e004f91ffa880409c103b63ceef177, type: 2}
-  - {fileID: 11400000, guid: 76533c86bd76f7846bd900681608b90d, type: 2}
   _chapterSettingList:
   - {fileID: 11400000, guid: bd14f54c973a3834fadc3c1887d1f489, type: 2}
   - {fileID: 11400000, guid: e12b0af65fd0ac746be6ec178eac082e, type: 2}
