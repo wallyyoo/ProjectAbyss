@@ -11,15 +11,13 @@ public class GridMapGenerator : IMapGenerator
     private readonly int _rows;
     private readonly int _roomCount;
     private readonly INodeTypeAssigner _nodeTypeAssigner;
-    //private readonly IFarthestRoomSelector _farthestRoomSelector;
 
-    public GridMapGenerator(int columns, int rows, int roomCount, INodeTypeAssigner nodeTypeAssigner)//IFarthestRoomSelector farthestRoomSelector)
+    public GridMapGenerator(int columns, int rows, int roomCount, INodeTypeAssigner nodeTypeAssigner)
     {
         _columns = columns;
         _rows = rows;
         _roomCount = roomCount;
         _nodeTypeAssigner = nodeTypeAssigner;
-        //_farthestRoomSelector = farthestRoomSelector;
     }
     
 
@@ -85,11 +83,6 @@ public class GridMapGenerator : IMapGenerator
                 mapModel.Nodes.Add(node);
                 queue.Enqueue(neighbor);
                 
-                // mapModel.Edges.Add(new EdgeModel(
-                //     mapModel.Nodes.Find(n=>n.GridPos == current).Id,
-                //     node.Id
-                //     ));
-
                 var edge = new EdgeModel(mapModel.Nodes.Find(n=>n.GridPos == current).Id, node.Id);
                 mapModel.Edges.Add(edge);
                 var fromNode = mapModel.Nodes.Find(n=>n.GridPos == current);
@@ -100,10 +93,6 @@ public class GridMapGenerator : IMapGenerator
 
             }
         }
-        // int startNodeId = mapModel.Nodes[0].Id;
-        // int bossNodeId = _farthestRoomSelector.SelectFarthestRoom(mapModel.Nodes,startNodeId);
-        // var bossNode = mapModel.Nodes.Find(n => n.Id == bossNodeId);
-        // bossNode.Type = NodeType.Move;
         return mapModel;
     }
 }

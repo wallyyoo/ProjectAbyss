@@ -125,10 +125,6 @@ public static class MapPatternLibrary
         {
             for (int y = -innerRadius; y <= innerRadius; y++)
             {
-                // if (x == 0 && y == 0)
-                // {
-                //     continue;
-                // }
                  positions.Add(new Vector2Int(x, y));
             }
         }

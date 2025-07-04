@@ -13,21 +13,10 @@ public class MapController : MonoBehaviour
     [SerializeField] private ChapterSetting[] _chapterSettingList;
     
     [Header("Grid Parameter")]
-    [SerializeField] private int _columns = 9;
-    [SerializeField] private int _rows = 5;
-    [SerializeField] private int _roomCount = 12;
-    [SerializeField] private float CellSize = 150f;
-
-    // [Header("Pattern Parameter")]
-    // [SerializeField] private int _ringHorizontalRadius;
-    // [SerializeField] private int _ringVerticalRadius;
-    // [SerializeField] private int _ringThickness;
-    // [SerializeField] private int _pyramidLevels;
-    // [SerializeField] private int _diagonalWidth;
-    // [SerializeField] private int _diagonalHeight;
-    // [SerializeField] private int _diagonalOffset;
-    // [SerializeField] private int _crossArmLength;
-    // [SerializeField] private int _crossThickness;
+    [SerializeField] private int _columns;
+    [SerializeField] private int _rows;
+    [SerializeField] private int _roomCount;
+    [SerializeField] private float CellSize;
 
     [Header("Debug")]
     [SerializeField] private bool _useDebugRunCount = false;
@@ -55,12 +44,6 @@ public class MapController : MonoBehaviour
                                               .Stages[_stageProgress.StageNumber -1]; 
     private ChapterSetting CurrentChapterSetting
     => _chapterSettingList.First(c => c.ChapterNumber == _stageProgress.Chapter);
-   //  
-   //  private StageType CurrentStageType
-   //      => CurrentChapterSetting.Stages[_stageProgress.StageNumber-1];
-   //  
-   //  private StageSetting CurrentStageSetting
-   //      => _stageSettingList.First(s => s.stageType == CurrentStageType);
 
     
     
