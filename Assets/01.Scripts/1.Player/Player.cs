@@ -1,34 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
-using TMPro;
-using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private PlayerData data;
-    private PlayerProgress progress;
 
-    [Header("기초 정보")]
-    [SerializeField] private TextMeshPro PlayerHP;
+    [Header("UI")]
+    [SerializeField] private PlayerUI playerUI;
+
+    [Header("Animations")]
+    [SerializeField] private PlayerAnimationData animationData;
+    [SerializeField] private Animator animator;
+    [SerializeField] private PlayerFSM playerFSM;
+
+    private int maxHP;
     private int currentHP;
 
     public bool IsAlive => currentHP > 0;
 
-    void Awake()
+    public void Init()
     {
-        // progress = GetComponent<PlayerProgress>();
-        // progress.Init(data);
-        // 강화 수치 적용된 progress.MaxHP 로 변경 예정
-        currentHP = data.MaxHP;
+        ApplyUpgradeMaxHP();
+        currentHP = maxHP;
+        UpdateHP();
+    }
+
+    /// <summary>
+    /// 업그레이드시 호출, maxHP 갱신용
+    /// </summary>
+    public void ApplyUpgradeMaxHP()
+    {
+        int baseHP = data.MaxHP;
+        var statData = PlayerProgressManager.Instance?.Progress?.
+        GetStatData(PlayerStatType.MaxHP);
+
+        int addHP = statData?.add_Stats ?? 0;
+        maxHP = baseHP + addHP;
+
+        currentHP = maxHP;
         UpdateHP();
     }
 
     private void OnEnable()
     {
         TurnManager.Instance.RegisterPlayer(this);
+        PlayerProgressManager.Instance.OnStatUpgraded += StatUpgraded;
+        UpdateHP();
+    }
+
+    private void OnDisable()
+    {
+        PlayerProgressManager.Instance.OnStatUpgraded -= StatUpgraded;
     }
 
     /// <summary>
@@ -40,17 +65,62 @@ public class Player : MonoBehaviour
         float result = damage * (1f - counterDamageReduction);
         currentHP -= Mathf.RoundToInt(result);
 
-        UpdateHP();
+        Debug.Log($"현재 최대 체력 : {maxHP}");
         Debug.Log($"{data.CharacterName}이(가) {damage} 데미지! 남은 체력: {currentHP}");
+
+        UpdateHP();
 
         if (currentHP <= 0)
         {
-            // 사망 처리 결과창
+            playerFSM.EnterState(PlayerState.Dead); // 사망 애니메이션 상태
+            // 사망 결과창
+        }
+        else
+        {
+            playerFSM.EnterState(PlayerState.Hit); // 피격 애니메이션 재생
         }
     }
 
-    void UpdateHP()
+    public void Heal(int amount)
     {
-        PlayerHP.text = $"{currentHP}";
+        currentHP = Mathf.Min(currentHP + amount, maxHP);
+        UpdateHP();
+    }
+
+    private void UpdateHP()
+    {
+        if (playerUI != null && gameObject.activeInHierarchy)
+        {
+            playerUI.SetHP(currentHP, maxHP);
+        }
+    }
+
+    /// <summary>
+    /// 이벤트 호출용
+    /// </summary>
+    /// <param name="type"></param>
+    private void StatUpgraded(PlayerStatType type)
+    {
+        if (type == PlayerStatType.MaxHP)
+        {
+            ApplyUpgradeMaxHP();
+        }
+    }
+
+    // ====== 애니메이션 관련 ======
+    private void Start()
+    {
+        animationData.Initialize();
+        playerFSM.Init(animator, animationData);
+    }
+
+    public void PlayHit()
+    {
+        animator.Play(animationData.hit.stateHash);
+    }
+
+    public void PlayDead()
+    {
+        animator.Play(animationData.dead.stateHash);
     }
 }

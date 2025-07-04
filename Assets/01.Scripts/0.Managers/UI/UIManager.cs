@@ -39,7 +39,17 @@ public class UIManager : Singleton<UIManager>
     [UIBind("UpgradePanel/Up_HandTypePanel/HandTypeTextManager")] private HandUIManager upgradeHandUI;
     [UIBind("UpgradePanel/Up_BaseStatPanel/StatTextManager")] private StatUIManager statUIManager;
     [UIBind("TopBar/Button(test)")] private Button upgradePanelBtn;
+    
+    // ==== 옵션 패널 ====
+    [UIBind("VideoPanel")] private GameObject videoPanel;
+    [UIBind("SoundPanel")] private GameObject soundPanel;
 
+    [UIBind("MenuPanel/SystemOption/VideoButton")] private Button videoBtn;
+    [UIBind("MenuPanel/SystemOption/SoundButton")] private Button soundBtn;
+
+    [UIBind("VideoPanel/CloseBtn")] private Button videoCloseBtn;
+    [UIBind("SoundPanel/CloseBtn")] private Button soundCloseBtn;
+    
     public HandUIManager UpgradeHandUI => upgradeHandUI;
     public HandUIManager CodexHandUI => codexHandUI;
     public StatUIManager StatUIManager => statUIManager;
@@ -58,6 +68,12 @@ public class UIManager : Singleton<UIManager>
         codexClosebtn.onClick.AddListener(CloseCodex);
         UpgradeClosebtn.onClick.AddListener(CloseUpgrade);
         upgradePanelBtn.onClick.AddListener(OpenUpgrade);
+        
+        videoBtn.onClick.AddListener(OpenVideoPanel);
+        soundBtn.onClick.AddListener(OpenSoundPanel);
+
+        videoCloseBtn.onClick.AddListener(CloseVideoPanel);
+        soundCloseBtn.onClick.AddListener(CloseSoundPanel);
     }
 
     /// <summary>
@@ -93,6 +109,31 @@ public class UIManager : Singleton<UIManager>
     public void CloseCodex()
     {
         codexPanel.SetActive(false);
+    }
+    
+    /// <summary>
+    /// 옵셥메뉴 열고 닫기.
+    /// </summary>
+    public void OpenVideoPanel()
+    {
+        videoPanel.SetActive(true);
+        videoPanel.transform.SetAsLastSibling(); 
+    }
+
+    public void CloseVideoPanel()
+    {
+        videoPanel.SetActive(false);
+    }
+
+    public void OpenSoundPanel()
+    {
+        soundPanel.SetActive(true);
+        soundPanel.transform.SetAsLastSibling(); 
+    }
+
+    public void CloseSoundPanel()
+    {
+        soundPanel.SetActive(false);
     }
 
     /// <summary>
