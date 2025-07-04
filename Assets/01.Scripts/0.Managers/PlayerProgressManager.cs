@@ -20,13 +20,14 @@ public class PlayerProgressManager : Singleton<PlayerProgressManager>
     {
         base.Awake();
 
-        Progress = FindObjectOfType<PlayerProgress>();
+        Progress = GetComponentInChildren<PlayerProgress>(includeInactive: true);
+
         if (Progress == null)
         {
-            GameObject go = new GameObject("PlayerProgress");
-            Progress = go.AddComponent<PlayerProgress>();
-            go.transform.SetParent(transform);
+            Debug.LogError("PlayerProgress가 null");
+            return;
         }
+
         Progress.Init();
         SyncUpgradeLevels();
     }

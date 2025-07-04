@@ -4,12 +4,11 @@ using TMPro;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private EnemyData data;
-    // [SerializeField] private TextMeshProUGUI turn; // ===== 삭제 ( 보류 ) =====
     [SerializeField] private TextMeshPro hp;
 
     private int currentHP;
     private int attackTurn;
-    private int currentTurn; // ===== 삭제 ( 보류 ) =====
+    private int currentTurn;
     public int dropGold;
 
     private TurnManager turnManager;
@@ -28,7 +27,6 @@ public class Enemy : MonoBehaviour
         currentHP = data.MaxHP;
         currentTurn = attackTurn;
         dropGold = data.DropGold;
-        // UpdateTurn(currentTurn); // ===== 삭제 ( 보류 ) =====
         UpdateHP(currentHP);
     }
 
@@ -38,22 +36,21 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// 적의 행동 턴 계산 ex) n턴 뒤 공격 (차후 구조 변경)
+    /// 적 행동
     /// </summary>
     public void ProcessTurn()
     {
-        currentTurn--;
+        currentTurn--; // SO
 
         if (currentTurn <= 0)
         {
             AttackPlayer();
             currentTurn = attackTurn; ; // 초기화
-            // UpdateTurn(currentTurn); // ===== 삭제 ( 보류 ) =====
         }
         else
         {
             Debug.Log($"{data.CharacterName}의 남은 공격 턴: {currentTurn}");
-            // UpdateTurn(currentTurn); // ===== 삭제 ( 보류 ) =====
+            // enemyFSM.EnterState(EnemyState.Stun);
         }
 
         turnManager.SetTurnPhase(TurnPhase.Ready);
@@ -78,19 +75,15 @@ public class Enemy : MonoBehaviour
 
     public void Die()
     {
-        // turnManager.player.AddGold(dropGold);
+        // PlayerProgressManager.Instance.
         Destroy(gameObject);
     }
 
     private void AttackPlayer()
     {
+        // enemyFSM.EnterState(PlayerState.Attack);
         turnManager.PlayerTakeDamage(data.AttackDamage);
     }
-
-    // private void UpdateTurn(int currentTurn) 
-    // {
-    //     turn.text = $"{currentTurn}"; // ===== 삭제 ( 보류 ) =====
-    // }
 
     void UpdateHP(int currentHP)
     {

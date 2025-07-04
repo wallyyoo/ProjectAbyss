@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -124,10 +125,6 @@ public static class MapPatternLibrary
         {
             for (int y = -innerRadius; y <= innerRadius; y++)
             {
-                // if (x == 0 && y == 0)
-                // {
-                //     continue;
-                // }
                  positions.Add(new Vector2Int(x, y));
             }
         }
@@ -135,8 +132,33 @@ public static class MapPatternLibrary
         return positions.Distinct().ToList();
     }
 
-    // public static List<Vector2Int> CreateRectangleRing(int width, int height)
-    // {
-    //     return 
-    // }
+    public static List<Vector2Int> CreateRectangularRing(int outerRadius, int innerHalf)
+    {
+        List<Vector2Int> positions = new List<Vector2Int>();
+        if (outerRadius < 1)
+        {
+            Debug.LogWarning("파라미터 유효하지않음");
+            return positions;
+        }
+
+        for (int x = -outerRadius; x <= outerRadius; x++)
+        {
+            for (int y = -outerRadius; y <= outerRadius; y++)
+            {
+                if (Mathf.Abs(x)+Mathf.Abs(y)>outerRadius)
+                {
+                    continue;
+                }
+
+                if (Mathf.Abs(x) < innerHalf && Mathf.Abs(y) < innerHalf)
+                {
+                    continue;
+                }
+                positions.Add(new Vector2Int(x,y));
+                    
+            }
+        }
+
+        return positions;
+    }
 }

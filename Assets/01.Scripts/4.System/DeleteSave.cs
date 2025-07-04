@@ -4,7 +4,7 @@ using NaughtyAttributes;
     
 public class DeleteSave:MonoBehaviour
 {
-    [SerializeField] private Canvas MapUi;
+    [SerializeField] private GameObject MapNodeUi;
     
     [Button("DeleteMapSave")]
     private void DeleteMapSave()
@@ -15,12 +15,12 @@ public class DeleteSave:MonoBehaviour
     [Button("TurnOnMap")]
     private void TurnOnMap()
     {
-        MapUi.enabled = true;
+        MapNodeUi.SetActive(true);
     }
     [Button("TurnOffMap")]
     private void TurnOffMap()
     {
-        MapUi.enabled = false;
+       MapNodeUi.SetActive(false);
     }
 
     //[Button("RunCountup")]

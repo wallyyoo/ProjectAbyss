@@ -42,21 +42,21 @@ public class PlayerProgress : MonoBehaviour
         }
     }
 
-    public int GetHandTypeAddScore(HandType type)
-    {
-        if (handDataCache.TryGetValue(type, out var data))
-            return data?.add_score ?? 0;
+    // public int GetHandTypeAddScore(HandType type)
+    // {
+    //     if (handDataCache.TryGetValue(type, out var data))
+    //         return data?.add_score ?? 0;
 
-        return 0;
-    }
+    //     return 0;
+    // }
 
-    public int GetHandAddMultiplier(HandType type)
-    {
-        if (handDataCache.TryGetValue(type, out var data))
-            return data?.add_multiplier ?? 0;
+    // public int GetHandAddMultiplier(HandType type)
+    // {
+    //     if (handDataCache.TryGetValue(type, out var data))
+    //         return data?.add_multiplier ?? 0;
 
-        return 0;
-    }
+    //     return 0;
+    // }
 
     /// <summary>
     /// 스탯 강화 레벨을 변경하고, 새 레벨의 데이터를 DB에서 다시 꺼내와 갱신

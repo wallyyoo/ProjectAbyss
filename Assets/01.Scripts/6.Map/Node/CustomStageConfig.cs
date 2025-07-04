@@ -18,6 +18,9 @@ public class CustomStageConfig : StageConfig
     [SerializeField] private int CrossThickness;
     [SerializeField] private int BossInnerRadius;
     [SerializeField] private int BossOuterDistance;
+    [SerializeField] private int RingRadius;
+    [SerializeField] private int RingInnerHalf;
+
     
     
 
@@ -35,6 +38,7 @@ public class CustomStageConfig : StageConfig
             PatternType.Diagonal => MapPatternLibrary.CreateDiagonal(DiagonalWidth, DiagonalHeight, DiagonalOffset),
             PatternType.Cross => MapPatternLibrary.CreateCross(CrossArmLength, CrossThickness),
             PatternType.BossRing => MapPatternLibrary.CreateBossRing(BossInnerRadius, BossOuterDistance),
+            PatternType.ColliderRing => MapPatternLibrary.CreateRectangularRing(RingRadius,RingInnerHalf)
             
         };
         var assigner = new NodeTypeAssigner(BattleWeight,ShopWeight,RestWeight,EventWeight,EmptyWeight);
