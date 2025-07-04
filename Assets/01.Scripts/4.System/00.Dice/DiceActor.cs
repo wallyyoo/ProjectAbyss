@@ -154,6 +154,7 @@ public class DiceActor : MonoBehaviour
         TurnManager.Instance.PlayerGetAttackDamage(result.finalDamage); 
         TurnManager.Instance.GetCounterReduction(result.counterDamageReduction);
         TurnManager.Instance.GetExtraRerollBouns(result.nextTurnExtraReroll);
+        TurnManager.Instance.GetStunChance(result.stunChance);
     }
     
     private void UpdateAllDiceSprites() // 주사위의 실제값을 설정해줌

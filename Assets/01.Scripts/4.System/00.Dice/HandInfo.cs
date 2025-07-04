@@ -16,12 +16,6 @@ public class HandInfo // 족보 정보
         this.description = description;
     }
 
-    public HandInfo(string name, int baseScore, int multiplier)
-    {
-        this.name = name;
-        this.baseScore = baseScore;
-        this.multiplier = multiplier;
-    }
 }
 
 public static class HandDatabase
