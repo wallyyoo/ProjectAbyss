@@ -88,7 +88,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1635310601679123242
 RectTransform:
   m_ObjectHideFlags: 0
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -160,16 +160,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c4c197732564142af0f71577d5b9be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _chapterSettingList:
+  - {fileID: 11400000, guid: bd14f54c973a3834fadc3c1887d1f489, type: 2}
+  - {fileID: 11400000, guid: e12b0af65fd0ac746be6ec178eac082e, type: 2}
+  _columns: 8
+  _rows: 6
+  _roomCount: 20
+  CellSize: 80
+  _useDebugRunCount: 1
+  _debugRunCount: 8
   _nodePrefab: {fileID: 445267991639944460, guid: ca85f0862fed33b408889f124e705bc6, type: 3}
   _edgePrefab: {fileID: 8942911800839377774, guid: ccae651935b54e54180fc86eb46af088, type: 3}
   _edges: {fileID: 7746553843558558289}
   _nodes: {fileID: 8703762628275484820}
   _cameraSwitcher: {fileID: 0}
-  _columns: 8
-  _rows: 6
-  _roomCount: 20
-  CellSize: 80
-  _battleWeight: 1
-  _shopWeight: 0
-  _rewardWeight: 0
-  _eventWeight: 0

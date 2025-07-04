@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FarthestNode: 8
   BattleWeight: 0
-  ShopWeight: 0.125
-  RestWeight: 0.125
+  ShopWeight: 0
+  RestWeight: 0
   EventWeight: 0
   EmptyWeight: 0.5
   PatternType: 2
@@ -30,3 +30,5 @@ MonoBehaviour:
   CrossThickness: 0
   BossInnerRadius: 0
   BossOuterDistance: 0
+  RingRadius: 0
+  RingInnerHalf: 0

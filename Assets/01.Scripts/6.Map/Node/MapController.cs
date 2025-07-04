@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 
 /// <summary>
@@ -13,21 +15,10 @@ public class MapController : MonoBehaviour
     [SerializeField] private ChapterSetting[] _chapterSettingList;
     
     [Header("Grid Parameter")]
-    [SerializeField] private int _columns = 9;
-    [SerializeField] private int _rows = 5;
-    [SerializeField] private int _roomCount = 12;
-    [SerializeField] private float CellSize = 150f;
-
-    // [Header("Pattern Parameter")]
-    // [SerializeField] private int _ringHorizontalRadius;
-    // [SerializeField] private int _ringVerticalRadius;
-    // [SerializeField] private int _ringThickness;
-    // [SerializeField] private int _pyramidLevels;
-    // [SerializeField] private int _diagonalWidth;
-    // [SerializeField] private int _diagonalHeight;
-    // [SerializeField] private int _diagonalOffset;
-    // [SerializeField] private int _crossArmLength;
-    // [SerializeField] private int _crossThickness;
+    [SerializeField] private int _columns;
+    [SerializeField] private int _rows;
+    [SerializeField] private int _roomCount;
+    [SerializeField] private float CellSize;
 
     [Header("Debug")]
     [SerializeField] private bool _useDebugRunCount = false;
@@ -55,16 +46,16 @@ public class MapController : MonoBehaviour
                                               .Stages[_stageProgress.StageNumber -1]; 
     private ChapterSetting CurrentChapterSetting
     => _chapterSettingList.First(c => c.ChapterNumber == _stageProgress.Chapter);
-   //  
-   //  private StageType CurrentStageType
-   //      => CurrentChapterSetting.Stages[_stageProgress.StageNumber-1];
-   //  
-   //  private StageSetting CurrentStageSetting
-   //      => _stageSettingList.First(s => s.stageType == CurrentStageType);
+    
+    private readonly Dictionary<NodeType, INodeClickActionHandler> _clickActionHandlers
+        = new Dictionary<NodeType, INodeClickActionHandler>();
 
-    
-    
-    
+    private void Awake()
+    {
+        InitializeClickActionHandlers();
+    }
+
+
     /// <summary>
     /// 스테이지 시작 시 호출
     /// </summary>
@@ -127,6 +118,22 @@ public class MapController : MonoBehaviour
         if (currentNode != null)
         {
             _cameraSwitcher.SwitchTo(currentNode.Type);
+        }
+    }
+
+    private void InitializeClickActionHandlers()
+    {
+        INodeClickActionHandler[] actionHandlers = new INodeClickActionHandler[]
+        {
+            new BattleNodeClickActionHandler(),
+            new ShopNodeClickHandler(),
+            new EventNodeClickActionHandler(),
+            new MoveNodeClickActionHandler(),
+            new RestNodeClickActionHandler()
+        };
+        foreach (INodeClickActionHandler actionHandler in actionHandlers)
+        {
+            _clickActionHandlers.Add(actionHandler.NodeType, actionHandler);
         }
     }
     
@@ -285,12 +292,12 @@ public class MapController : MonoBehaviour
         NodeModel endNode =_mapModel.Nodes.Find(n=> n.Id == _endNodeId);
         if (!currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
             return;
+        bool isFirstVisited = !_visitedNodes.Contains(nodeModel.Id);
         
         if (nodeModel.Type == NodeType.Move
             && nodeModel.Id == _endNodeId)
         {
             AdvanceStage();
-            //InitializeStage();
             return;
         }
         
@@ -317,8 +324,12 @@ public class MapController : MonoBehaviour
         ApplyHighlights();
         SaveGameWithRunCount();
         _cameraSwitcher.SwitchTo(nodeModel.Type);
-        
-        
+        if (isFirstVisited)
+        {
+            HandleNodeTypeAction(nodeModel);
+        }
+
+
         //TODO: 현재위치 확인 -> 이동가능 여부 검사 -> 씬전환 or 전투 호출 등
     }
     
@@ -502,10 +513,21 @@ public class MapController : MonoBehaviour
         SaveLoadManager.SaveGame(save);
     }
 
+    private void HandleNodeTypeAction(NodeModel nodeModel)
+    {
+        if (_clickActionHandlers.TryGetValue(nodeModel.Type, out INodeClickActionHandler clickActionHandler))
+        {
+            clickActionHandler.HandleClick(nodeModel);
+        }
+        else
+        {
+            Debug.LogWarning($"{nodeModel.Type}타입에 대한 핸들러가 없습니다.");
+        }
+    }
+
     [Button("bossclear")]
     private void bossclear()
     {
         OnBossCleared();
     }
-    
 }
