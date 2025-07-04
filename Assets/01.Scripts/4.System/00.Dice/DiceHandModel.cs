@@ -83,8 +83,4 @@ public class DiceHandModel
         }
     }
 
-    public void SetExtraReroll(int bonus)
-    {
-        MaxRerolls = 3 + bonus;
-    }
 }
