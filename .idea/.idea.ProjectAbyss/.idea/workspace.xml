@@ -6,9 +6,20 @@
   <component name="ChangeListManager">
     <list default="true" id="75a9aa63-600e-475a-b31d-5cc6c5bf82ca" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectAbyss/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectAbyss/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/GridMapGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/GridMapGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapPatternLibrary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapPatternLibrary.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/00.Scenes/3.JM/JM_Scene_test_1.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/00.Scenes/3.JM/JM_Scene_test_1.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/4.System/DeleteSave.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/4.System/DeleteSave.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/4.System/Test/SceneLoadTest.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/4.System/Test/SceneLoadTest.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Enum/NodeType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Enum/NodeType.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/IFarthestRoomSelector.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/IFarthestRoomSelector.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/IMapGenerator.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/IMapGenerator.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/INodeRevealStrategy.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/INodeRevealStrategy.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/INodeTypeAssigner.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/INodeTypeAssigner.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/02.Prefabs/6.Map/MapNodeUI.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/02.Prefabs/6.Map/MapNodeUI.prefab" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,11 +42,8 @@
     <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/GridStageConfig.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/INodeRevealStrategy.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapPatternLibrary.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/MapType.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/NodeType.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/PatternType.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/RunCountRevealStrategy.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/StageType.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/01.Scripts/6.Map/Node/ShopNodeClickHandler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.textmeshpro@3.0.6/Scripts/Runtime/TMPro_UGUI_Private.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
@@ -140,7 +148,7 @@
       <workItem from="1750984749070" duration="18086000" />
       <workItem from="1751418992162" duration="21589000" />
       <workItem from="1751502209692" duration="12128000" />
-      <workItem from="1751588904705" duration="9080000" />
+      <workItem from="1751588904705" duration="14944000" />
     </task>
     <servers />
   </component>

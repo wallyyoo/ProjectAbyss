@@ -7,7 +7,7 @@ public enum NodeType
     Start, //거점
     Battle, //전투
     Shop, //상점 
-    Rest,//회복맵 이동
+    Rest,//회복맵
     Event, // 이벤트
     Move, // 맵 이동
     Empty, // 빈 노드
