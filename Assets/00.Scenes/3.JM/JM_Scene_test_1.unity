@@ -1733,15 +1733,6 @@ MonoBehaviour:
   _rows: 6
   _roomCount: 20
   CellSize: 80
-  _ringHorizontalRadius: 8
-  _ringVerticalRadius: 6
-  _ringThickness: 4
-  _pyramidLevels: 6
-  _diagonalWidth: 4
-  _diagonalHeight: 4
-  _diagonalOffset: 3
-  _crossArmLength: 3
-  _crossThickness: 3
   _useDebugRunCount: 1
   _debugRunCount: 8
   _nodePrefab: {fileID: 445267991639944460, guid: ca85f0862fed33b408889f124e705bc6, type: 3}

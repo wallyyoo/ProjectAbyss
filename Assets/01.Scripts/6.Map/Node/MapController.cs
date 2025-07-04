@@ -290,7 +290,6 @@ public class MapController : MonoBehaviour
             && nodeModel.Id == _endNodeId)
         {
             AdvanceStage();
-            //InitializeStage();
             return;
         }
         
@@ -507,5 +506,4 @@ public class MapController : MonoBehaviour
     {
         OnBossCleared();
     }
-    
 }

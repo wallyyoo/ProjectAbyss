@@ -8,5 +8,6 @@ public enum PatternType
     Pyramid,
     Diagonal,
     Cross,
-    BossRing
+    BossRing,
+    ColliderRing
 }
