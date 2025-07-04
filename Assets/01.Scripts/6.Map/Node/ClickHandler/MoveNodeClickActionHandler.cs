@@ -2,17 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class MoveNodeClickActionHandler : INodeClickActionHandler
 {
-    // Start is called before the first frame update
-    void Start()
+    public NodeType NodeType => NodeType.Move;
+    public void HandleClick(NodeModel nodeModel)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        throw new System.NotImplementedException();
     }
 }

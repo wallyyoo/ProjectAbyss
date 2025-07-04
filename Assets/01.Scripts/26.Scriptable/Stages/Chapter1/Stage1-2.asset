@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Stage1-2
   m_EditorClassIdentifier: 
   FarthestNode: 6
-  BattleWeight: 0.25
-  ShopWeight: 0.1
-  RestWeight: 0.12
-  EventWeight: 0.1
-  EmptyWeight: 0.33
+  BattleWeight: 0.4
+  ShopWeight: 0
+  RestWeight: 0
+  EventWeight: 0
+  EmptyWeight: 0.6
   MinRoomCount: 20
   MaxRoomCount: 24

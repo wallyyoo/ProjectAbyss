@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 
 /// <summary>
@@ -44,10 +46,16 @@ public class MapController : MonoBehaviour
                                               .Stages[_stageProgress.StageNumber -1]; 
     private ChapterSetting CurrentChapterSetting
     => _chapterSettingList.First(c => c.ChapterNumber == _stageProgress.Chapter);
+    
+    private readonly Dictionary<NodeType, INodeClickActionHandler> _clickActionHandlers
+        = new Dictionary<NodeType, INodeClickActionHandler>();
 
-    
-    
-    
+    private void Awake()
+    {
+        InitializeClickActionHandlers();
+    }
+
+
     /// <summary>
     /// 스테이지 시작 시 호출
     /// </summary>
@@ -110,6 +118,22 @@ public class MapController : MonoBehaviour
         if (currentNode != null)
         {
             _cameraSwitcher.SwitchTo(currentNode.Type);
+        }
+    }
+
+    private void InitializeClickActionHandlers()
+    {
+        INodeClickActionHandler[] actionHandlers = new INodeClickActionHandler[]
+        {
+            new BattleNodeClickActionHandler(),
+            new ShopNodeClickHandler(),
+            new EventNodeClickActionHandler(),
+            new MoveNodeClickActionHandler(),
+            new RestNodeClickActionHandler()
+        };
+        foreach (INodeClickActionHandler actionHandler in actionHandlers)
+        {
+            _clickActionHandlers.Add(actionHandler.NodeType, actionHandler);
         }
     }
     
@@ -268,6 +292,7 @@ public class MapController : MonoBehaviour
         NodeModel endNode =_mapModel.Nodes.Find(n=> n.Id == _endNodeId);
         if (!currentNode.ConnectedNodeIds.Contains(nodeModel.Id))
             return;
+        bool isFirstVisited = !_visitedNodes.Contains(nodeModel.Id);
         
         if (nodeModel.Type == NodeType.Move
             && nodeModel.Id == _endNodeId)
@@ -299,8 +324,12 @@ public class MapController : MonoBehaviour
         ApplyHighlights();
         SaveGameWithRunCount();
         _cameraSwitcher.SwitchTo(nodeModel.Type);
-        
-        
+        if (isFirstVisited)
+        {
+            HandleNodeTypeAction(nodeModel);
+        }
+
+
         //TODO: 현재위치 확인 -> 이동가능 여부 검사 -> 씬전환 or 전투 호출 등
     }
     
@@ -482,6 +511,18 @@ public class MapController : MonoBehaviour
             });
         }
         SaveLoadManager.SaveGame(save);
+    }
+
+    private void HandleNodeTypeAction(NodeModel nodeModel)
+    {
+        if (_clickActionHandlers.TryGetValue(nodeModel.Type, out INodeClickActionHandler clickActionHandler))
+        {
+            clickActionHandler.HandleClick(nodeModel);
+        }
+        else
+        {
+            Debug.LogWarning($"{nodeModel.Type}타입에 대한 핸들러가 없습니다.");
+        }
     }
 
     [Button("bossclear")]

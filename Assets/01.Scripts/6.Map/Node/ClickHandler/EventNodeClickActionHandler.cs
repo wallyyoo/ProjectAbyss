@@ -2,17 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionHandler : MonoBehaviour
+public class EventNodeClickActionHandler : INodeClickActionHandler
 {
-    // Start is called before the first frame update
-    void Start()
+    public NodeType NodeType => NodeType.Event;
+    public void HandleClick(NodeModel nodeModel)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        //EventManager.StartRandomEvent;
     }
 }
