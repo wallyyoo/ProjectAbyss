@@ -43,7 +43,7 @@ public class PlayerFSM : MonoBehaviour
         // 애니메이션 길이만큼 대기
         yield return new WaitForSeconds(animationData.attack.duration);
 
-        // 공격 끝났다는 신호를 보내자 (예: 턴매니저 호출)
+        // 공격 끝났다는 신호
         TurnManager.Instance.PlayerAttackFinished();
 
         // 다시 Idle 상태로

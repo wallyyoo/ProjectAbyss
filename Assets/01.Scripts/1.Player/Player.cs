@@ -53,6 +53,7 @@ public class Player : MonoBehaviour
 
     private void OnDisable()
     {
+        if (PlayerProgressManager.Instance != null)
         PlayerProgressManager.Instance.OnStatUpgraded -= StatUpgraded;
     }
 
@@ -112,15 +113,5 @@ public class Player : MonoBehaviour
     {
         animationData.Initialize();
         playerFSM.Init(animator, animationData);
-    }
-
-    public void PlayHit()
-    {
-        animator.Play(animationData.hit.stateHash);
-    }
-
-    public void PlayDead()
-    {
-        animator.Play(animationData.dead.stateHash);
     }
 }
